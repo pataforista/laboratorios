@@ -288,6 +288,16 @@ function initUI() {
   // Action buttons
   $("#btnTheme").onclick    = toggleTheme;
   $("#btnSettings").onclick = () => show("#viewSettings");
+
+  // Wire up iframe theme sync on load
+  const manualFrame = $('#manualFrame');
+  if (manualFrame) {
+    manualFrame.addEventListener('load', () => {
+      const theme = document.body.dataset.theme || localStorage.getItem(LS_THEME) || 'dark';
+      // Small delay to ensure the iframe's message listener is registered
+      setTimeout(() => sendThemeToManual(theme), 80);
+    });
+  }
   $("#btnSaveRecord").onclick  = saveNewRecord;
   $("#btnExport").onclick      = openExport;
   $("#btnEditRecord").onclick  = () => openNew(state.selected?.id);
@@ -340,8 +350,9 @@ function showTab(tab) {
   const manualEl = $('#tabManual');
   if (tab === 'manual') {
     if (manualEl) manualEl.classList.remove('hidden');
-    // Sync theme to the iframe whenever the manual tab is shown
-    setTimeout(() => sendThemeToManual(document.body.dataset.theme || localStorage.getItem(LS_THEME) || 'dark'), 150);
+    // Send theme now — if iframe already loaded this works immediately;
+    // if it's still loading, the onload handler above will catch it.
+    sendThemeToManual(document.body.dataset.theme || localStorage.getItem(LS_THEME) || 'dark');
   } else {
     if (manualEl) manualEl.classList.add('hidden');
     // Show the correct in-container tab
