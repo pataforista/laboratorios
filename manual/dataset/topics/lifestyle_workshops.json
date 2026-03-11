@@ -1,0 +1,63 @@
+{
+  "id": "lifestyle_workshops",
+  "title": "Ocupación y Rutina Diaria",
+  "audience": "both",
+  "tags": ["lifestyle", "ocupacion", "salud_mental", "social"],
+  "blocks": [
+    {
+      "id": "workshops_intro_alert",
+      "type": "alert",
+      "title": "La Rutina es Medicina",
+      "level": "info",
+      "audience": "both",
+      "content": "Tener actividades estructuradas ayuda a regular el reloj biológico, mejora el ánimo y evita el aislamiento."
+    },
+    {
+      "id": "workshops_balance_wheel",
+      "type": "section",
+      "title": "Equilibrio Ocupacional",
+      "audience": "both",
+      "content": "Su día debe tener una mezcla de tres tipos de actividades:",
+      "sub_blocks": [
+        {
+          "id": "activity_types_kv",
+          "type": "key_value",
+          "title": "Tipos de Actividad",
+          "data": {
+            "Productivas": "Trabajo, estudios, voluntariado, cuidado del hogar.",
+            "Restaurativas": "Dormir, meditar, comer con calma.",
+            "Ocio/Placer": "Hobbies, deporte, salir con amigos, talleres."
+          }
+        }
+      ]
+    },
+    {
+      "id": "workshops_community_ideas",
+      "type": "checklist",
+      "title": "Ideas para mantenerse activo",
+      "items": [
+        "Inscríbase a un taller local (PILARES, DIF, Casa de Cultura).",
+        "Aprenda una habilidad nueva (idiomas, tejido, carpintería).",
+        "Únase a grupos de caminata o baile en su parque.",
+        "Si está jubilado, considere el voluntariado."
+      ]
+    },
+    {
+      "id": "workshops_action_plan",
+      "type": "section",
+      "title": "Plan de Acción",
+      "audience": "both",
+      "sub_blocks": [
+        {
+          "id": "weekly_planner_text",
+          "type": "text",
+          "content": "No deje sus días al azar. Intente planear su semana los domingos en la noche, asegurando al menos **una actividad social** y **una actividad física** fuera de casa."
+        }
+      ]
+    }
+  ],
+  "meta": {
+    "source": "manual_local_comorbilidades",
+    "version": "2.1_occupational_therapy"
+  }
+}

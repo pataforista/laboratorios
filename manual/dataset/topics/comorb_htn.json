@@ -1,0 +1,162 @@
+{
+  "id": "comorb_htn",
+  "title": "Manejo de Hipertensión Arterial (2024-2025)",
+  "audience": "both",
+  "tags": [
+    "cardiovascular",
+    "crónico",
+    "urgencias",
+    "guias_2025"
+  ],
+  "blocks": [
+    {
+      "id": "htn_intro_alert",
+      "type": "alert",
+      "title": "Actualización 2024-2025",
+      "level": "info",
+      "audience": "both",
+      "content": "Síntesis de guías AHA/ACC 2025 (EE. UU.) y ESC 2024 / ESH 2023 (Europa). Divergencia en umbrales diagnósticos y énfasis en riesgo cardiovascular."
+    },
+    {
+      "id": "htn_diagnosis",
+      "type": "section",
+      "title": "1. Definición y Clasificación",
+      "audience": "clinician",
+      "content": "Existe divergencia en el umbral diagnóstico. Se requiere confirmación por MAPA/MDPA.",
+      "sub_blocks": [
+        {
+          "type": "key_value",
+          "title": "Umbrales Diagnósticos",
+          "data": {
+            "AHA/ACC 2025 (EE.UU.)": "≥ 130/80 mmHg (Estadio 1)",
+            "ESC/ESH/OMS (Europa)": "≥ 140/90 mmHg",
+            "PA Elevada (ESC 2024)": "TAS 120-139 o TAD 70-89 mmHg"
+          }
+        },
+        {
+          "type": "alert",
+          "title": "Confirmación Diagnóstica",
+          "level": "warning",
+          "content": "No depender solo de PA en consultorio. Usar MAPA (24h) o MDPA (Domicilio) para descartar HTA de bata blanca o enmascarada."
+        }
+      ]
+    },
+    {
+      "id": "htn_risk_strat",
+      "type": "section",
+      "title": "2. Estratificación de Riesgo",
+      "audience": "clinician",
+      "content": "El tratamiento se guía por el Riesgo Cardiovascular (RCV) Global.",
+      "sub_blocks": [
+        {
+          "type": "text",
+          "title": "Herramientas de Cálculo",
+          "content": "- **AHA/ACC 2025 (PREVENT™):** Incluye salud renal (TFGe, albuminuria) y determinantes sociales. Elimina raza.\n  *Tratar Estadio 1 (130-139) si riesgo a 10 años ≥ 7.5%.*\n- **ESC (SCORE2):** Tratar 'PA Elevada' (130-139) si riesgo a 10 años ≥ 10% o comorbilidades (ECV, ERC, DM)."
+        }
+      ]
+    },
+    {
+      "id": "htn_goals",
+      "type": "table",
+      "title": "3. Metas de Tratamiento",
+      "audience": "clinician",
+      "headers": [
+        "Población",
+        "Meta (AHA/ACC)",
+        "Meta (ESC 2024)"
+      ],
+      "rows": [
+        {
+          "group": "General",
+          "target_aha": "< 130/80 mmHg",
+          "target_esc": "TAS 120-129 mmHg"
+        },
+        {
+          "group": "Adulto Mayor (>65)",
+          "target_aha": "< 130/80 (Si tolera)",
+          "target_esc": "TAS 130-139 mmHg"
+        },
+        {
+          "group": "Muy Anciano / Frágil",
+          "target_aha": "Individualizar",
+          "target_esc": "Tan bajo como sea razonable"
+        }
+      ]
+    },
+    {
+      "id": "htn_treatment",
+      "type": "section",
+      "title": "4. Tratamiento Farmacológico",
+      "audience": "clinician",
+      "content": "Priorizar simplicidad y potencia inicial.",
+      "sub_blocks": [
+        {
+          "type": "text",
+          "title": "Estrategia de Inicio",
+          "content": "**Combinación en Píldora Única (SPC):** Iniciar con 2 fármacos en una sola tableta para la mayoría (esp. si PA ≥ 140/90).\n**Fármacos de 1ª Línea:**\n- IECA o ARA-II\n- Calcioantagonista (CCB)\n- Diurético Tiazídico/Tiazida-like"
+        },
+        {
+          "type": "alert",
+          "title": "Beta-bloqueantes",
+          "level": "info",
+          "content": "AHA y ESC los reservan para indicaciones específicas (IC, Post-IAM, FA). Solo ESH 2023 los mantiene como 1ª línea general."
+        },
+        {
+          "type": "checklist",
+          "title": "Novedades 2025",
+          "items": [
+            "Sustitutos de Sal (con Potasio): Recomendados si no hay ERC avanzada.",
+            "Agonistas GLP-1: Considerar si hay Obesidad/Sobrepeso.",
+            "Denervación Renal: Opción (IIb) en HTA no controlada o intolerancia."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "htn_screening",
+      "type": "section",
+      "title": "5. Casos Específicos",
+      "audience": "clinician",
+      "sub_blocks": [
+        {
+          "type": "text",
+          "title": "Hiperaldosteronismo Primario",
+          "content": "Ampliar cribado. Buscar en toda HTA resistente y considerar en la mayoría de hipertensos (está subdiagnosticado), independientemente del Potasio."
+        },
+        {
+          "type": "alert",
+          "title": "🚨 Crisis Hipertensiva (>180/120)",
+          "level": "critical",
+          "content": "- **Emergencia (Daño órgano):** Referir inmediato.\n- **Urgencia (Sin daño):** Bajar gradualmente (días)."
+        }
+      ]
+    },
+    {
+      "id": "htn_patient_info",
+      "type": "section",
+      "title": "Para el Paciente",
+      "audience": "both",
+      "sub_blocks": [
+        {
+          "type": "checklist",
+          "title": "Signos de Alarma",
+          "items": [
+            "Dolor torácico opresivo.",
+            "Cefalea intensa súbita.",
+            "Disnea (falta de aire).",
+            "Déficit neurológico focal."
+          ]
+        },
+        {
+          "type": "resource_link",
+          "link_id": "bp_log_a4",
+          "label": "🖨️ Hoja de Registro de Presión"
+        }
+      ]
+    }
+  ],
+  "meta": {
+    "source": "AHA/ACC 2025, ESC 2024, ESH 2023",
+    "version": "3.0_guidelines_update"
+  }
+}

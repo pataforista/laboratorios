@@ -1,0 +1,317 @@
+{
+    "id": "womens_health",
+    "title": "Salud de la Mujer: Guía Clínica Integral",
+    "audience": "clinician",
+    "tags": [
+        "ginecologia",
+        "obstetricia",
+        "prevencion",
+        "menopausia",
+        "adolescencia"
+    ],
+    "blocks": [
+        {
+            "id": "wh_intro_safety",
+            "type": "alert",
+            "title": "Nota de Seguridad",
+            "level": "info",
+            "audience": "clinician",
+            "content": "Verificar la presión arterial en cada visita; las enfermedades cardiovasculares son la principal causa de muerte en la mujer postmenopáusica."
+        },
+        {
+            "id": "wh_adolescence",
+            "type": "section",
+            "title": "1. Adolescencia y Pubertad: Construcción de Cimientos",
+            "audience": "clinician",
+            "content": "El objetivo es crear un entorno de confianza (\"servicios amigables\") para la detección de riesgos psicosociales y reproductivos.",
+            "sub_blocks": [
+                {
+                    "type": "text",
+                    "title": "Anamnesis y Entorno",
+                    "content": "Garantizar la privacidad y confidencialidad (sin padres si es necesario). Evaluar maduración sexual (Tanner), inicio de vida sexual, vacunación (VPH) y riesgos de violencia o abuso."
+                },
+                {
+                    "type": "accordion",
+                    "title": "Menstruación como Signo Vital",
+                    "items": [
+                        {
+                            "title": "Normalidad",
+                            "content": "Ciclos de 21-45 días, duración de 2-7 días. La irregularidad es común en los primeros 2 años post-menarquía por inmadurez del eje."
+                        },
+                        {
+                            "title": "Dismenorrea",
+                            "content": "Si es primaria, tratar con AINEs. Si no responde, valorar anticonceptivos o referir para descartar endometriosis."
+                        },
+                        {
+                            "title": "Sangrado Uterino Anormal (SUA)",
+                            "content": "Descartar coagulopatías, embarazo e infección. El 80% son funcionales anovulatorios."
+                        }
+                    ]
+                },
+                {
+                    "type": "checklist",
+                    "title": "Prevención e Intervenciones Clave",
+                    "items": [
+                        "Vacunación VPH: Fundamental antes del inicio de vida sexual (beneficio hasta los 26 años).",
+                        "Inicio Rápido (Quick Start): Si hay certeza razonable de no embarazo, iniciar anticoncepción el mismo día. Aumenta efectividad en adolescentes.",
+                        "Cribado Opt-out: Recomendar pruebas de ITS de forma rutinaria a menos que se rechacen explícitamente.",
+                        "Anticoncepción LARC: Implantes y DIU son altamente efectivos. Promover la 'doble protección' (+ condón)."
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "wh_reproductive",
+            "type": "section",
+            "title": "2. Edad Reproductiva: Salud Integral y Planificación",
+            "audience": "clinician",
+            "content": "Abarca desde la preconcepción hasta el manejo avanzado de anticoncepción y salud sexual.",
+            "sub_blocks": [
+                {
+                    "type": "accordion",
+                    "title": "Consejería: Toma de Decisiones Compartida (SDM)",
+                    "items": [
+                        {
+                            "title": "Cambio de Paradigma",
+                            "content": "La autonomía de la paciente es prioridad. No asuma que la eficacia es el único valor; considere control de sangrado, ausencia de hormonas o retorno a la fertilidad."
+                        },
+                        {
+                            "title": "Modelo PHI CARE",
+                            "content": "1. **P**ast (experiencias), 2. **H**ealth (historia/MEC), 3. **I**mportance (prioridad), 4. **C**ounsel (alinear opciones), 5. **A**utonomy (respetar decisión), 6. **R**eview (uso), 7. **E**xperience (validar cambios)."
+                        },
+                        {
+                            "title": "Comunicación de Riesgos",
+                            "content": "Use frecuencias naturales (ej. '9 de cada 100 mujeres') en lugar de porcentajes abstractos o Índice de Pearl."
+                        }
+                    ]
+                },
+                {
+                    "type": "accordion",
+                    "title": "Actualizaciones de Seguridad (MEC 2024-2025)",
+                    "items": [
+                        {
+                            "title": "Enfermedad Renal (ERC)",
+                            "content": "En hemodiálisis o diálisis peritoneal, los hormonales combinados (AHC) son **Categoría 4** (riesgo inaceptable). Preferir DIU de cobre, implante o DIU-LNG."
+                        },
+                        {
+                            "title": "Obesidad e IMC ≥ 30",
+                            "content": "La AE (LNG o UPA) puede tener eficacia reducida (MEC 2). El Gold Standard para AE en obesidad es el **DIU de cobre**."
+                        },
+                        {
+                            "title": "Cáncer de Mama",
+                            "content": "Cáncer actual: Todos los hormonales son **Categoría 4**. Si han pasado >5 años sin enfermedad, bajan a **Categoría 3** (preferir DIU de cobre)."
+                        }
+                    ]
+                },
+                {
+                    "type": "accordion",
+                    "title": "Manejo de Procedimientos y Efectos",
+                    "items": [
+                        {
+                            "title": "Dolor en Inserción de DIU",
+                            "content": "Se recomienda **lidocaína paracervical** o tópica. No se recomienda misoprostol de rutina."
+                        },
+                        {
+                            "title": "Sangrado con Implantes",
+                            "content": "Curso corto (5-7 días) de AINEs (ibuprofeno) o AHC temporales para estabilizar el endometrio ante sangrado molesto."
+                        }
+                    ]
+                },
+                {
+                    "type": "accordion",
+                    "title": "Salud Sexual y Prevención ITS",
+                    "items": [
+                        {
+                            "title": "Doxy-PEP",
+                            "content": "Doxiciclina 200mg (dosis única) post-coital (dentro de 72h) para reducir sífilis/clamidia en poblaciones de alto riesgo."
+                        },
+                        {
+                            "title": "Tratamiento Gonorrea",
+                            "content": "**Ceftriaxona 500mg IM** es el estándar. Si no se descartó Clamidia, añadir Doxiciclina (la azitromicina ya no es primera línea dual)."
+                        },
+                        {
+                            "title": "Población Trans/NB",
+                            "content": "Use lenguaje inclusivo ('personas con útero'). No asuma que la testosterona es anticonceptiva. Documente nombre elegido y pronombres."
+                        }
+                    ]
+                },
+                {
+                    "type": "text",
+                    "title": "Atención Preconcepcional y Prenatal",
+                    "content": "Suplementación con Ácido Fólico (<0.4mg o 5mg 3 meses antes). Control prenatal: Iniciar <sem 14, mín 5 controles, ideal 10. Tamizaje VIH/Sífilis/Diabetes/Preeclampsia."
+                }
+            ]
+        },
+        {
+            "id": "wh_menopause",
+            "type": "section",
+            "title": "3. Climaterio, Menopausia y Postmenopausia",
+            "audience": "clinician",
+            "content": "El enfoque cambia hacia la preservación de la calidad de vida, prevención de enfermedades crónicas y manejo de síntomas.",
+            "sub_blocks": [
+                {
+                    "type": "accordion",
+                    "title": "Diagnóstico: Enfoque Clínico y STRAW+10",
+                    "items": [
+                        {
+                            "title": "Diagnóstico Clínico",
+                            "content": "En mujeres >45 años con síntomas vasomotores e irregularidades menstruales, el diagnóstico es eminentemente clínico. No se requieren niveles hormonales (FSH, estradiol) de rutina."
+                        },
+                        {
+                            "title": "Uso de FSH",
+                            "content": "Solo si hay duda diagnóstica:\n- 40-45 años con síntomas atípicos.\n- Sospecha de Insuficiencia Ovárica Prematura (IOP) en <40 años (FSH >25-40 UI/L en 2 tomas).\n- Mujeres histerectomizadas para confirmar estado.\n- *Nota:* No pedir si usa anticonceptivos hormonales."
+                        },
+                        {
+                            "title": "Etapas STRAW+10",
+                            "content": "Estándar de oro. La transición tardía se marca por intervalos de amenorrea ≥ 60 días."
+                        }
+                    ]
+                },
+                {
+                    "type": "checklist",
+                    "title": "Evaluación Integral Inicial",
+                    "items": [
+                        "Historia Clínica: Riesgo cardiovascular, cáncer de mama, fracturas y depresión.",
+                        "Laboratorios: Perfil lipídico, glucosa sérica (metabólico) y TSH (descartar patología tiroidea).",
+                        "Gabinete: Mastografía y citología vigente. USG pélvico si hay sangrado anormal antes de THM.",
+                        "Calidad de Vida: Usar Menopause Rating Scale (MRS) para cuantificar severidad."
+                    ]
+                },
+                {
+                    "type": "calculator",
+                    "title": "Calculadora Breve MRS",
+                    "audience": "clinician",
+                    "fn": "mrs_scale",
+                    "inputs": [
+                        {
+                            "key": "somatic",
+                            "label": "Somáticos (0-16)",
+                            "unit": "pts",
+                            "min": 0,
+                            "max": 16,
+                            "required": true
+                        },
+                        {
+                            "key": "psych",
+                            "label": "Psicológicos (0-16)",
+                            "unit": "pts",
+                            "min": 0,
+                            "max": 16,
+                            "required": true
+                        },
+                        {
+                            "key": "urogen",
+                            "label": "Urogenitales (0-12)",
+                            "unit": "pts",
+                            "min": 0,
+                            "max": 12,
+                            "required": true
+                        }
+                    ]
+                },
+                {
+                    "type": "accordion",
+                    "title": "Prevención y Cribado",
+                    "items": [
+                        {
+                            "title": "Salud Ósea",
+                            "content": "Densitometría (DEXA) universal en ≥65 años. En <65 años solo si hay factores de riesgo (usar FRAX)."
+                        },
+                        {
+                            "title": "Salud Cardiovascular",
+                            "content": "Meta <130/80 mmHg. Considerar Lipoproteína (a) única para riesgo genético."
+                        },
+                        {
+                            "title": "Estilo de Vida",
+                            "content": "Dieta Mediterránea/DASH. Ejercicio de resistencia (fuerza) ≥2 veces/semana para evitar obesidad sarcopénica. Terapia Cognitivo-Conductual (CBT) para sofocos e insomnio."
+                        }
+                    ]
+                },
+                {
+                    "type": "accordion",
+                    "title": "Terapia Hormonal (THM) y Alternativas",
+                    "items": [
+                        {
+                            "title": "Ventana de Oportunidad",
+                            "content": "Maximiza beneficios si se inicia <60 años o dentro de 10 años post-menopausia."
+                        },
+                        {
+                            "title": "Esquemas",
+                            "content": "- Con útero: Estrógeno + Progestágeno ( micronizada o didrogesterona preferida).\n- Sin útero: Solo estrógenos.\n- Vía Transdérmica: Preferida en obesidad, HTA, riesgo de trombosis o tabaquismo."
+                        },
+                        {
+                            "title": "Perimenopausia / Mirena",
+                            "content": "Mantener anticoncepción hasta 1 año de amenorrea (si >50a). El **DIU-LNG 52mg** (ej. Mirena) es ideal para 'doble protección' (anticoncepción + protección endometrial). Duración extendida a **8 años**."
+                        },
+                        {
+                            "title": "S. Genitourinario (SGM)",
+                            "content": "1. Hidratantes/Lubricantes.\n2. Estrógenos vaginales a dosis bajas (seguros, mínima absorción sistémica)."
+                        },
+                        {
+                            "title": "No Hormonales",
+                            "content": "Antagonistas NK3 (Fezolinetant) para sofocos. Segunda línea: ISRS/IRSN, gabapentina o clonidina."
+                        }
+                    ]
+                },
+                {
+                    "type": "alert",
+                    "title": "Seguimiento y Seguridad",
+                    "level": "caution",
+                    "content": "Revisión anual riesgo-beneficio. Reducción a dosis mínima efectiva.\n**¡ALERTA!** Cualquier sangrado postmenopáusico requiere evaluación inmediata (USG/biopsia) para descartar cáncer de endometrio."
+                }
+            ]
+        },
+        {
+            "id": "wh_screening",
+            "type": "table",
+            "title": "4. Tamizaje Oncológico (Cáncer)",
+            "audience": "clinician",
+            "headers": [
+                "Patología",
+                "Método",
+                "Frecuencia y Edad"
+            ],
+            "rows": [
+                [
+                    "Cérvico-uterino",
+                    "Citología (Pap) o Test VPH",
+                    "Pap cada 3 años (21-29a). VPH cada 5 años (30-65a) estándar preferido."
+                ],
+                [
+                    "Mama",
+                    "Mamografía",
+                    "Iniciar a los 40-50 años cada 1-2 años hasta los 74 años."
+                ],
+                [
+                    "Endometrio",
+                    "Eco Transvaginal",
+                    "Solo ante sangrado postmenopáusico (Endometrio >4-5mm requiere biopsia)."
+                ]
+            ]
+        },
+        {
+            "id": "wh_referral",
+            "type": "section",
+            "title": "5. Criterios de Referencia al Especialista",
+            "audience": "clinician",
+            "content": "Derivar al segundo nivel (Ginecología) en los siguientes casos:",
+            "sub_blocks": [
+                {
+                    "type": "list",
+                    "items": [
+                        "**Sangrado:** Postmenopáusico, SUA persistente o anemia refractaria.",
+                        "**Dolor:** Dismenorrea que no cede con AINEs/ACO (sospecha endometriosis) o dolor crónico.",
+                        "**Patología:** Miomas >14 cm, crecimiento rápido, o quistes complejos.",
+                        "**Infertilidad:** Sin embarazo tras 12 meses (6 meses si >35 años).",
+                        "**Riesgo Obstétrico:** Comorbilidades graves (Preeclampsia previa, diabetes descompensada)."
+                    ]
+                }
+            ]
+        }
+    ],
+    "meta": {
+        "source": "Consenso Nacional e Internacional de Ginecología y Obstetricia",
+        "last_reviewed": "2026-02-11",
+        "notes": "Guía para médico general enfocada en prevención y tamizaje oportuno."
+    }
+}

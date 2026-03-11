@@ -1,0 +1,90 @@
+{
+  "id": "lifestyle_nutrition",
+  "title": "Alimentación Saludable (MNT)",
+  "audience": "both",
+  "tags": [
+    "lifestyle",
+    "estilo de vida",
+    "dieta",
+    "milpa",
+    "clinician"
+  ],
+  "blocks": [
+    {
+      "id": "nutrition_clinical_intro",
+      "type": "section",
+      "title": "Terapia Nutricional Médica",
+      "audience": "clinician",
+      "content": "La intervención nutricional es primera línea en HTA, Dislipidemia y Diabetes. El objetivo es reducir el riesgo cardiovascular, no solo el peso.",
+      "sub_blocks": [
+        {
+          "id": "nutrition_assessment",
+          "type": "list",
+          "title": "Evaluación Rápida (Screening)",
+          "items": [
+            "¿Cuántas bebidas azucaradas consume al día? (Refrescos, jugos).",
+            "¿Come frutas/verduras diariamente?",
+            "¿Con qué frecuencia come alimentos ultraprocesados o comida rápida?",
+            "¿Agrega sal extra a la comida ya preparada?"
+          ]
+        },
+        {
+          "id": "nutrition_targets_rx",
+          "type": "key_value",
+          "title": "Metas de Prescripción",
+          "data": {
+            "Sodio": "< 2 g/día (aprox. 1 cucharadita de sal total).",
+            "Azúcar Añadida": "< 10% de la energía total (OMS).",
+            "Fibra": "> 25 g/día (Leguminosas, verduras)."
+          }
+        }
+      ]
+    },
+    {
+      "id": "nutrition_milpa",
+      "type": "section",
+      "title": "Recurso: La Dieta de la Milpa",
+      "audience": "both",
+      "content": "Explique al paciente este modelo culturalmente relevante:",
+      "items": [
+        "**Maíz:** Fuente de energía y fibra (preferir tortilla nixtamalizada).",
+        "**Frijol:** Proteína vegetal y hierro (combinar con maíz = proteína completa).",
+        "**Calabaza/Quelites:** Vitaminas y antioxidantes locales.",
+        "**Chile:** Mejora la digestión y aporta vitamina C."
+      ]
+    },
+    {
+      "id": "nutrition_plate",
+      "type": "section",
+      "title": "Recurso: El Plato del Bien Comer",
+      "audience": "both",
+      "content": "Herramienta visual para explicar porciones:",
+      "sub_blocks": [
+        {
+          "type": "list",
+          "title": "Instrucciones para el Paciente",
+          "items": [
+            "🟢 **Verduras y Frutas:** \"Llene la mitad de su plato con esto.\"",
+            "🟡 **Cereales:** \"Un cuarto del plato (arroz, pasta, tortilla).\"",
+            "🔴 **Proteínas:** \"El otro cuarto (pollo, pescado, frijoles). Evite carnes rojas.\""
+          ]
+        }
+      ]
+    },
+    {
+      "id": "nutrition_tips_script",
+      "type": "section",
+      "title": "Consejos Prácticos (Script)",
+      "audience": "clinician",
+      "items": [
+        "\"No beba sus calorías: cambie el refresco por agua simple.\"",
+        "\"Más mercado y menos supermercado: prefiera alimentos sin etiqueta.\"",
+        "\"Coma despacio y sin distracciones (TV o celular).\""
+      ]
+    }
+  ],
+  "meta": {
+    "source": "Secretaría de Salud México + OMS Guidelines",
+    "version": "2.0_clinician_focused"
+  }
+}

@@ -1,0 +1,118 @@
+{
+    "id": "psych_bipolar",
+    "title": "Trastorno bipolar",
+    "audience": "clinician",
+    "tags": [
+        "bipolar",
+        "mania",
+        "tratamiento"
+    ],
+    "blocks": [
+        {
+            "id": "psych_bipolar_diagnosis",
+            "type": "section",
+            "title": "Diagnóstico",
+            "audience": "clinician",
+            "content": "El diagnóstico requiere historia de episodios maníacos/hipomaníacos y depresión."
+        },
+        {
+            "id": "psych_bipolar_mania",
+            "type": "checklist",
+            "title": "Características de manía/hipomanía",
+            "audience": "clinician",
+            "items": [
+                "Estado de ánimo elevado/irritable con aumento de energía.",
+                "Disminución de necesidad de sueño.",
+                "Aumento de actividad, verborrea, fuga de ideas.",
+                "Conductas de riesgo o juicio disminuido.",
+                "Duración típica: manía ≥1 semana o cualquier duración con hospitalización; hipomanía ≥4 días."
+            ]
+        },
+        {
+            "id": "psych_bipolar_treatment",
+            "type": "section",
+            "title": "Tratamiento inicial",
+            "audience": "clinician",
+            "content": "Seleccione estabilizadores del estado de ánimo y antipsicóticos según fase clínica.",
+            "sub_blocks": [
+                {
+                    "id": "psych_bipolar_general",
+                    "type": "list",
+                    "title": "Recomendaciones generales",
+                    "audience": "clinician",
+                    "items": [
+                        "Manía aguda: estabilizador del ánimo y/o antipsicótico; considerar hospitalización si hay riesgo.",
+                        "Depresión bipolar: evitar antidepresivos en monoterapia; usar opciones con evidencia.",
+                        "Psicoeducación, regularidad de sueño y reducción de sustancias son claves."
+                    ]
+                },
+                {
+                    "id": "psych_bipolar_warning",
+                    "type": "alert",
+                    "title": "Advertencia",
+                    "level": "warning",
+                    "audience": "clinician",
+                    "content": "Los antidepresivos en monoterapia pueden precipitar manía o ciclado rápido."
+                }
+            ]
+        },
+        {
+            "id": "psych_bipolar_printables",
+            "type": "section",
+            "title": "Material para el paciente",
+            "audience": "clinician",
+            "content": "Refuerce autocuidado y adherencia.",
+            "sub_blocks": [
+                {
+                    "id": "psych_bipolar_print_meds",
+                    "type": "resource_link",
+                    "audience": "clinician",
+                    "link_id": "medication_log_a4",
+                    "label": "🖨️ Registro de medicación"
+                },
+                {
+                    "id": "psych_bipolar_print_sleep",
+                    "type": "resource_link",
+                    "audience": "clinician",
+                    "link_id": "sleep_hygiene_checklist_a4",
+                    "label": "🖨️ Checklist de higiene del sueño"
+                },
+                {
+                    "id": "psych_bipolar_infographic",
+                    "type": "resource_link",
+                    "audience": "both",
+                    "link_id": "bipolar_termometro_image",
+                    "label": "📊 Ver Infografía: Termómetro del Ánimo"
+                }
+            ]
+        },
+        {
+            "id": "psych_bipolar_guidelines",
+            "type": "resource_list",
+            "title": "Guías clínicas recomendadas",
+            "audience": "clinician",
+            "items": [
+                {
+                    "name": "NICE CG185: Bipolar disorder (2014, updated)",
+                    "link": "https://www.nice.org.uk/guidance/cg185",
+                    "description": "Guía internacional para diagnóstico y manejo."
+                },
+                {
+                    "name": "CANMAT/ISBD Bipolar Guidelines (2018/2023 updates)",
+                    "link": "https://www.canmat.org/resources",
+                    "description": "Recomendaciones basadas en evidencia."
+                },
+                {
+                    "name": "CENETEC México: Trastorno bipolar",
+                    "link": "https://www.gob.mx/cenetec/acciones-y-programas/guias-de-practica-clinica",
+                    "description": "Consultar la guía nacional vigente."
+                }
+            ]
+        }
+    ],
+    "meta": {
+        "source": "guias_internacionales_y_nacionales",
+        "last_reviewed": "2026-01-06",
+        "notes": "Personalizar tratamiento según fase y comorbilidades."
+    }
+}

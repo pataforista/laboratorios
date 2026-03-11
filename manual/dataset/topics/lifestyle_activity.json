@@ -1,0 +1,97 @@
+{
+  "id": "lifestyle_activity",
+  "title": "Actividad Física (Prescripción)",
+  "audience": "both",
+  "tags": [
+    "lifestyle",
+    "ejercicio",
+    "metabolico",
+    "fitt",
+    "clinician"
+  ],
+  "blocks": [
+    {
+      "id": "activity_clinical_intro",
+      "type": "section",
+      "title": "Evaluación Clínica",
+      "audience": "clinician",
+      "content": "Antes de prescribir, evalúe el nivel actual y riesgo cardiovascular.",
+      "sub_blocks": [
+        {
+          "id": "activity_safety_check",
+          "type": "alert",
+          "title": "Contraindicaciones Absolutas",
+          "level": "critical",
+          "content": "No iniciar si: Angina inestable, PA descontrolada (>180/110), Arritmia no controlada, Estenosis aórtica severa."
+        }
+      ]
+    },
+    {
+      "id": "activity_prescription_fitt",
+      "type": "section",
+      "title": "Modelo de Prescripción FITT",
+      "audience": "clinician",
+      "sub_blocks": [
+        {
+          "id": "fitt_table",
+          "type": "key_value",
+          "title": "Parámetros",
+          "data": {
+            "Frecuencia": "3-5 días/semana (mínimo).",
+            "Intensidad": "Moderada (poder hablar pero no cantar) a Vigorosa.",
+            "Tiempo": "150 min/sem (Moderada) o 75 min/sem (Vigorosa).",
+            "Tipo": "Aeróbico (caminar, nadar) + Fuerza (2 días)."
+          }
+        },
+        {
+          "id": "activity_calc_mets",
+          "type": "calculator",
+          "title": "Calculadora de Gasto (METs)",
+          "fn": "mets_calc",
+          "inputs": [
+            {
+              "key": "weight",
+              "label": "Peso (kg)",
+              "unit": "kg"
+            },
+            {
+              "key": "mets",
+              "label": "METs (Intensidad)",
+              "unit": "MET"
+            },
+            {
+              "key": "duration",
+              "label": "Duración (min)",
+              "unit": "min"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "activity_patient_menu",
+      "type": "section",
+      "title": "Menú de Opciones para el Paciente",
+      "audience": "both",
+      "content": "Sugerencias para iniciar (Bajo Impacto):",
+      "items": [
+        "**Caminata Brisk:** Paso constante (como si tuviera prisa).",
+        "**Transporte Activo:** Bajarse una parada antes.",
+        "**Baile en Casa:** 3 canciones seguidas = 10 minutos.",
+        "**Pausas Activas:** Levantarse cada hora (Romper el sedentarismo)."
+      ]
+    },
+    {
+      "id": "activity_sedentary_warning",
+      "type": "alert",
+      "title": "Advertencia sobre Sedentarismo",
+      "level": "warning",
+      "audience": "both",
+      "content": "Estar sentado >8 horas al día anula gran parte de los beneficios del ejercicio. Recomiende micro-pausas."
+    }
+  ],
+  "meta": {
+    "source": "ACSM Guidelines + OMS 2020",
+    "version": "2.0_clinician_fitt"
+  }
+}

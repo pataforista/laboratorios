@@ -1,0 +1,64 @@
+{
+  "id": "lifestyle_oral",
+  "title": "Higiene Bucal y Salud Sistémica",
+  "audience": "both",
+  "tags": ["lifestyle", "oral", "diabetes", "cardiovascular"],
+  "blocks": [
+    {
+      "id": "oral_systemic_connection",
+      "type": "alert",
+      "title": "¿Sabía que...",
+      "level": "warning",
+      "audience": "both",
+      "content": "Existe una relación directa entre su boca y su cuerpo:\n\n1. **Diabetes:** La infección de encías sube el azúcar. Si no controla su boca, no controlará su diabetes.\n2. **Corazón:** Las bacterias de la boca pueden viajar a las válvulas del corazón."
+    },
+    {
+      "id": "oral_technique_section",
+      "type": "section",
+      "title": "Técnica de Cepillado (Bass Modificada)",
+      "audience": "both",
+      "content": "No se trata de fuerza, sino de técnica. El cepillado debe durar 2 minutos.",
+      "sub_blocks": [
+        {
+          "id": "brushing_steps",
+          "type": "key_value",
+          "title": "Paso a Paso",
+          "data": {
+            "Ángulo": "Coloque el cepillo a 45° (inclinado hacia la encía).",
+            "Movimiento": "Haga círculos pequeños y suaves (vibración), no líneas rectas.",
+            "Barrido": "Termine barriendo hacia abajo (dientes de arriba) o hacia arriba (dientes de abajo).",
+            "Lengua": "No olvide cepillar la lengua de atrás hacia adelante."
+          }
+        }
+      ]
+    },
+    {
+      "id": "oral_routine_checklist",
+      "type": "checklist",
+      "title": "Rutina Diaria Ideal",
+      "items": [
+        "Cepillado 3 veces al día (después de cada comida).",
+        "Uso de Hilo Dental: 1 vez al día (preferiblemente en la noche, antes de cepillarse).",
+        "Cambiar el cepillo: Cada 3 meses o después de enfermarse (gripe/infección).",
+        "Visita al dentista: Al menos 2 veces al año (limpieza profesional)."
+      ]
+    },
+    {
+      "id": "oral_warning_signs",
+      "type": "warning",
+      "title": "⛔ Signos de Alarma",
+      "level": "danger",
+      "content": "Consulte a su dentista de inmediato si nota:",
+      "items": [
+        "Sangrado al cepillarse (¡NO es normal!)",
+        "Encías rojas, inflamadas o que se retraen (dientes largos).",
+        "Mal aliento que no desaparece.",
+        "Dientes flojos o que se mueven."
+      ]
+    }
+  ],
+  "meta": {
+    "source": "manual_local_comorbilidades + ADA_Guidelines",
+    "version": "2.1_interactive"
+  }
+}

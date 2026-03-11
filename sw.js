@@ -1,24 +1,23 @@
-// LabNotes PWA Service Worker v1.0
-const CACHE_NAME = "labnotes-v1.0";
+// LabNotes PWA Service Worker v3.1
+const CACHE_NAME = "labnotes-v3.1";
+
 const STATIC_ASSETS = [
   "./",
   "./index.html",
   "./styles.css",
   "./app.js",
-  "./components.js",
+  "./clinical.js",
   "./manifest.json",
   "./icon-192.png",
   "./icon-512.png",
-  "./lab_catalog.json",
-  "./AnimatedList.css",
-  "./BubbleMenu.css",
-  "./ElectricBorder.css",
-  "./Galaxy.css"
+  "./manual/index.html"
 ];
 
-// Network-First files (Data and Logic)
+// Network-First files (always try to get fresh)
 const FRESH_ASSETS = [
   "./app.js",
+  "./clinical.js",
+  "./index.html",
   "./lab_catalog.json"
 ];
 
@@ -40,7 +39,6 @@ self.addEventListener("activate", (event) => {
 
 self.addEventListener("fetch", (event) => {
   const url = new URL(event.request.url);
-  const isStatic = STATIC_ASSETS.some(asset => url.pathname.endsWith(asset.replace('./', '')));
   const isFresh = FRESH_ASSETS.some(asset => url.pathname.endsWith(asset.replace('./', '')));
 
   if (isFresh) {

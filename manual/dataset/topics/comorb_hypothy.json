@@ -1,0 +1,155 @@
+{
+  "id": "comorb_hypothy",
+  "title": "Manejo de Hipotiroidismo (Guía detallada)",
+  "audience": "both",
+  "tags": [
+    "endocrino",
+    "tiroides",
+    "farmacología",
+    "guias_2025"
+  ],
+  "blocks": [
+    {
+      "id": "hypo_intro_alert",
+      "type": "alert",
+      "title": "Guía Práctica 2024-2025",
+      "level": "info",
+      "audience": "both",
+      "content": "Basado en LATS, ATA, ETA y NICE. El diagnóstico es fundamentalmente bioquímico."
+    },
+    {
+      "id": "hypo_diagnosis",
+      "type": "section",
+      "title": "1. Diagnóstico (Cascada)",
+      "audience": "clinician",
+      "content": "No se recomienda cribado universal, solo búsqueda en grupos de riesgo (mujeres >60, antecedentes, autoinmunidad).",
+      "sub_blocks": [
+        {
+          "type": "list",
+          "title": "Estrategia de Pruebas",
+          "items": [
+            "**1. TSH (Inicial):** Primera línea. Relación inversa logarítmica con T4.",
+            "**2. T4 Libre (Confirmatoria):** Pedir si TSH elevada. No pedir T3 de rutina.",
+            "**3. Anti-TPO (Etiología):** Para confirmar Hashimoto y predecir progresión."
+          ]
+        },
+        {
+          "type": "key_value",
+          "title": "Clasificación",
+          "data": {
+            "Hipotiroidismo Clínico": "TSH ↑ Elevada + T4L ↓ Baja",
+            "Hipo. Subclínico (HSC)": "TSH ↑ Elevada + T4L Normal (Confirmar en 2-3 meses)"
+          }
+        }
+      ]
+    },
+    {
+      "id": "hypo_treatment",
+      "type": "section",
+      "title": "2. Tratamiento con Levotiroxina (LT4)",
+      "audience": "clinician",
+      "content": "Monoterapia con LT4 es el estándar. Se debe tomar en ayunas (30-60 min antes desayuno) o al acostarse (3h después de cena).",
+      "sub_blocks": [
+        {
+          "type": "text",
+          "title": "Dosis de Inicio",
+          "content": "- **Adultos Jóvenes/Sanos (<60 años):** Dosis plena **1.6 - 1.8 mcg/kg/día**.\n- **Adultos >60 años o Cardiópatas:** \"Start low, go slow\". Iniciar **12.5 - 50 mcg/día**. Subir 12.5-25 mcg cada 6-8 semanas.\n- **Hipo. Subclínico:** Iniciar **25-75 mcg/día**."
+        },
+        {
+          "type": "table",
+          "title": "¿Cuándo tratar el Subclínico?",
+          "headers": [
+            "TSH",
+            "Conducta"
+          ],
+          "rows": [
+            {
+              "condition": "> 10 mUI/L",
+              "action": "Tratar a todos (Excep. muy ancianos)."
+            },
+            {
+              "condition": "4.5 - 10 mUI/L",
+              "action": "Tratar SI: Síntomas, Embarazo, Anti-TPO+, Bocio o Riesgo CV alto."
+            },
+            {
+              "condition": "< 10 (Ancianos >70)",
+              "action": "Generalmente NO tratar (Riesgo arritmias > Beneficio)."
+            }
+          ]
+        },
+        {
+          "type": "alert",
+          "title": "🤰 Embarazo (Urgente)",
+          "level": "critical",
+          "content": "Aumentar dosis **20-30%** inmediatamente tras confirmar embarazo. Meta TSH 1er trim: < 2.5."
+        }
+      ]
+    },
+    {
+      "id": "hypo_monitoring",
+      "type": "section",
+      "title": "3. Seguimiento y Metas",
+      "audience": "clinician",
+      "sub_blocks": [
+        {
+          "type": "key_value",
+          "title": "Frecuencia de Controles",
+          "data": {
+            "Ajuste de Dosis": "Cada 6-8 Semanas (No antes)",
+            "Estabilidad": "Cada 6-12 Meses",
+            "Cambio de Marca": "Controlar en 6-8 semanas"
+          }
+        },
+        {
+          "type": "table",
+          "title": "Metas de TSH",
+          "headers": [
+            "Población",
+            "Meta TSH (mUI/L)"
+          ],
+          "rows": [
+            {
+              "group": "Población General",
+              "target": "0.4 - 4.0"
+            },
+            {
+              "group": "Adulto Mayor (>70)",
+              "target": "4.0 - 6.0 (Más laxo para proteger corazón/hueso)"
+            },
+            {
+              "group": "Embarazo",
+              "target": "< 2.5 (1er Trim) / < 3.0 (2do/3er)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hypo_patient_info",
+      "type": "section",
+      "title": "Para el Paciente",
+      "audience": "both",
+      "sub_blocks": [
+        {
+          "type": "checklist",
+          "title": "Reglas de Oro de la Pastilla",
+          "items": [
+            "Tómela con agua sola, lejos de comidas.",
+            "Espere 4 HORAS si toma: Calcio, Hierro, Antiácidos (Omeprazol) o Soja.",
+            "Si olvida una dosis, puede tomarla cuando recuerde (si es el mismo día) o tomar 2 al día siguiente (la vida media es larga, 7 días).",
+            "No cambie de marca sin avisar."
+          ]
+        },
+        {
+          "type": "resource_link",
+          "link_id": "medication_log_a4",
+          "label": "🖨️ Registro de Medicación"
+        }
+      ]
+    }
+  ],
+  "meta": {
+    "source": "LATS, ATA, ETA, NICE (2024-2025)",
+    "version": "3.0_comprehensive_guide"
+  }
+}

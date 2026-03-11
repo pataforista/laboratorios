@@ -1,0 +1,53 @@
+{
+    "id": "clozapine_cigh_traffic_light_a4",
+    "title": "Semáforo de salud intestinal en clozapina",
+    "format": "a4",
+    "template": "guide_checklist",
+    "sections": [
+        {
+            "title": "🟢 Zona verde (seguro)",
+            "items": [
+                "Evacúa diariamente o cada 2 días como máximo.",
+                "Heces suaves, sin dolor ni esfuerzo excesivo.",
+                "Abdomen blando, sin hinchazón.",
+                "Continuar medicación y laxantes preventivos si están indicados.",
+                "Mantener hidratación y caminatas ligeras."
+            ]
+        },
+        {
+            "title": "🟡 Zona amarilla (alerta temprana)",
+            "items": [
+                "Han pasado 2 días sin evacuar.",
+                "Heces duras o esfuerzo importante.",
+                "Sensación de evacuación incompleta.",
+                "Gases o molestia abdominal leve.",
+                "Acción: aumentar vigilancia y usar dosis de rescate indicada por el médico.",
+                "Prohibido: suplementos de fibra en polvo (psyllium, Metamucil, salvado)."
+            ]
+        },
+        {
+            "title": "🔴 Zona roja (urgencia médica)",
+            "items": [
+                "Más de 3-4 días sin evacuar o sin expulsar gases.",
+                "Diarrea por rebosamiento (manchado líquido con sensación de estreñimiento).",
+                "Abdomen distendido, duro o doloroso.",
+                "Vómitos, fiebre o confusión repentina.",
+                "Acción inmediata: no administrar más clozapina ni laxantes orales y acudir a urgencias."
+            ]
+        },
+        {
+            "title": "📝 Lista de chequeo diaria",
+            "items": [
+                "¿Evacuó el intestino hoy? (si no, anotar días).",
+                "¿Hubo dificultad o dolor?",
+                "¿Tomó el laxante preventivo?",
+                "¿Tiene la panza hinchada?",
+                "¿Ha tenido náuseas o vómitos?"
+            ]
+        }
+    ],
+    "meta": {
+        "source": "handout_clozapina_cigh",
+        "last_reviewed": "2026-01-06"
+    }
+}

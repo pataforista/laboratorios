@@ -1,0 +1,156 @@
+{
+    "id": "prevent_cancer",
+    "title": "Prevención y Tamizaje de Cáncer",
+    "audience": "both",
+    "tags": [
+        "cancer",
+        "prevencion",
+        "oncologia",
+        "tamizaje",
+        "guias_2025"
+    ],
+    "blocks": [
+        {
+            "id": "cancer_intro_alert",
+            "type": "alert",
+            "title": "Actualización 2024-2025",
+            "level": "info",
+            "audience": "both",
+            "content": "Síntesis de guías clínicas actualizadas (USPSTF, NCCN, ACS, SEOM) sobre tamizaje oncológico y medidas preventivas."
+        },
+        {
+            "id": "cancer_crc",
+            "type": "section",
+            "title": "1. Cáncer Colorrectal (CCR)",
+            "audience": "both",
+            "content": "Cambio relevante: Adelantar inicio de cribado a los 45 años.",
+            "sub_blocks": [
+                {
+                    "type": "text",
+                    "title": "Población de Riesgo Promedio",
+                    "content": "**Inicio:** 45 años (Grado B USPSTF).\n**Métodos:**\n- FIT Anual (Alta adherencia, no inferior a colonoscopia única a largo plazo).\n- Colonoscopia cada 10 años.\n- ADN en heces cada 3 años.\n**Finalización:** 75 años. (76-85 a criterio individual)."
+                },
+                {
+                    "type": "text",
+                    "title": "Alto Riesgo",
+                    "content": "- **Historia Familiar (1º grado):** Iniciar a los 40 años o 10 años antes del caso índice.\n- **S. Lynch:** Colonoscopia anual/bienal desde los 20-25 años.\n- **PAF:** Sigmoidoscopia anual desde pubertad (10-12 años)."
+                }
+            ]
+        },
+        {
+            "id": "cancer_breast",
+            "type": "section",
+            "title": "2. Cáncer de Mama",
+            "audience": "both",
+            "content": "Evidencia apoya inicio más temprano y evaluación de densidad.",
+            "sub_blocks": [
+                {
+                    "type": "text",
+                    "title": "Riesgo Promedio",
+                    "content": "**Inicio:** 40 años (USPSTF 2024).\n**Frecuencia:** Bienal (USPSTF) o Anual (NCCN/ACS, esp. 45-54 años).\n**Finalización:** 74 años o mientras esperanza de vida >10 años."
+                },
+                {
+                    "type": "alert",
+                    "title": "Densidad Mamaria",
+                    "level": "warning",
+                    "content": "Mamas densas (BI-RADS C/D) tienen mayor riesgo y menor sensibilidad mamográfica. Considerar eco/RM complementaria."
+                },
+                {
+                    "type": "text",
+                    "title": "Alto Riesgo (BRCA, RT torácica previ)",
+                    "content": "RM anual + Mamografía comenzando a los 25-30 años."
+                }
+            ]
+        },
+        {
+            "id": "cancer_cervix",
+            "type": "section",
+            "title": "3. Cáncer de Cérvix",
+            "audience": "both",
+            "content": "Prioridad a detección molecular VPH y auto-toma.",
+            "sub_blocks": [
+                {
+                    "type": "list",
+                    "title": "Estrategia por Edad",
+                    "items": [
+                        "< 21 años: No cribar.",
+                        "21-29 años: Citología sola cada 3 años.",
+                        "30-65 años: VPH cada 5 años (preferido), Cotest cada 5 o Citología cada 3.",
+                        "> 65 años: Cesar si historial negativo adecuado.",
+                        "NOVEDAD 2025: FDA aprueba auto-recolección vaginal para VPH."
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "cancer_lung",
+            "type": "section",
+            "title": "4. Cáncer de Pulmón",
+            "audience": "both",
+            "content": "Cribado con TAC de Baja Dosis (LDCT) en fumadores.",
+            "sub_blocks": [
+                {
+                    "type": "checklist",
+                    "title": "Criterios de Inclusión (USPSTF)",
+                    "items": [
+                        "Edad: 50 a 80 años.",
+                        "Índice tabaquico: ≥ 20 paquetes-año.",
+                        "Fumador actual o ex-fumador (<15 años abstinencia)."
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "cancer_prostate",
+            "type": "section",
+            "title": "5. Cáncer de Próstata",
+            "audience": "both",
+            "content": "Decisión compartida. Nuevos datos sugieren beneficio a largo plazo.",
+            "sub_blocks": [
+                {
+                    "type": "text",
+                    "title": "Recomendaciones",
+                    "content": "- **55-69 años:** Decisión individualizada (Grado C).\n- **> 70 años:** No recomendado de rutina.\n- **Alto Riesgo (Afroamericanos/BRCA2):** Iniciar discusión 40-45 años.\n- **RM Multiparamétrica:** Útil antes de biopsia para evitar sobrediagnóstico."
+                }
+            ]
+        },
+        {
+            "id": "cancer_ovary",
+            "type": "section",
+            "title": "6. Cáncer de Ovario",
+            "audience": "both",
+            "content": "Sin cribado eficaz para población general.",
+            "sub_blocks": [
+                {
+                    "type": "text",
+                    "title": "Estrategias",
+                    "content": "**Población General:** No usar CA-125/Eco TV.\n**Prevención Primaria:** Salpingectomía oportunista en cx pélvica benigna.\n**Alto Riesgo (BRCA):** Salpingo-ooforectomía (RRSO) a los 35-40 años."
+                }
+            ]
+        },
+        {
+            "id": "cancer_others",
+            "type": "section",
+            "title": "7. Otros y Prevención General",
+            "audience": "both",
+            "content": "",
+            "sub_blocks": [
+                {
+                    "type": "text",
+                    "title": "Gástrico y Piel",
+                    "content": "- **Gástrico:** Cribado en grupos de riesgo (H. pylori, atrofia, zonas endémicas).\n- **Piel:** Vigilancia clínica en fenotipos de riesgo."
+                },
+                {
+                    "type": "alert",
+                    "title": "Estilo de Vida",
+                    "level": "success",
+                    "content": "40% de cánceres son prevenibles actuando sobre: Tabaco, Alcohol, Obesidad e Infecciones (VPH, VHB, H. pylori)."
+                }
+            ]
+        }
+    ],
+    "meta": {
+        "source": "USPSTF, NCCN, ACS, SEOM (2024-2025)",
+        "version": "1.0"
+    }
+}

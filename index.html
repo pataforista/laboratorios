@@ -4,279 +4,409 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="theme-color" content="#111111" />
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#141218" />
+  <link rel="icon" type="image/png" href="icon-192.png" sizes="192x192">
+  <link rel="shortcut icon" href="icon-192.png">
+  <meta name="description" content="Registro clínico de laboratorio y monitoreo de Clozapina" />
   <meta http-equiv="Content-Security-Policy"
-    content="default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; script-src 'self' 'unsafe-inline';">
+    content="default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; script-src 'self' 'unsafe-inline'; frame-src 'self';">
   <link rel="manifest" href="manifest.json" />
   <link rel="stylesheet" href="styles.css" />
-  <link rel="stylesheet" href="AnimatedList.css" />
-  <link rel="stylesheet" href="BubbleMenu.css" />
-  <link rel="stylesheet" href="ElectricBorder.css" />
-  <link rel="stylesheet" href="Galaxy.css" />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Cormorant:wght@400;500;600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
-    rel="stylesheet">
-  <title>Lab Notes</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <title>Lab Notes — Registro Clínico</title>
 </head>
 
 <body data-theme="dark">
-  <div id="galaxyBg"></div>
 
   <!-- PWA Update Toast -->
   <div id="pwa-toast" class="toast hidden">
     <span>Nueva versión disponible</span>
-    <button onclick="window.location.reload()">Actualizar</button>
+    <button class="btn btn-sm btn-primary" onclick="window.location.reload()">Actualizar</button>
   </div>
 
+  <!-- ── TOP APP BAR ───────────────────────────────────────────────── -->
   <header class="topbar">
     <div class="brand">
-      <div class="brand-title">Lab Notes</div>
-      <div class="brand-sub">Registro clínico de laboratorio</div>
+      <span class="brand-icon">🧬</span>
+      <div>
+        <div class="brand-title">Lab Notes</div>
+        <div class="brand-sub">Registro clínico · Offline</div>
+      </div>
     </div>
+
+    <!-- OmniSearch -->
+    <div class="omnisearch-wrap" id="omniSearchWrap">
+      <div class="omnisearch-bar">
+        <span class="omnisearch-icon">🔍</span>
+        <input type="search" id="omniInput" placeholder="Buscar registros, protocolos, recursos..." autocomplete="off" />
+        <button class="omnisearch-clear hidden" id="omniClear" aria-label="Limpiar">✕</button>
+      </div>
+      <div class="omnisearch-results hidden" id="omniResults"></div>
+    </div>
+
     <div class="top-actions">
-      <button id="btnNew" class="btn">Nuevo</button>
-      <button id="btnTheme" class="btn btn-secondary">Tema</button>
-      <button id="btnSettings" class="btn btn-secondary">Ajustes</button>
-      <button id="btnDemo" class="btn btn-secondary">Demo UI</button>
+      <button id="btnTheme" class="btn btn-text btn-icon" title="Cambiar tema">◐</button>
+      <button id="btnSettings" class="btn btn-text btn-icon" title="Ajustes">⚙</button>
     </div>
   </header>
 
   <main class="container">
 
-    <!-- DASHBOARD -->
-    <section id="viewDashboard" class="view">
-      <div class="row">
+    <!-- ═══════════════════════════════════════════════════════════════
+         TAB: LABORATORIOS
+    ══════════════════════════════════════════════════════════════════ -->
+    <section id="tabLab" class="tab-section active">
+      <div class="tab-header">
         <h2>Registros</h2>
-        <span class="muted">Guardado local · Offline</span>
-      </div>
-      <div class="card search-card">
-        <input type="search" id="nrSearch" placeholder="Buscar por fecha, contexto o lab..."
-          aria-label="Buscar registros">
-      </div>
-      <div id="recordsList" class="cards"></div>
-      <div id="emptyState" class="empty hidden">No hay registros.</div>
-    </section>
-
-    <!-- UI DEMO VIEW -->
-    <section id="viewDemo" class="view hidden">
-      <div class="row">
-        <h2>Demo de Componentes Premium</h2>
-        <button id="btnBackFromDemo" class="btn btn-secondary">Volver</button>
+        <span class="label-chip">Guardado local</span>
       </div>
 
-      <div class="grid2" style="margin-top: 20px;">
-        <div id="electricCard">
-          <div class="eb-content">
-            <h3>Electric Border</h3>
-            <p>Este componente envuelve contenido con un borde animado sutil.</p>
-          </div>
+      <div id="recordsList" class="records-list"></div>
+
+      <!-- Onboarding empty state -->
+      <div id="emptyState" class="onboarding-card hidden">
+        <div class="onboarding-icon">🧪</div>
+        <h3>Bienvenido a Lab Notes</h3>
+        <p class="muted">Registra estudios de laboratorio y monitorea Clozapina de forma sencilla.</p>
+        <div class="onboarding-steps">
+          <div class="onb-step"><span class="onb-num">1</span><span>Toca <strong>+</strong> para crear tu primer registro</span></div>
+          <div class="onb-step"><span class="onb-num">2</span><span>Selecciona fecha, contexto y estudios</span></div>
+          <div class="onb-step"><span class="onb-num">3</span><span>Guarda y revisa las alertas clínicas</span></div>
         </div>
-
-        <div id="listContainer">
-          <h3>Animated List</h3>
-        </div>
-      </div>
-    </section>
-
-    <!-- NUEVO -->
-    <section id="viewNew" class="view hidden">
-      <div class="row">
-        <h2>Nuevo registro</h2>
-        <button id="btnBackFromNew" class="btn btn-secondary">Volver</button>
+        <button class="btn btn-filled" onclick="openNew()">+ Crear primer registro</button>
       </div>
 
-      <div class="card">
-        <div class="grid2">
-          <label>Fecha
-            <input id="nrDate" type="date" />
-          </label>
-          <label>Sexo
-            <select id="nrSex">
-              <option value="any">No aplica</option>
-              <option value="female">Femenino</option>
-              <option value="male">Masculino</option>
-            </select>
-          </label>
-        </div>
-
-        <label>Contexto
-          <input id="nrContext" placeholder="Ej. Control ambulatorio" />
-        </label>
-
-        <label>Laboratorio
-          <input id="nrLabName" placeholder="Ej. Lab X" />
-        </label>
-
-        <label class="checkrow">
-          <input id="nrClozapine" type="checkbox" aria-describedby="cloz-hint">
-          Paciente en clozapina
-          <span id="cloz-hint" class="sr-only">Activa monitoreo ANC</span>
-        </label>
-
-        <label class="checkrow">
-          <input id="nrBEN" type="checkbox">
-          BEN / Duffy-null (ANC 500)
-        </label>
-      </div>
-
-      <div class="card">
+      <!-- Tendencias Clínicas -->
+      <div id="trendsCard" class="card hidden" style="margin-top: 24px;">
         <div class="row">
-          <h3>Estudios</h3>
-          <div class="right">
-            <button id="btnClearPanels" class="btn btn-secondary small">Limpiar</button>
-          </div>
+          <h3>Tendencias Clínicas</h3>
+          <select id="trendMetric" class="btn btn-outlined btn-sm">
+            <option value="anc">ANC (Neutrófilos)</option>
+            <option value="wbc">WBC (Leucocitos)</option>
+            <option value="plt">PLT (Plaquetas)</option>
+          </select>
         </div>
-        <input type="text" id="nrPanelSearch" placeholder="🔍 Buscar estudio (ej. renal, biometría)..."
-          style="margin-bottom: 12px; height: 36px; padding: 0 12px;">
-        <div id="nrPanels" class="panel-pills"></div>
-      </div>
-
-      <div id="nrCaptureArea"></div>
-
-      <div class="actions">
-        <button id="btnSaveRecord" class="btn btn-primary">Guardar</button>
+        <canvas id="trendChart" style="width: 100%; height: 200px; margin-top: 16px; border-radius: 12px;"></canvas>
+        <p class="body-sm muted" style="margin-top: 8px;">Últimos 10 registros con datos de la métrica seleccionada.</p>
       </div>
     </section>
 
-    <!-- DETALLE -->
-    <section id="viewDetail" class="view hidden">
-      <div class="row">
-        <h2>Detalle</h2>
-        <div class="right">
-          <button id="btnExport" class="btn">Exportar</button>
-          <button id="btnBackFromDetail" class="btn btn-secondary">Volver</button>
+    <!-- ═══════════════════════════════════════════════════════════════
+         TAB: CLOZAPINA
+    ══════════════════════════════════════════════════════════════════ -->
+    <section id="tabCloz" class="tab-section hidden">
+      <div class="tab-header">
+        <h2>🩺 Clozapina</h2>
+        <span class="label-chip clz-chip">Monitoreo activo</span>
+      </div>
+
+      <!-- CLZ summary stats -->
+      <div id="clzStats" class="clz-stats-row hidden"></div>
+
+      <div id="clzRecordsList" class="records-list"></div>
+
+      <div id="clzEmpty" class="onboarding-card hidden">
+        <div class="onboarding-icon">🩺</div>
+        <h3>Sin registros de Clozapina</h3>
+        <p class="muted">Crea un registro y activa "Monitorizar Clozapina" para comenzar el seguimiento.</p>
+        <button class="btn btn-filled" onclick="openNew()">+ Nuevo registro Clozapina</button>
+      </div>
+
+      <!-- Clozapine trend mini card -->
+      <div id="clzTrendCard" class="card hidden" style="margin-top:24px;">
+        <div class="row">
+          <h3>Tendencia ANC</h3>
+          <span class="badge clz">CLOZAPINA</span>
+        </div>
+        <canvas id="clzTrendChart" style="width:100%; height:180px; border-radius:12px; margin-top:8px;"></canvas>
+      </div>
+    </section>
+
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         VIEW: NUEVO / EDITAR REGISTRO (overlay over tabs)
+    ══════════════════════════════════════════════════════════════════ -->
+    <section id="viewNew" class="view hidden">
+      <div class="view-topbar">
+        <button id="btnBackFromNew" class="btn btn-text">← Volver</button>
+        <h2 id="nrTitle" style="font-size:18px; margin:0;">Nuevo Registro</h2>
+        <div style="width:80px;"></div>
+      </div>
+
+      <!-- Stepper -->
+      <div class="stepper" id="stepperBar">
+        <div class="step-dot active" data-step="1">1</div>
+        <div class="step-line"></div>
+        <div class="step-dot" data-step="2">2</div>
+        <div class="step-line"></div>
+        <div class="step-dot" data-step="3">3</div>
+      </div>
+
+      <!-- Step 1: Información -->
+      <div id="nrStep1" class="step">
+        <div class="card">
+          <h3>Información Básica</h3>
+          <div class="grid2">
+            <label class="field">
+              <span class="field-label">Fecha</span>
+              <input id="nrDate" type="date" />
+            </label>
+            <label class="field">
+              <span class="field-label">Sexo biológico</span>
+              <select id="nrSex">
+                <option value="any">No especificado</option>
+                <option value="female">Femenino</option>
+                <option value="male">Masculino</option>
+              </select>
+            </label>
+          </div>
+          <label class="field">
+            <span class="field-label">Contexto clínico</span>
+            <input id="nrContext" placeholder="Ej. Control mensual, urgencias..." />
+          </label>
+          <label class="field">
+            <span class="field-label">Laboratorio</span>
+            <input id="nrLabName" placeholder="Ej. Lab Central, IMSS..." />
+          </label>
+
+          <!-- Clozapina -->
+          <div class="divider" style="margin: 16px 0;"></div>
+          <div class="grid2">
+            <label class="checkrow">
+              <input id="nrClozapine" type="checkbox" onchange="toggleClozapineFields()">
+              <span>Monitorizar Clozapina</span>
+            </label>
+            <label class="checkrow">
+              <input id="nrBEN" type="checkbox">
+              <span>BEN / Duffy-null</span>
+            </label>
+          </div>
+
+          <!-- Factores Clozapina -->
+          <div id="clozHabits" class="hidden surface-container" style="margin-top:16px; border-radius:12px; padding:16px;">
+            <p class="label-md" style="margin-bottom:12px;">Factores de Interacción CYP1A2</p>
+            <div class="grid2">
+              <label class="checkrow">
+                <input id="nrSmoking" type="checkbox">
+                <span>Fumador activo</span>
+              </label>
+              <label class="checkrow">
+                <input id="nrQuitSmoking" type="checkbox">
+                <span>Cese reciente (&lt;14 días)</span>
+              </label>
+            </div>
+            <div class="grid2" style="margin-top:8px;">
+              <label class="field">
+                <span class="field-label">Cafeína</span>
+                <select id="nrCaffeine">
+                  <option value="normal">Normal / Baja</option>
+                  <option value="high">&gt;3 tazas/día</option>
+                </select>
+              </label>
+              <label class="checkrow" style="align-self:flex-end; padding-bottom:8px;">
+                <input id="nrFluvoxamine" type="checkbox">
+                <span>Uso de Fluvoxamina</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button id="btnNext1" class="btn btn-filled">Siguiente: Estudios →</button>
         </div>
       </div>
 
-      <div id="detailHeader" class="card"></div>
+      <!-- Step 2: Selección de estudios -->
+      <div id="nrStep2" class="step hidden">
+        <div class="card">
+          <div class="row">
+            <h3>Selección de Estudios</h3>
+            <button id="btnClearPanels" class="btn btn-text btn-sm">Limpiar</button>
+          </div>
+          <div class="search-bar" style="margin-bottom:12px;">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="nrPanelSearch" placeholder="Buscar estudio (ej. renal, biometría)...">
+          </div>
+          <div id="nrPanels" class="panel-pills"></div>
+        </div>
+        <div class="actions">
+          <button id="btnPrev2" class="btn btn-outlined">← Volver</button>
+          <button id="btnNext2" class="btn btn-filled">Siguiente: Captura →</button>
+        </div>
+      </div>
 
+      <!-- Step 3: Captura de datos -->
+      <div id="nrStep3" class="step hidden">
+        <div id="nrCaptureArea"></div>
+
+        <!-- Triage Clozapina -->
+        <div id="clozTriage" class="card hidden" style="margin-top:16px; border: 1px solid var(--m3-primary);">
+          <h3>🔬 Triage Clínico (Clozapina)</h3>
+          <div class="grid2">
+            <label class="field">
+              <span class="field-label">Estreñimiento (0–5)</span>
+              <input id="nrConstipation" type="range" min="0" max="5" value="0" oninput="this.nextElementSibling.value = this.value">
+              <output>0</output>
+            </label>
+            <label class="field">
+              <span class="field-label">Somnolencia (0–5)</span>
+              <input id="nrSomnolence" type="range" min="0" max="5" value="0" oninput="this.nextElementSibling.value = this.value">
+              <output>0</output>
+            </label>
+          </div>
+          <div class="grid2" style="margin-top:8px;">
+            <label class="checkrow">
+              <input id="nrFever" type="checkbox">
+              <span>Fiebre (&gt;38°C)</span>
+            </label>
+            <label class="checkrow">
+              <input id="nrChestPain" type="checkbox">
+              <span>Dolor Torácico</span>
+            </label>
+          </div>
+          <label class="field" style="margin-top:12px;">
+            <span class="field-label">Notas clínicas breves</span>
+            <textarea id="nrClinicalNotes" rows="3" placeholder="Ej. Taquicardia leve, mejoría en el sueño..."></textarea>
+          </label>
+        </div>
+
+        <div class="actions">
+          <button id="btnPrev3" class="btn btn-outlined">← Volver</button>
+          <button id="btnSaveRecord" class="btn btn-filled">💾 Guardar Registro</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         VIEW: DETALLE DEL REGISTRO
+    ══════════════════════════════════════════════════════════════════ -->
+    <section id="viewDetail" class="view hidden">
+      <div class="view-topbar">
+        <button id="btnBackFromDetail" class="btn btn-text">← Registros</button>
+        <div class="right">
+          <button id="btnEditRecord" class="btn btn-tonal btn-sm">✏ Editar</button>
+          <button id="btnExport" class="btn btn-tonal btn-sm">📋 Exportar</button>
+        </div>
+      </div>
+      <div id="detailHeader" class="card card-hero"></div>
       <div class="card">
-        <h3>Alertas</h3>
+        <h3>Alertas e Interpretación</h3>
         <div id="detailAlerts" class="chips"></div>
         <div id="detailChecklists" class="checklists"></div>
       </div>
-
+      <!-- Manual bridge button (shown only for CLZ records) -->
+      <div id="clzManualBridge" class="hidden" style="margin-bottom:12px;">
+        <button class="btn btn-outlined clz-btn" onclick="openManualClzProtocol()">
+          📖 Ver Protocolo Clozapina en Manual →
+        </button>
+      </div>
       <div id="detailPanels"></div>
     </section>
 
-    <!-- EXPORT -->
+    <!-- ═══════════════════════════════════════════════════════════════
+         VIEW: EXPORTACIÓN
+    ══════════════════════════════════════════════════════════════════ -->
     <section id="viewExport" class="view hidden">
-      <div class="row">
-        <h2>Exportación</h2>
-        <div class="right">
-          <button id="btnCopyExport" class="btn btn-primary">Copiar</button>
-          <button id="btnBackFromExport" class="btn btn-secondary">Volver</button>
-        </div>
+      <div class="view-topbar">
+        <button id="btnBackFromExport" class="btn btn-text">← Detalle</button>
+        <h2 style="font-size:18px; margin:0;">Nota Clínica</h2>
+        <button id="btnCopyExport" class="btn btn-filled btn-sm">📋 Copiar</button>
       </div>
       <div class="card">
-        <textarea id="exportText" rows="18"></textarea>
+        <textarea id="exportText" rows="20" style="font-family: var(--font-mono); font-size: 13px;"></textarea>
       </div>
     </section>
 
-    <!-- SETTINGS -->
+    <!-- ═══════════════════════════════════════════════════════════════
+         VIEW: AJUSTES
+    ══════════════════════════════════════════════════════════════════ -->
     <section id="viewSettings" class="view hidden">
-      <div class="row">
-        <h2>Ajustes</h2>
-        <button id="btnBackFromSettings" class="btn btn-secondary">Volver</button>
+      <div class="view-topbar">
+        <button id="btnBackFromSettings" class="btn btn-text">← Volver</button>
+        <h2 style="font-size:18px; margin:0;">Ajustes</h2>
+        <div style="width:80px;"></div>
       </div>
 
       <div class="card">
-        <button id="btnExportAll" class="btn">Exportar JSON</button>
-        <button id="btnReset" class="btn btn-danger">Borrar todo</button>
+        <h3>Gestión de Datos</h3>
+        <p class="body-sm muted" style="margin-bottom:16px;">Exporta o importa todos tus registros. Los datos se guardan solo en este dispositivo.</p>
+        <div class="grid2">
+          <button id="btnExportAll" class="btn btn-tonal">⬇ Exportar JSON</button>
+          <label class="btn btn-tonal" style="margin:0; text-align:center; cursor:pointer;">
+            ⬆ Importar JSON
+            <input type="file" id="inputImport" accept=".json" style="display:none;">
+          </label>
+        </div>
+        <div class="divider" style="margin:16px 0;"></div>
+        <button id="btnReset" class="btn btn-danger" style="width:100%;">🗑 Borrar todos los datos locales</button>
       </div>
 
       <div class="card">
-        <h3>Acerca de esta Herramienta</h3>
-        <p><strong>Autor:</strong> Dr. César Celada</p>
-        <p><strong>Contacto:</strong> <a href="mailto:drceladapsiquiatria@gmail.com">drceladapsiquiatria@gmail.com</a>
-        </p>
-        <p class="small muted">Este proyecto es sin fines de lucro, diseñado para apoyar la práctica clínica mediante la
-          gestión eficiente de registros de laboratorio.</p>
-
-        <div style="margin-top: 20px;">
-          <a href="https://buymeacoffee.com/herramente" target="_blank" class="btn btn-coffee">
-            ☕ Donar en Buy Me a Coffee
-          </a>
+        <h3>Acerca de</h3>
+        <p><strong>Dr. César Celada</strong></p>
+        <p class="body-sm muted">Registro clínico de laboratorio · Monitoreo de Clozapina</p>
+        <p><a href="mailto:drceladapsiquiatria@gmail.com" class="link">drceladapsiquiatria@gmail.com</a></p>
+        <div style="margin-top:16px;">
+          <a href="https://buymeacoffee.com/herramente" target="_blank" class="btn btn-coffee">☕ Apoyar el proyecto</a>
         </div>
       </div>
 
-      <div class="card disclaimer-card">
-        <h3>Aviso Legal y Clínico</h3>
-        <p class="small">Esta herramienta es de uso informativo y de apoyo técnico. <strong>No sustituye el juicio
-            clínico del profesional de la salud.</strong></p>
-        <ul class="small">
-          <li>Los rangos de referencia son orientativos y pueden variar según el laboratorio.</li>
-          <li>Las sugerencias de seguimiento y alertas son basadas en guías generales y deben ser validadas
-            individualmente.</li>
-          <li>El autor no se hace responsable por decisiones médicas tomadas basadas exclusivamente en esta aplicación.
-          </li>
-        </ul>
+      <div class="card surface-container">
+        <h3>⚠ Aviso Legal</h3>
+        <p class="body-sm">Esta herramienta es de apoyo técnico. <strong>No sustituye el juicio clínico.</strong> Los rangos de referencia son orientativos y deben validarse individualmente.</p>
       </div>
     </section>
 
   </main>
 
-  <footer class="footer muted">
-    Dr. César Celada · 2026
+  <!-- Manual tab lives outside container so iframe fills full viewport -->
+  <section id="tabManual" class="tab-manual hidden">
+    <iframe
+      id="manualFrame"
+      src="./manual/index.html"
+      class="manual-frame"
+      title="Manual Clínico de Consulta"
+      loading="lazy"
+    ></iframe>
+  </section>
+
+  <!-- ── BOTTOM NAVIGATION BAR ─────────────────────────────────────── -->
+  <nav class="bottom-nav" id="bottomNav">
+    <button class="nav-item active" data-tab="lab" onclick="showTab('lab')">
+      <span class="nav-icon">🧪</span>
+      <span class="nav-label">Laboratorios</span>
+      <span class="nav-indicator"></span>
+    </button>
+    <button class="nav-item" data-tab="cloz" onclick="showTab('cloz')">
+      <span class="nav-icon">🩺</span>
+      <span class="nav-label">Clozapina</span>
+      <span class="nav-indicator"></span>
+    </button>
+    <button class="nav-item" data-tab="manual" onclick="showTab('manual')">
+      <span class="nav-icon">📖</span>
+      <span class="nav-label">Manual</span>
+      <span class="nav-indicator"></span>
+    </button>
+  </nav>
+
+  <!-- ── FAB ──────────────────────────────────────────────────────── -->
+  <button class="fab" id="fabNew" onclick="openNew()" aria-label="Nuevo registro">+</button>
+
+  <footer class="footer">
+    Dr. César Celada · Lab Notes 2026
   </footer>
 
-  <script src="components.js"></script>
-  <script src="app.js"></script>
+  <script type="module" src="app.js?v=2026.2"></script>
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      // Init Galaxy
-      if (document.getElementById('galaxyBg')) new Galaxy(document.getElementById('galaxyBg'));
-
-      // Init Electric Border
-      const ec = document.getElementById('electricCard');
-      if (ec) new ElectricBorder(ec, { color: '#7c3aed' });
-
-      // Init Animated List
-      const lc = document.getElementById('listContainer');
-      if (lc) {
-        new AnimatedList(lc, {
-          items: ['Monitoreo de Clozapina', 'Niveles de Litio', 'Perfil Tiroideo', 'Cinética de Hierro', 'Función Viral'],
-          onItemSelect: (item, index) => console.log('Selected:', item, index)
-        });
-      }
-
-      // Init Bubble Menu
-      new BubbleMenu({
-        items: [
-          { label: 'Dashboard', href: '#' },
-          { label: 'Nuevo', href: '#' },
-          { label: 'Ajustes', href: '#' }
-        ]
-      });
-
-      // Demo Navigation
-      const btnDemo = document.getElementById('btnDemo');
-      const viewDemo = document.getElementById('viewDemo');
-      const btnBackFromDemo = document.getElementById('btnBackFromDemo');
-      const viewDashboard = document.getElementById('viewDashboard');
-
-      if (btnDemo && viewDemo) {
-        btnDemo.onclick = () => {
-          document.querySelectorAll('.view').forEach(v => v.classList.add('hidden'));
-          viewDemo.classList.remove('hidden');
-        };
-      }
-      if (btnBackFromDemo && viewDashboard) {
-        btnBackFromDemo.onclick = () => {
-          document.querySelectorAll('.view').forEach(v => v.classList.add('hidden'));
-          viewDashboard.classList.remove('hidden');
-        };
-      }
-    });
-
-    // Service Worker Registration
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('./sw.js').then(reg => {
           reg.addEventListener('updatefound', () => {
-            const newWorker = reg.installing;
-            newWorker.addEventListener('statechange', () => {
-              if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+            const nw = reg.installing;
+            nw.addEventListener('statechange', () => {
+              if (nw.state === 'installed' && navigator.serviceWorker.controller) {
                 document.getElementById('pwa-toast').classList.remove('hidden');
               }
             });

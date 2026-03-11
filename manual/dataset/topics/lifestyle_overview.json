@@ -1,0 +1,84 @@
+{
+  "id": "lifestyle_overview",
+  "title": "Pilares del Estilo de Vida",
+  "audience": "both",
+  "tags": ["lifestyle", "prevencion", "medicina_preventiva"],
+  "blocks": [
+    {
+      "id": "overview_intro_alert",
+      "type": "alert",
+      "title": "La Base del Tratamiento",
+      "level": "info",
+      "audience": "both",
+      "content": "Ningún medicamento funciona al 100% si no se acompaña de cambios en el estilo de vida. Pequeños cambios sostenibles son más efectivos que dietas extremas."
+    },
+    {
+      "id": "overview_pillars_nav",
+      "type": "section",
+      "title": "Los 5 Pilares de la Salud",
+      "audience": "both",
+      "content": "Seleccione un área para ver recomendaciones específicas:",
+      "sub_blocks": [
+        {
+          "type": "resource_link",
+          "link_id": "lifestyle_nutrition",
+          "label": "🍎 Alimentación e Hidratación"
+        },
+        {
+          "type": "resource_link",
+          "link_id": "lifestyle_activity",
+          "label": "🏃 Actividad Física"
+        },
+        {
+          "type": "resource_link",
+          "link_id": "lifestyle_sleep",
+          "label": "💤 Higiene del Sueño"
+        },
+        {
+          "type": "resource_link",
+          "link_id": "lifestyle_anxiety",
+          "label": "🧘 Salud Mental y Ansiedad"
+        },
+        {
+          "type": "resource_link",
+          "link_id": "lifestyle_oral",
+          "label": "🦷 Higiene Bucal"
+        },
+        {
+          "type": "resource_link",
+          "link_id": "lifestyle_master_guide",
+          "label": "🖨️ IMPRIMIR TODO (Resumen General)"
+        }
+      ]
+    },
+    {
+      "id": "overview_toxic_habits",
+      "type": "section",
+      "title": "Hábitos a Eliminar",
+      "audience": "both",
+      "content": "El cese de estas sustancias tiene beneficios inmediatos.",
+      "sub_blocks": [
+        {
+          "id": "tobacco_alcohol_list",
+          "type": "checklist",
+          "title": "Metas de Reducción",
+          "items": [
+            "Tabaco/Vapeo: La meta ideal es 0. (Aumenta riesgo cardiovascular X3).",
+            "Alcohol: Máximo 1 bebida al día (Mujeres) o 2 (Hombres).",
+            "Café: Suspender después de las 4:00 PM."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "overview_kaizen",
+      "type": "text",
+      "title": "Filosofía 'Paso a Paso'",
+      "content": "No intente cambiar todo en un día. Elija UN solo pilar esta semana y domínelo antes de pasar al siguiente."
+    }
+  ],
+  "meta": {
+    "source": "manual_local_comorbilidades",
+    "version": "2.2_hub_navigation"
+  }
+}

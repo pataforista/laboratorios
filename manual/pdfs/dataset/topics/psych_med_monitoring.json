@@ -1,0 +1,196 @@
+{
+    "id": "psych_med_monitoring",
+    "title": "Monitoreo de psicofármacos",
+    "audience": "clinician",
+    "tags": [
+        "monitoreo",
+        "farmacos",
+        "seguridad",
+        "metabolico"
+    ],
+    "blocks": [
+        {
+            "id": "psych_med_general",
+            "type": "alert",
+            "title": "Enfoque operativo",
+            "level": "info",
+            "audience": "clinician",
+            "content": "Estructura estándar por tres momentos: basal, seguimiento temprano (2–12 semanas) y mantenimiento. Mostrar decisiones accionables: todo ok, vigilar/educar, alarma/actuar."
+        },
+        {
+            "id": "psych_med_matrix",
+            "type": "table",
+            "title": "Matriz operativa universal",
+            "audience": "clinician",
+            "headers": [
+                "Momento",
+                "Qué evaluar",
+                "Resultado esperado"
+            ],
+            "rows": [
+                [
+                    "Basal (inicio/reinicio)",
+                    "Riesgo CV/metabólico/familiar, SUD, embarazo, interacciones, adherencia previa; TA, FC, peso/IMC, signos neurológicos; labs/estudios por clase.",
+                    "Línea basal y plan individual de monitoreo."
+                ],
+                [
+                    "Seguimiento temprano (2–12 semanas)",
+                    "Eficacia diana, efectos adversos agudos, adherencia/barreras y primer corte metabólico en antipsicóticos de riesgo.",
+                    "Ajuste precoz para evitar iatrogenia y abandono."
+                ],
+                [
+                    "Mantenimiento (trimestral/semestral/anual)",
+                    "Peso, TA, glucosa/A1c, lípidos, QTc cuando aplique, prolactina si hay síntomas y pendientes por comorbilidad.",
+                    "Detección de iatrogenia silenciosa y continuidad terapéutica."
+                ]
+            ]
+        },
+        {
+            "id": "psych_med_antipsychotic",
+            "type": "table",
+            "title": "Panel mínimo sugerido para antipsicóticos (especialmente SGAs)",
+            "audience": "clinician",
+            "headers": [
+                "Parámetro",
+                "Basal",
+                "Seguimiento"
+            ],
+            "rows": [
+                [
+                    "Peso/IMC y TA",
+                    "Sí",
+                    "Seriado (4–12 semanas y luego periódico)"
+                ],
+                [
+                    "Glucosa o HbA1c",
+                    "Sí",
+                    "Reevaluación temprana y luego periódica"
+                ],
+                [
+                    "Perfil lipídico",
+                    "Sí",
+                    "Reevaluación temprana y luego periódica"
+                ],
+                [
+                    "ECG (si riesgo QTc)",
+                    "Según riesgo",
+                    "Repetir si síncope, polifarmacia o cambios clínicos"
+                ]
+            ]
+        },
+        {
+            "id": "psych_med_alert_thresholds",
+            "type": "checklist",
+            "title": "Umbrales de alarma y acción",
+            "audience": "clinician",
+            "items": [
+                "Ganancia de peso rápida o síntomas metabólicos: intervención conductual + revisar antipsicótico + solicitar labs.",
+                "Síncope/palpitaciones o combinación de fármacos con riesgo QTc: ECG and ajuste terapéutico.",
+                "Galactorrea, disfunción sexual o amenorrea: medir prolactina y ajustar tratamiento.",
+                "Temblor, poliuria/polidipsia en litio: niveles séricos + función renal y ajuste."
+            ]
+        },
+        {
+            "id": "psych_med_lithium",
+            "type": "table",
+            "title": "Monitoreo con litio",
+            "audience": "clinician",
+            "headers": [
+                "Parámetro",
+                "Basal",
+                "Seguimiento"
+            ],
+            "rows": [
+                [
+                    "Función renal (creatinina, eGFR)",
+                    "Sí",
+                    "Cada 3-6 meses"
+                ],
+                [
+                    "TSH",
+                    "Sí",
+                    "Cada 6-12 meses"
+                ],
+                [
+                    "Nivel sérico de litio",
+                    "Sí",
+                    "5-7 días tras ajustes; luego cada 3-6 meses"
+                ],
+                [
+                    "Electrolitos",
+                    "Sí",
+                    "Periódico"
+                ]
+            ]
+        },
+        {
+            "id": "psych_med_valproate",
+            "type": "table",
+            "title": "Monitoreo con valproato",
+            "audience": "clinician",
+            "headers": [
+                "Parámetro",
+                "Basal",
+                "Seguimiento"
+            ],
+            "rows": [
+                [
+                    "Función hepática",
+                    "Sí",
+                    "Periódico (3-6 meses)"
+                ],
+                [
+                    "Biometría hemática",
+                    "Sí",
+                    "Periódico"
+                ],
+                [
+                    "Prueba de embarazo (si aplica)",
+                    "Sí",
+                    "Según riesgo"
+                ]
+            ]
+        },
+        {
+            "id": "psych_med_education",
+            "type": "checklist",
+            "title": "Plantilla fija de educación al paciente (60 segundos)",
+            "audience": "clinician",
+            "items": [
+                "Qué es y por qué importa hoy (1–2 frases).",
+                "Qué esperamos lograr (beneficio observable y horizonte temporal).",
+                "Efectos esperables frecuentes (2) y qué hacer.",
+                "Señales de alarma para urgencias (3).",
+                "Autocuidado mínimo (1–2 acciones concretas)."
+            ]
+        },
+        {
+            "id": "psych_med_guidelines",
+            "type": "resource_list",
+            "title": "Guías clínicas recomendadas",
+            "audience": "clinician",
+            "items": [
+                {
+                    "name": "University of Washington PCL: Metabolic Monitoring for Antipsychotics",
+                    "link": "https://pcl.psychiatry.uw.edu/",
+                    "description": "Actualizaciones de monitoreo metabólico aplicables a práctica clínica."
+                },
+                {
+                    "name": "APA/ADA Consensus on Antipsychotics and Metabolic Risk",
+                    "link": "https://www.psychiatry.org/psychiatrists/practice/clinical-practice-guidelines",
+                    "description": "Consenso sobre monitoreo metabólico y cardiovascular."
+                },
+                {
+                    "name": "Maudsley Prescribing Guidelines",
+                    "link": "https://www.maudsley-prescribing-guidelines.co.uk/",
+                    "description": "Referencia para seguridad farmacológica y seguimiento."
+                }
+            ]
+        }
+    ],
+    "meta": {
+        "source": "matriz_operativa_monitoreo_psicofarmacos",
+        "last_reviewed": "2026-02-11",
+        "notes": "Priorizar decisiones clínicas accionables y alertas tempranas."
+    }
+}

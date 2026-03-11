@@ -1,0 +1,46 @@
+{
+    "id": "safety_plan_a4",
+    "title": "Plan de seguridad en crisis (A4)",
+    "format": "a4",
+    "template": "guide_checklist",
+    "sections": [
+        {
+            "title": "Señales de alarma personales",
+            "items": [
+                "Pensamientos de hacerse daño o desesperanza intensa.",
+                "Aislamiento extremo o abandono del autocuidado.",
+                "Aumento de consumo de alcohol o drogas.",
+                "Cambios bruscos en el sueño o irritabilidad extrema."
+            ]
+        },
+        {
+            "title": "Estrategias inmediatas",
+            "items": [
+                "Retirar o limitar acceso a medios letales.",
+                "Buscar un lugar seguro y acompañado.",
+                "Realizar una actividad que ayude a calmarse (respiración, caminar, música)."
+            ]
+        },
+        {
+            "title": "Red de apoyo",
+            "items": [
+                "Persona de confianza: ____________________",
+                "Teléfono: ____________________",
+                "Otra persona de apoyo: ____________________",
+                "Teléfono: ____________________"
+            ]
+        },
+        {
+            "title": "Atención profesional",
+            "items": [
+                "Servicio de urgencias o línea de crisis local.",
+                "Psiquiatra/psicoterapia: ____________________",
+                "Teléfono: ____________________"
+            ]
+        }
+    ],
+    "meta": {
+        "source": "planes_de_seguridad_clinica",
+        "last_reviewed": "2026-01-06"
+    }
+}

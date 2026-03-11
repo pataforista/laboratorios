@@ -1,0 +1,21 @@
+{
+  "id": "bp_log_a4",
+  "title": "Registro de presión arterial (A4)",
+  "format": "a4",
+  "template": "table_log",
+  "fields": {
+    "columns": [
+      "Fecha",
+      "Hora",
+      "PAS (mmHg)",
+      "PAD (mmHg)",
+      "Frecuencia (lpm)",
+      "Notas"
+    ],
+    "rows": 24
+  },
+  "meta": {
+    "source": "manual_de_consulta_comorbilidades_pdf",
+    "last_reviewed": "2026-01-06"
+  }
+}

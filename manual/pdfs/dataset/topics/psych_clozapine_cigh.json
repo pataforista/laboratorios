@@ -1,0 +1,177 @@
+{
+    "id": "psych_clozapine_cigh",
+    "title": "Clozapina: hipomotilidad gastrointestinal (CIGH)",
+    "audience": "clinician",
+    "tags": [
+        "clozapina",
+        "seguridad",
+        "urgencias",
+        "gastrointestinal"
+    ],
+    "blocks": [
+        {
+            "id": "cigh_overview",
+            "type": "section",
+            "title": "Resumen clínico",
+            "audience": "clinician",
+            "content": "La hipomotilidad gastrointestinal inducida por clozapina (CIGH) es un evento adverso frecuente y potencialmente fatal. Su mortalidad puede superar la de la agranulocitosis porque el estreñimiento no se monitorea de forma sistemática y el inicio puede ser insidioso.",
+            "share_variant": {
+                "title": "Resumen para pacientes",
+                "content": "La clozapina puede enlentecer el intestino. Esto no es solo estreñimiento: puede ser peligroso si no se trata a tiempo. Avise a su equipo de salud si pasa más de 2 días sin evacuar o si hay dolor abdominal, distensión, vómitos o fiebre."
+            }
+        },
+        {
+            "id": "cigh_pathophys",
+            "type": "section",
+            "title": "Fisiopatología",
+            "content": "El mecanismo principal es la acción anticolinérgica (antimuscarínica) sobre el músculo liso intestinal, con contribución adicional del antagonismo serotoninérgico (5-HT3 y 5-HT4). El tiempo de tránsito colónico puede cuadruplicarse y superar las 100 horas.",
+            "sub_blocks": [
+                {
+                    "id": "cigh_lethal_cycle",
+                    "type": "warning",
+                    "level": "danger",
+                    "title": "Ciclo letal",
+                    "content": "Estreñimiento severo → fecaloma → obstrucción/íleo → isquemia o megacolon tóxico → perforación → sepsis → muerte."
+                }
+            ]
+        },
+        {
+            "id": "cigh_epidemiology",
+            "type": "section",
+            "title": "Epidemiología y riesgo",
+            "content": "Se estima que 30-60% de los pacientes en clozapina presentan estreñimiento clínicamente significativo. La mortalidad por complicaciones gastrointestinales puede ser mayor que la de la agranulocitosis por la falta de monitoreo sistemático.",
+            "share_variant": {
+                "title": "Dato clave",
+                "content": "Hasta 6 de cada 10 personas con clozapina tienen estreñimiento importante. Si se ignora, puede convertirse en una urgencia médica."
+            }
+        },
+        {
+            "id": "cigh_red_flags",
+            "type": "warning",
+            "title": "Banderas rojas",
+            "level": "danger",
+            "content": "Los pacientes con psicosis pueden no reportar dolor con claridad. Ante cualquiera de estos signos, sospeche CIGH grave.",
+            "items": [
+                "Diarrea por rebosamiento (no tratar con antidiarreicos).",
+                "Distensión abdominal visible o dolor intenso.",
+                "Vómitos, especialmente con olor fecaloide.",
+                "Ausencia de ruidos hidroaéreos o signos de sepsis sin foco claro.",
+                "Más de 3-4 días sin deposición o sin expulsión de gases."
+            ]
+        },
+        {
+            "id": "cigh_prevention",
+            "type": "section",
+            "title": "Prevención activa (Maudsley/Porirua)",
+            "content": "Inicie profilaxis desde el día 1. El enfoque estándar combina laxantes osmóticos y estimulantes para contrarrestar el efecto anticolinérgico.",
+            "sub_blocks": [
+                {
+                    "id": "cigh_first_line",
+                    "type": "list",
+                    "title": "Laxantes de primera línea",
+                    "items": [
+                        "Macrogol (PEG) como osmótico preferido.",
+                        "Senósidos o bisacodilo como estimulantes.",
+                        "Promover hidratación y actividad física leve."
+                    ]
+                },
+                {
+                    "id": "cigh_avoid_fiber",
+                    "type": "warning",
+                    "level": "caution",
+                    "title": "Evitar formadores de masa",
+                    "content": "No usar psyllium, plantago, Metamucil o salvado: requieren motilidad intestinal y pueden solidificarse, empeorando la obstrucción."
+                }
+            ]
+        },
+        {
+            "id": "cigh_algorithm",
+            "type": "table",
+            "title": "Algoritmo escalonado de manejo",
+            "headers": [
+                "Escenario",
+                "Acción clínica",
+                "Fármacos sugeridos"
+            ],
+            "rows": [
+                [
+                    "Inicio de clozapina",
+                    "Profilaxis obligatoria.",
+                    "Senósidos (noche) o Macrogol (mañana)."
+                ],
+                [
+                    "Sin deposición en 2 días",
+                    "Aumentar dosis.",
+                    "Duplicar dosis de Senósidos o Macrogol."
+                ],
+                [
+                    "Sin deposición en 3 días",
+                    "Combinar agentes.",
+                    "Macrogol + Senósidos."
+                ],
+                [
+                    "Sin deposición en 4 días",
+                    "Alerta médica y examen físico.",
+                    "Supositorio de glicerina o bisacodilo. Considerar lactulosa si no hay Macrogol."
+                ],
+                [
+                    "> 4 días sin deposición o con vómitos/dolor",
+                    "Urgencia: descartar obstrucción.",
+                    "Suspender clozapina temporalmente. Imagenología (Rx/TAC). No laxantes orales si hay sospecha de obstrucción."
+                ]
+            ]
+        },
+        {
+            "id": "cigh_severe_management",
+            "type": "section",
+            "title": "Sospecha de CIGH grave",
+            "content": "Si hay distensión abdominal aguda, dolor, vómitos o signos de shock:",
+            "sub_blocks": [
+                {
+                    "id": "cigh_severe_steps",
+                    "type": "list",
+                    "items": [
+                        "Suspender clozapina de inmediato.",
+                        "Derivar a urgencias/cirugía para evaluación.",
+                        "Preferir TAC de abdomen para descartar isquemia o perforación.",
+                        "Considerar niveles plasmáticos de clozapina si hay sospecha de toxicidad (>1000 ng/mL)."
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "cigh_other_risks",
+            "type": "accordion",
+            "title": "Otros riesgos vitales no hematológicos (resumen)",
+            "items": [
+                {
+                    "title": "Miocarditis (inicio temprano)",
+                    "content": "Primer mes: taquicardia persistente, fiebre, dolor torácico. Monitorizar troponinas y PCR."
+                },
+                {
+                    "title": "Convulsiones",
+                    "content": "Riesgo dosis-dependiente (más alto >500-600 mg/día)."
+                },
+                {
+                    "title": "Embolismo pulmonar",
+                    "content": "Clozapina aumenta riesgo de tromboembolismo venoso."
+                },
+                {
+                    "title": "Cetoacidosis diabética",
+                    "content": "Vigilancia de síntomas metabólicos agudos."
+                }
+            ]
+        },
+        {
+            "id": "cigh_patient_handout",
+            "type": "printable_ref",
+            "title": "Semáforo intestinal para pacientes y cuidadores",
+            "printable_id": "clozapine_cigh_traffic_light_a4"
+        }
+    ],
+    "meta": {
+        "source": "maudsley_porirua_y_literatura_actual",
+        "version": "1.0",
+        "last_reviewed": "2026-01-06"
+    }
+}

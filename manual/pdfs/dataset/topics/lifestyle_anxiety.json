@@ -1,0 +1,143 @@
+{
+  "id": "lifestyle_anxiety",
+  "title": "Habilidades TIP (DBT) - Módulo de Crisis",
+  "audience": "both",
+  "tags": [
+    "lifestyle",
+    "anxiety",
+    "salud_mental",
+    "dbt",
+    "crisis",
+    "tip"
+  ],
+  "blocks": [
+    {
+      "id": "tip_intro_def",
+      "type": "section",
+      "title": "¿Qué son las Habilidades TIP?",
+      "audience": "both",
+      "content": "Las habilidades **TIP** son estrategias de la **Terapia Dialéctico Conductual (DBT)** para reducir la activación emocional extrema de manera rápida y fisiológica. No requieren pensar, sino que cambian la **química del cuerpo** para activar el sistema parasimpático (calma)."
+    },
+    {
+      "id": "tip_breakdown_t",
+      "type": "section",
+      "title": "T - Temperatura (Cambiar la temperatura facial)",
+      "audience": "both",
+      "content": "**Objetivo:** Activar el reflejo de inmersión de los mamíferos para bajar la frecuencia cardíaca inmediatamente.",
+      "sub_blocks": [
+        {
+          "id": "tip_t_action",
+          "type": "key_value",
+          "title": "Cómo se hace",
+          "data": {
+            "Acción 1": "Retenga la respiración.",
+            "Acción 2": "Sumerja el rostro (ojos y mejillas) en un recipiente con agua helada (10-15°C) por 15-30 segundos.",
+            "Alternativa": "Aplique una bolsa de hielo sobre los ojos y pómulos mientras contiene la respiración e inclina el torso hacia adelante."
+          }
+        }
+      ]
+    },
+    {
+      "id": "tip_breakdown_i",
+      "type": "section",
+      "title": "I - Intense Exercise (Ejercicio Intenso)",
+      "audience": "both",
+      "content": "**Objetivo:** 'Quemar' el exceso de energía y adrenalina de la respuesta de lucha/huida.",
+      "sub_blocks": [
+        {
+          "id": "tip_i_action",
+          "type": "key_value",
+          "title": "Cómo se hace",
+          "data": {
+            "Duración": "10-20 minutos de actividad breve pero vigorosa.",
+            "Ejemplos": "Correr, saltos de tijera (jumping jacks), subir escaleras rápidamente.",
+            "Meta": "Elevar el ritmo cardíaco al 70% de su capacidad para agotar la energía física acumulada."
+          }
+        }
+      ]
+    },
+    {
+      "id": "tip_breakdown_p1",
+      "type": "section",
+      "title": "P - Paced Breathing (Respiración Pausada)",
+      "audience": "both",
+      "content": "**Objetivo:** Estimular el nervio vago enviando la señal de seguridad al cerebro.",
+      "sub_blocks": [
+        {
+          "id": "tip_p1_action",
+          "type": "key_value",
+          "title": "Cómo se hace",
+          "data": {
+            "Ritmo": "Ralentizar a 5-6 respiraciones por minuto.",
+            "Clave": "La **exhalación debe ser más larga** que la inhalación.",
+            "Ejemplo": "Inhalar en 4 segundos, Exhalar en 6 u 8 segundos."
+          }
+        }
+      ]
+    },
+    {
+      "id": "tip_breakdown_p2",
+      "type": "section",
+      "title": "P - Paired Muscle Relaxation (Relajación Muscular Pareada)",
+      "audience": "both",
+      "content": "**Objetivo:** Reducir la tensión física que alimenta la angustia.",
+      "sub_blocks": [
+        {
+          "id": "tip_p2_action",
+          "type": "key_value",
+          "title": "Cómo se hace",
+          "data": {
+            "Paso 1": "Inhalar mientras tensa fuertemente un grupo muscular (ej. manos u hombros).",
+            "Paso 2": "Sostener unos segundos.",
+            "Paso 3": "Soltar la tensión de golpe al exhalar, diciendo mentalmente 'relájate'."
+          }
+        }
+      ]
+    },
+    {
+      "id": "clinician_guide",
+      "type": "section",
+      "title": "Guía para el Médico: Cómo Explicarlo",
+      "audience": "clinician",
+      "content": "Scripts sugeridos para presentar estas herramientas a pacientes en crisis.",
+      "sub_blocks": [
+        {
+          "id": "script_short_circuit",
+          "type": "accordion",
+          "title": "1. Analogía del 'Cortocircuito'",
+          "content": "Explique que con intensidad emocional >80/100, el cerebro racional no funciona.\n\n*'Piensa en las habilidades TIP como un freno de mano o un cortocircuito biológico. Cuando tus emociones están tan altas que no puedes pensar, hablarte a ti mismo no funcionará. Necesitamos 'hackear' tu cuerpo para bajar el volumen de la emoción físicamente y que tu cerebro vuelva a funcionar'*."
+        },
+        {
+          "id": "script_physiology",
+          "type": "accordion",
+          "title": "2. Explicar la Fisiología (El Por qué)",
+          "content": "Reduce la culpa por no poder 'calmarse solo'.\n\n**Temperatura:** *'Vamos a engañar a tu cuerpo para que piense que estás buceando. Al sentir frío en la cara sin respirar, tu corazón se frena automáticamente para conservar oxígeno.'*\n\n**Ejercicio:** *'Tu cuerpo está lleno de adrenalina. Si no la usas, aumenta la angustia. Vamos a correr o saltar para gastar esa energía y que tu cuerpo pueda relajarse.'*"
+        },
+        {
+          "id": "script_when_to_use",
+          "type": "accordion",
+          "title": "3. Cuándo Usarlas (Crisis vs. Diario)",
+          "content": "*'No usarías TIP para un mal día común. Estas son habilidades de supervivencia para cuando sientes que vas a explotar, tienes un impulso de autolesión o sientes que la emoción te va a matar.'*"
+        },
+        {
+          "id": "script_practice",
+          "type": "accordion",
+          "title": "4. Importancia de la Práctica",
+          "content": "*'No esperes a la crisis. Practica sumergir la cara en agua esta semana cuando estés tranquilo, para que tu cuerpo reconozca la sensación.'*"
+        }
+      ]
+    },
+    {
+      "id": "tip_safety",
+      "type": "alert",
+      "title": "Precauciones de Seguridad (Contraindicaciones)",
+      "level": "warning",
+      "audience": "clinician",
+      "content": "**Agua Fría:** NO usar en pacientes con problemas cardíacos, uso de betabloqueantes, trastornos alimentarios (anorexia/bulimia) o condiciones sensibles a cambios bruscos.\n\n**Ejercicio Intenso:** Evaluar riesgo cardiovascular o lesiones físicas previas."
+    }
+  ],
+  "meta": {
+    "source": "DBT Skills Manual + Protocolo Local",
+    "version": "3.0_comprehensive_update"
+  }
+}

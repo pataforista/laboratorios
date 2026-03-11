@@ -1,0 +1,369 @@
+{
+  "schema_version": "1.0.0",
+  "dataset_id": "manual_psiquiatria_v1",
+  "generated_at": "2026-01-06T12:00:00",
+  "files": {
+    "schema": {
+      "path": "dataset/schema/dataset.schema.json",
+      "bytes": 0
+    },
+    "topics": [],
+    "printables": []
+  },
+  "topics": [
+    {
+      "id": "psych_overview",
+      "title": "Evaluación psiquiátrica inicial",
+      "path": "dataset/topics/psych_overview.json",
+      "audience": "clinician",
+      "tags": [
+        "evaluacion",
+        "entrevista",
+        "seguridad",
+        "urgencias"
+      ]
+    },
+    {
+      "id": "psych_suicide_risk",
+      "title": "Riesgo suicida y crisis",
+      "path": "dataset/topics/psych_suicide_risk.json",
+      "audience": "clinician",
+      "tags": [
+        "urgencias",
+        "seguridad",
+        "crisis",
+        "suicidio"
+      ]
+    },
+    {
+      "id": "psych_depression",
+      "title": "Trastorno depresivo mayor",
+      "path": "dataset/topics/psych_depression.json",
+      "audience": "clinician",
+      "tags": [
+        "depresion",
+        "diagnostico",
+        "tratamiento"
+      ]
+    },
+    {
+      "id": "psych_bipolar",
+      "title": "Trastorno bipolar",
+      "path": "dataset/topics/psych_bipolar.json",
+      "audience": "clinician",
+      "tags": [
+        "bipolar",
+        "manía",
+        "tratamiento"
+      ]
+    },
+    {
+      "id": "psych_psychosis",
+      "title": "Psicosis, agitación y esquizofrenia",
+      "path": "dataset/topics/psych_psychosis.json",
+      "audience": "clinician",
+      "tags": [
+        "psicosis",
+        "agitación",
+        "urgencias",
+        "esquizofrenia"
+      ]
+    },
+    {
+      "id": "psych_anxiety",
+      "title": "Trastornos de ansiedad",
+      "path": "dataset/topics/psych_anxiety.json",
+      "audience": "clinician",
+      "tags": [
+        "ansiedad",
+        "panic",
+        "GAD"
+      ]
+    },
+    {
+      "id": "psych_substance_use",
+      "title": "Trastornos por uso de sustancias",
+      "path": "dataset/topics/psych_substance_use.json",
+      "audience": "clinician",
+      "tags": [
+        "sustancias",
+        "adicciones",
+        "SBIRT"
+      ]
+    },
+    {
+      "id": "psych_adherence",
+      "title": "Adherencia terapéutica y alianza",
+      "path": "dataset/topics/psych_adherence.json",
+      "audience": "clinician",
+      "tags": [
+        "tratamiento",
+        "adherencia",
+        "alianza"
+      ]
+    },
+    {
+      "id": "psych_med_monitoring",
+      "title": "Monitoreo de psicofármacos",
+      "path": "dataset/topics/psych_med_monitoring.json",
+      "audience": "clinician",
+      "tags": [
+        "farmacos",
+        "seguridad",
+        "monitoreo",
+        "metabolico"
+      ]
+    },
+    {
+      "id": "psych_clozapine_cigh",
+      "title": "Clozapina: hipomotilidad gastrointestinal (CIGH)",
+      "path": "dataset/topics/psych_clozapine_cigh.json",
+      "audience": "clinician",
+      "tags": [
+        "clozapina",
+        "seguridad",
+        "urgencias"
+      ]
+    },
+    {
+      "id": "psych_qt_antipsychotics",
+      "title": "Antipsicóticos y prolongación del QT",
+      "path": "dataset/topics/psych_qt_antipsychotics.json",
+      "audience": "clinician",
+      "tags": [
+        "seguridad",
+        "cardiologia",
+        "antipsicoticos"
+      ]
+    },
+    {
+      "id": "psych_eps",
+      "title": "Efectos secundarios extrapiramidales (EPS)",
+      "path": "dataset/topics/psych_eps.json",
+      "audience": "clinician",
+      "tags": [
+        "antipsicoticos",
+        "seguridad",
+        "EPS"
+      ]
+    },
+    {
+      "id": "psych_hyperprolactinemia",
+      "title": "Hiperprolactinemia inducida por antipsicóticos",
+      "path": "dataset/topics/psych_hyperprolactinemia.json",
+      "audience": "clinician",
+      "tags": [
+        "antipsicoticos",
+        "endocrino",
+        "seguridad"
+      ]
+    },
+    {
+      "id": "psych_constipation",
+      "title": "Estreñimiento inducido por fármacos",
+      "path": "dataset/topics/psych_constipation.json",
+      "audience": "both",
+      "tags": [
+        "efectos-secundarios",
+        "gastrointestinal",
+        "seguridad"
+      ]
+    },
+    {
+      "id": "psych_antipsychotic_systems_monitoring",
+      "title": "Monitoreo sistémico en tratamiento con antipsicóticos",
+      "path": "dataset/topics/psych_antipsychotic_systems_monitoring.json",
+      "audience": "clinician",
+      "tags": [
+        "seguridad",
+        "monitoreo",
+        "salud-fisica"
+      ]
+    },
+    {
+      "id": "comorb_t2dm",
+      "title": "Manejo de Diabetes Mellitus Tipo 2",
+      "path": "dataset/topics/comorb_t2dm.json",
+      "audience": "both",
+      "tags": [
+        "metabolico",
+        "diabetes"
+      ]
+    },
+    {
+      "id": "comorb_htn",
+      "title": "Manejo de Hipertensión Arterial (HAS)",
+      "path": "dataset/topics/comorb_htn.json",
+      "audience": "both",
+      "tags": [
+        "cardiovascular",
+        "tension"
+      ]
+    },
+    {
+      "id": "comorb_dyslip",
+      "title": "Manejo de Dislipidemias",
+      "path": "dataset/topics/comorb_dyslip.json",
+      "audience": "both",
+      "tags": [
+        "metabolico",
+        "colesterol"
+      ]
+    },
+    {
+      "id": "comorb_obesity",
+      "title": "Monitoreo Metabólico y Obesidad",
+      "path": "dataset/topics/comorb_obesity.json",
+      "audience": "both",
+      "tags": [
+        "peso",
+        "metabolico"
+      ]
+    },
+    {
+      "id": "comorb_masld",
+      "title": "Hígado Graso (MASLD/MASH)",
+      "path": "dataset/topics/comorb_masld.json",
+      "audience": "both",
+      "tags": [
+        "hepatico",
+        "metabolico"
+      ]
+    },
+    {
+      "id": "comorb_hypothy",
+      "title": "Manejo de Hipotiroidismo",
+      "path": "dataset/topics/comorb_hypothy.json",
+      "audience": "both",
+      "tags": [
+        "endocrino",
+        "tiroides"
+      ]
+    },
+    {
+      "id": "lifestyle_overview",
+      "title": "Pilares del Estilo de Vida",
+      "path": "dataset/topics/lifestyle_overview.json",
+      "audience": "both",
+      "tags": [
+        "estilo-de-vida",
+        "prevencion"
+      ]
+    },
+    {
+      "id": "lifestyle_nutrition",
+      "title": "Alimentación Saludable",
+      "path": "dataset/topics/lifestyle_nutrition.json",
+      "audience": "both",
+      "tags": [
+        "dieta",
+        "nutricion"
+      ]
+    },
+    {
+      "id": "lifestyle_activity",
+      "title": "Actividad Física y Sedentarismo",
+      "path": "dataset/topics/lifestyle_activity.json",
+      "audience": "both",
+      "tags": [
+        "ejercicio",
+        "peso"
+      ]
+    },
+    {
+      "id": "lifestyle_sleep",
+      "title": "Higiene del Sueño e Insomnio: Guía para el Médico",
+      "path": "dataset/topics/lifestyle_sleep.json",
+      "audience": "both",
+      "tags": [
+        "sueño",
+        "insomnio"
+      ]
+    },
+    {
+      "id": "lifestyle_anxiety",
+      "title": "Habilidades TIP (DBT) - Módulo de Crisis",
+      "path": "dataset/topics/lifestyle_anxiety.json",
+      "audience": "both",
+      "tags": [
+        "ansiedad",
+        "crisis"
+      ]
+    },
+    {
+      "id": "lifestyle_oral",
+      "title": "Salud Oral y Xerostomía",
+      "path": "dataset/topics/lifestyle_oral.json",
+      "audience": "both",
+      "tags": [
+        "dental",
+        "boca"
+      ]
+    },
+    {
+      "id": "lifestyle_workshops",
+      "title": "Ocupación y Rutina Diaria",
+      "path": "dataset/topics/lifestyle_workshops.json",
+      "audience": "both",
+      "tags": [
+        "rutina",
+        "social"
+      ]
+    },
+    {
+      "id": "prevent_cancer",
+      "title": "Prevención y Tamizaje de Cáncer",
+      "path": "dataset/topics/prevent_cancer.json",
+      "audience": "both",
+      "tags": [
+        "cancer",
+        "prevencion",
+        "oncologia"
+      ]
+    },
+    {
+      "id": "womens_health",
+      "title": "Salud de la Mujer",
+      "path": "dataset/topics/womens_health.json",
+      "audience": "clinician",
+      "tags": [
+        "ginecologia",
+        "obstetricia",
+        "prevencion",
+        "menopausia"
+      ]
+    }
+  ],
+  "printables": [
+    {
+      "id": "sleep_hygiene_checklist_a4",
+      "title": "Checklist de higiene del sueño (A4)",
+      "path": "dataset/printables/sleep_hygiene_checklist_a4.json",
+      "format": "a4"
+    },
+    {
+      "id": "safety_plan_a4",
+      "title": "Plan de seguridad en crisis (A4)",
+      "path": "dataset/printables/safety_plan_a4.json",
+      "format": "a4"
+    },
+    {
+      "id": "medication_log_a4",
+      "title": "Registro de medicación (A4)",
+      "path": "dataset/printables/medication_log_a4.json",
+      "format": "a4"
+    },
+    {
+      "id": "patient_psychoeducation_guide",
+      "title": "Guía breve para pacientes y familias",
+      "path": "dataset/printables/patient_psychoeducation_guide.json",
+      "format": "a4"
+    },
+    {
+      "id": "clozapine_cigh_traffic_light_a4",
+      "title": "Semáforo de salud intestinal en clozapina",
+      "path": "dataset/printables/clozapine_cigh_traffic_light_a4.json",
+      "format": "a4"
+    }
+  ]
+}

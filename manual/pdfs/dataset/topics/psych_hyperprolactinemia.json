@@ -1,0 +1,138 @@
+{
+    "id": "psych_hyperprolactinemia",
+    "title": "Hiperprolactinemia inducida por antipsicóticos",
+    "audience": "clinician",
+    "tags": [
+        "antipsicoticos",
+        "endocrino",
+        "seguridad",
+        "prolactina"
+    ],
+    "blocks": [
+        {
+            "id": "hyperprolactin_overview",
+            "type": "section",
+            "title": "Resumen clínico",
+            "content": "La hiperprolactinemia inducida por antipsicóticos suele ser silenciosa al inicio, pero con impacto sistémico a largo plazo (hipogonadismo y pérdida ósea)."
+        },
+        {
+            "id": "hyperprolactin_mechanism",
+            "type": "section",
+            "title": "Mecanismo tuberoinfundibular",
+            "content": "El bloqueo dopaminérgico D2 en lactotropas hipofisarias elimina el freno dopaminérgico (PIF), aumentando la secreción de prolactina."
+        },
+        {
+            "id": "hyperprolactin_risk_table",
+            "type": "table",
+            "title": "Jerarquía de riesgo por fármaco",
+            "headers": [
+                "Riesgo",
+                "Antipsicóticos"
+            ],
+            "rows": [
+                [
+                    "Muy alto",
+                    "Risperidona, Paliperidona, Amisulprida, Haloperidol"
+                ],
+                [
+                    "Moderado",
+                    "Olanzapina, Ziprasidona"
+                ],
+                [
+                    "Bajo/Neutro",
+                    "Quetiapina, Clozapina"
+                ],
+                [
+                    "Disminución (agonistas parciales)",
+                    "Aripiprazol, Brexpiprazol, Cariprazina"
+                ]
+            ]
+        },
+        {
+            "id": "hyperprolactin_red_flag",
+            "type": "warning",
+            "level": "caution",
+            "title": "Perla clínica",
+            "content": "Prolactina >200 ng/mL con dosis bajas sugiere prolactinoma coexistente: solicitar RM de silla turca."
+        },
+        {
+            "id": "hyperprolactin_impact",
+            "type": "section",
+            "title": "Impacto clínico (hipogonadismo secundario)",
+            "content": "La prolactina alta inhibe la liberación pulsátil de GnRH, causando hipogonadismo hipogonadotrópico.",
+            "sub_blocks": [
+                {
+                    "id": "hyperprolactin_short_term",
+                    "type": "list",
+                    "title": "Síntomas reproductivos",
+                    "items": [
+                        "Mujeres: amenorrea, oligomenorrea, galactorrea, infertilidad.",
+                        "Hombres: disfunción eréctil, disminución de libido, ginecomastia, eyaculación retrógrada."
+                    ]
+                },
+                {
+                    "id": "hyperprolactin_bone",
+                    "type": "warning",
+                    "level": "danger",
+                    "title": "Riesgo óseo",
+                    "content": "La supresión crónica de estrógenos/testosterona reduce la densidad mineral ósea y aumenta fracturas tempranas de cadera/columna."
+                }
+            ]
+        },
+        {
+            "id": "hyperprolactin_monitoring",
+            "type": "section",
+            "title": "Monitoreo",
+            "content": "Cuándo medir prolactina:",
+            "sub_blocks": [
+                {
+                    "id": "hyperprolactin_monitoring_list",
+                    "type": "list",
+                    "items": [
+                        "Basal antes de iniciar risperidona o amisulprida.",
+                        "Seguimiento si aparecen síntomas.",
+                        "Screening anual en pacientes jóvenes o adolescentes, incluso asintomáticos."
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "hyperprolactin_management",
+            "type": "section",
+            "title": "Estrategias de manejo",
+            "content": "Si hay hiperprolactinemia sintomática o >100 ng/mL:",
+            "sub_blocks": [
+                {
+                    "id": "hyperprolactin_management_list",
+                    "type": "list",
+                    "items": [
+                        "Reducir dosis si el control clínico lo permite.",
+                        "Rotar a quetiapina o aripiprazol.",
+                        "Estrategia aripiprazol: añadir 2.5-5 mg como agonista parcial para reducir prolactina.",
+                        "Agonistas dopaminérgicos (cabergolina) solo en casos extremos y con precaución por riesgo psicótico."
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "hyperprolactin_app",
+            "type": "accordion",
+            "title": "Ideas para PWA",
+            "items": [
+                {
+                    "title": "Calculadora de riesgo endocrino",
+                    "content": "Input: fármaco, dosis, edad, sexo. Output: riesgo óseo y recomendaciones de DEXA."
+                },
+                {
+                    "title": "Alerta automática",
+                    "content": "Si >12 meses con risperidona + amenorrea, sugerir densitometría ósea."
+                }
+            ]
+        }
+    ],
+    "meta": {
+        "source": "docencia_y_literatura_clinica",
+        "version": "1.0",
+        "last_reviewed": "2026-01-06"
+    }
+}

@@ -1,0 +1,178 @@
+{
+    "id": "psych_qt_antipsychotics",
+    "title": "Antipsicóticos y prolongación del QT",
+    "audience": "clinician",
+    "tags": [
+        "seguridad",
+        "cardiologia",
+        "antipsicoticos",
+        "QT"
+    ],
+    "blocks": [
+        {
+            "id": "qt_overview",
+            "type": "section",
+            "title": "Riesgo clínico",
+            "content": "La prolongación del QT es un marcador subrogado del riesgo de Torsade de Pointes (TdP), taquicardia ventricular polimórfica que puede degenerar en fibrilación ventricular y muerte súbita."
+        },
+        {
+            "id": "qt_mechanism",
+            "type": "section",
+            "title": "Mecanismo electrofisiológico",
+            "content": "La mayoría de los antipsicóticos prolongan el QT al bloquear canales de potasio IKr (hERG) en miocitos ventriculares, retrasando la repolarización (fase 3). Si un impulso llega antes de completar la repolarización (fenómeno R sobre T), puede desencadenarse TdP."
+        },
+        {
+            "id": "qt_risk_by_drug",
+            "type": "table",
+            "title": "Estratificación de riesgo por fármaco",
+            "headers": [
+                "Nivel de riesgo",
+                "Fármacos",
+                "Notas clínicas"
+            ],
+            "rows": [
+                [
+                    "Alto",
+                    "Tioridazina, Ziprasidona, Haloperidol IV",
+                    "Tioridazina con advertencia de caja negra. Haloperidol IV requiere monitoreo cardiaco continuo por riesgo de Cmax alta."
+                ],
+                [
+                    "Moderado",
+                    "Quetiapina, Risperidona, Clozapina, Haloperidol oral",
+                    "Riesgo dosis-dependiente. Clozapina suele causar taquicardia sinusal, complicando la medición."
+                ],
+                [
+                    "Bajo",
+                    "Aripiprazol, Lurasidona, Brexpiprazol, Olanzapina",
+                    "Opciones preferidas en cardiopatía estructural o QTc basal prolongado."
+                ]
+            ]
+        },
+        {
+            "id": "qt_ziprasidone_note",
+            "type": "warning",
+            "level": "caution",
+            "title": "Nota sobre ziprasidona",
+            "content": "Aunque prolonga el QTc (~10-20 ms), grandes estudios epidemiológicos no muestran mayor tasa de muerte súbita comparada con olanzapina. Es un marcador eléctrico potente, pero su letalidad real es debatida."
+        },
+        {
+            "id": "qt_formulas",
+            "type": "section",
+            "title": "Fórmulas de corrección (QTc)",
+            "content": "El QT varía con la frecuencia cardiaca. La máquina suele usar Bazett, pero sobreestima QTc en taquicardia.",
+            "sub_blocks": [
+                {
+                    "id": "qt_bazett",
+                    "type": "key_value",
+                    "title": "Bazett",
+                    "data": {
+                        "Fórmula": "QTc = QT / √RR",
+                        "Limitación": "Sobrecodifica el riesgo con frecuencia cardiaca alta."
+                    }
+                },
+                {
+                    "id": "qt_fridericia",
+                    "type": "key_value",
+                    "title": "Fridericia",
+                    "data": {
+                        "Fórmula": "QTc = QT / ∛RR",
+                        "Recomendación": "Más precisa con FC > 60-70 lpm."
+                    }
+                },
+                {
+                    "id": "qt_teaching_tip",
+                    "type": "warning",
+                    "level": "info",
+                    "title": "Tip docente",
+                    "content": "Si Bazett marca alerta en un paciente taquicárdico, recalcular manualmente con Fridericia antes de escalar decisiones."
+                }
+            ]
+        },
+        {
+            "id": "qt_monitoring",
+            "type": "section",
+            "title": "Protocolo de monitoreo",
+            "content": "Cuándo pedir EKG:",
+            "sub_blocks": [
+                {
+                    "id": "qt_monitoring_list",
+                    "type": "list",
+                    "items": [
+                        "Basal: idealmente en todos; obligatorio si hay cardiopatía o co-medicación que prolonga QT.",
+                        "Al alcanzar estado estacionario tras la titulación.",
+                        "Anual en pacientes crónicos o si se agregan inhibidores de CYP."
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "qt_thresholds",
+            "type": "table",
+            "title": "Semáforo de valores QTc",
+            "headers": [
+                "Nivel",
+                "QTc",
+                "Acción"
+            ],
+            "rows": [
+                [
+                    "🟢 Normal",
+                    "< 440 ms (hombres) / < 450 ms (mujeres)",
+                    "Continuar vigilancia habitual."
+                ],
+                [
+                    "🟡 Alerta",
+                    "470-500 ms",
+                    "No subir dosis; corregir K+/Mg++; revisar interacciones."
+                ],
+                [
+                    "🔴 Peligro",
+                    "> 500 ms o aumento > 60 ms sobre basal",
+                    "Suspender o cambiar antipsicótico; riesgo de TdP aumenta exponencialmente."
+                ]
+            ]
+        },
+        {
+            "id": "qt_risk_factors",
+            "type": "section",
+            "title": "Factores de riesgo concurrentes",
+            "content": "La TdP suele requerir fármaco + factor del huésped.",
+            "sub_blocks": [
+                {
+                    "id": "qt_risk_list",
+                    "type": "list",
+                    "items": [
+                        "Hipopotasemia e hipomagnesemia (anorexia, alcoholismo, diuréticos).",
+                        "Bradicardia.",
+                        "Interacciones farmacocinéticas (p. ej., quetiapina + inhibidores CYP3A4 como ketoconazol/claritromicina/jugo de toronja).",
+                        "Sexo femenino y edad > 65 años."
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "qt_clinical_pearls",
+            "type": "accordion",
+            "title": "Perlas clínicas",
+            "items": [
+                {
+                    "title": "Haloperidol IV",
+                    "content": "Evitar bolos rápidos; preferir infusión lenta o monitoreo continuo. El haloperidol oral tiene menor riesgo."
+                },
+                {
+                    "title": "Quetiapina",
+                    "content": "Mayor riesgo en sobredosis o adultos mayores; vigilar combinación con escitalopram o citalopram."
+                },
+                {
+                    "title": "Aripiprazol",
+                    "content": "Puede acortar el QT; opción de rescate cuando hay QT prolongado con otros fármacos."
+                }
+            ]
+        }
+    ],
+    "meta": {
+        "source": "maudsley_apa_y_literatura_actual",
+        "version": "1.0",
+        "last_reviewed": "2026-01-06"
+    }
+}

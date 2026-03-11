@@ -1,0 +1,157 @@
+{
+    "id": "psych_psychosis",
+    "title": "Psicosis, agitación y esquizofrenia",
+    "audience": "clinician",
+    "tags": [
+        "psicosis",
+        "agitación",
+        "urgencias",
+        "esquizofrenia"
+    ],
+    "blocks": [
+        {
+            "id": "psych_psychosis_alert",
+            "type": "alert",
+            "title": "Principio de manejo",
+            "level": "warning",
+            "audience": "clinician",
+            "content": "Secuencia recomendada: ambiental → médico → verbal → farmacológico → restrictivo. Primero seguridad médica y del entorno."
+        },
+        {
+            "id": "psych_psychosis_algorithm",
+            "type": "section",
+            "title": "Algoritmo integrado en urgencias",
+            "audience": "clinician",
+            "content": "Use un flujo explícito para disminuir iatrogenia y uso innecesario de medidas restrictivas.",
+            "sub_blocks": [
+                {
+                    "id": "psych_psychosis_step1",
+                    "type": "checklist",
+                    "title": "Paso 1 — Red flags médicos / delirium",
+                    "audience": "clinician",
+                    "items": [
+                        "Si hay datos de delirium o causa médica aguda, priorice ruta médica.",
+                        "No etiquetar como psicosis primaria hasta completar descarte clínico mínimo."
+                    ]
+                },
+                {
+                    "id": "psych_psychosis_step2",
+                    "type": "checklist",
+                    "title": "Paso 2 — Desescalada verbal estructurada",
+                    "audience": "clinician",
+                    "items": [
+                        "Objetivo explícito: bajar activación, no ganar discusión.",
+                        "Mantener distancia segura, voz baja and frases cortas.",
+                        "Ofrecer opciones binarias simples.",
+                        "Validar emoción sin validar delirios.",
+                        "Evitar confrontación, ironía, amenazas o múltiples órdenes simultáneas."
+                    ]
+                },
+                {
+                    "id": "psych_psychosis_step3",
+                    "type": "checklist",
+                    "title": "Paso 3 — Estratificar gravedad y colaboración",
+                    "audience": "clinician",
+                    "items": [
+                        "Agitación leve/moderada con colaboración: preferir VO/SL.",
+                        "Agitación severa o riesgo inmediato: intervención rápida; considerar IM si no coopera."
+                    ]
+                },
+                {
+                    "id": "psych_psychosis_step4",
+                    "type": "checklist",
+                    "title": "Paso 4 — Selección farmacológica por etiología probable",
+                    "audience": "clinician",
+                    "items": [
+                        "Psicosis primaria/manía sin delirium: antipsicótico como base; benzodiacepina adyuvante según caso.",
+                        "Intoxicación por estimulantes o abstinencia alcohol-BZD: benzodiacepina suele ser central.",
+                        "Delirium: tratar causa médica; antipsicótico solo con cautela cuando hay peligro conductual.",
+                        "Akatisia: diferenciar de agitación para evitar empeorar con más antipsicótico."
+                    ]
+                },
+                {
+                    "id": "psych_psychosis_step5",
+                    "type": "checklist",
+                    "title": "Paso 5 — Escalamiento a medidas restrictivas",
+                    "audience": "clinician",
+                    "items": [
+                        "Solo con riesgo inminente para paciente/equipo and tras fracaso o imposibilidad de medidas menos restrictivas.",
+                        "Registrar razón, alternativas intentadas, duración, reevaluación programada and criterios de retiro."
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "psych_psychosis_treatment",
+            "type": "section",
+            "title": "Tratamiento longitudinal",
+            "audience": "clinician",
+            "content": "Combine antipsicóticos con intervenciones psicosociales and seguimiento cercano.",
+            "sub_blocks": [
+                {
+                    "id": "psych_psychosis_recs",
+                    "type": "list",
+                    "title": "Recomendaciones basadas en guías",
+                    "audience": "clinician",
+                    "items": [
+                        "Primer episodio: iniciar antipsicótico a dosis bajas and titular según respuesta.",
+                        "Evaluar adherencia, efectos adversos and necesidades psicosociales.",
+                        "Considerar clozapina tras falta de respuesta a 2 antipsicóticos adecuados.",
+                        "Monitorizar parámetros metabólicos and neurológicos de forma regular."
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "psych_psychosis_printables",
+            "type": "section",
+            "title": "Material para el paciente",
+            "audience": "clinician",
+            "content": "Apoye la adherencia and comprensión del tratamiento.",
+            "sub_blocks": [
+                {
+                    "id": "psych_psychosis_print_meds",
+                    "type": "resource_link",
+                    "audience": "clinician",
+                    "link_id": "medication_log_a4",
+                    "label": "🖨️ Registro de medicación"
+                },
+                {
+                    "id": "psych_psychosis_print_guide",
+                    "type": "resource_link",
+                    "audience": "clinician",
+                    "link_id": "patient_psychoeducation_guide",
+                    "label": "🖨️ Guía breve para pacientes and familias"
+                }
+            ]
+        },
+        {
+            "id": "psych_psychosis_guidelines",
+            "type": "resource_list",
+            "title": "Guías clínicas recomendadas",
+            "audience": "clinician",
+            "items": [
+                {
+                    "name": "American Association for Emergency Psychiatry - Project BETA",
+                    "link": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3298219/",
+                    "description": "Buenas prácticas para desescalada and manejo de agitación."
+                },
+                {
+                    "name": "NICE CG178: Psychosis and schizophrenia in adults",
+                    "link": "https://www.nice.org.uk/guidance/cg178",
+                    "description": "Guía internacional para evaluación and manejo longitudinal."
+                },
+                {
+                    "name": "APA Practice Guideline for Schizophrenia (2020)",
+                    "link": "https://psychiatryonline.org/doi/book/10.1176/appi.books.9780890424841",
+                    "description": "Guía basada en evidencia para tratamiento de esquizofrenia."
+                }
+            ]
+        }
+    ],
+    "meta": {
+        "source": "algoritmo_integrado_psicosis_agitacion",
+        "last_reviewed": "2026-02-11",
+        "notes": "El orden de intervención reduce iatrogenia and mejora trazabilidad de escalamiento."
+    }
+}

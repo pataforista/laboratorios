@@ -1,0 +1,311 @@
+{
+    "id": "psych_antipsychotic_systems_monitoring",
+    "title": "Monitoreo sistémico en tratamiento con antipsicóticos",
+    "audience": "clinician",
+    "tags": [
+        "seguridad",
+        "monitoreo",
+        "antipsicoticos",
+        "salud-fisica"
+    ],
+    "blocks": [
+        {
+            "id": "systems_overview",
+            "type": "section",
+            "title": "Objetivo clínico",
+            "content": "El monitoreo busca prevenir complicaciones sistémicas (cardiovasculares, metabólicas y hematológicas) y reducir el opacamiento diagnóstico en pacientes con SMI."
+        },
+        {
+            "id": "systems_dental",
+            "type": "section",
+            "title": "Salud dental y xerostomía",
+            "content": "La xerostomía por bloqueo muscarínico reduce IgA, limpieza mecánica y remineralización, favoreciendo caries rampantes, candidiasis y enfermedad periodontal.",
+            "sub_blocks": [
+                {
+                    "id": "systems_dental_actions",
+                    "type": "list",
+                    "title": "Manejo",
+                    "items": [
+                        "Sustitutos salivales o saliva artificial.",
+                        "Chicle sin azúcar para estimulación mecánica.",
+                        "Visitas semestrales al odontólogo."
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "systems_smoking",
+            "type": "section",
+            "title": "Tabaco y CYP1A2",
+            "content": "Los hidrocarburos del humo inducen CYP1A2, reduciendo niveles de clozapina/olanzapina. Dejar de fumar súbitamente puede elevar niveles a rango tóxico.",
+            "sub_blocks": [
+                {
+                    "id": "systems_smoking_actions",
+                    "type": "list",
+                    "title": "Recomendaciones",
+                    "items": [
+                        "Preguntar en cada consulta por cambios en hábito tabáquico.",
+                        "Ajustar dosis si el paciente deja de fumar o reinicia."
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "systems_hepatic_renal",
+            "type": "section",
+            "title": "Función hepática y renal",
+            "content": "Los antipsicóticos son lipofílicos y dependen del metabolismo hepático; ajustar dosis en ERC para evitar acumulación de metabolitos.",
+            "sub_blocks": [
+                {
+                    "id": "systems_hepatic_renal_actions",
+                    "type": "list",
+                    "items": [
+                        "Medir transaminasas basales y si hay ictericia/dolor en hipocondrio derecho.",
+                        "Ajustar dosis según función renal (aclaramiento de creatinina)."
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "systems_clozapine_anc",
+            "type": "section",
+            "title": "Hemograma en clozapina",
+            "content": "El ANC guía la seguridad hematológica.",
+            "sub_blocks": [
+                {
+                    "id": "systems_clozapine_schedule",
+                    "type": "list",
+                    "title": "Calendario estándar",
+                    "items": [
+                        "Semanal durante 6 meses.",
+                        "Quincenal de 6 a 12 meses.",
+                        "Mensual de por vida tras el primer año."
+                    ]
+                },
+                {
+                    "id": "systems_clozapine_stop",
+                    "type": "warning",
+                    "level": "danger",
+                    "title": "Criterios de interrupción",
+                    "content": "Si ANC cae por debajo del umbral crítico, suspender clozapina (excepto neutropenia étnica benigna) y monitorizar estrechamente."
+                }
+            ]
+        },
+        {
+            "id": "systems_visual",
+            "type": "section",
+            "title": "Salud visual",
+            "content": "La evidencia actual no muestra asociación causal fuerte entre quetiapina y cataratas. Se recomienda examen basal y luego anual o según edad/síntomas."
+        },
+        {
+            "id": "systems_monitoring_schedule",
+            "type": "section",
+            "title": "Cronograma de monitoreo metabólico",
+            "content": "Basal, seguimiento temprano (4-12 semanas), hito a 3 meses y control anual.",
+            "sub_blocks": [
+                {
+                    "id": "systems_baseline",
+                    "type": "list",
+                    "title": "Evaluación basal",
+                    "items": [
+                        "Peso, IMC y cintura.",
+                        "Presión arterial y signos vitales.",
+                        "Glucosa en ayunas y perfil lipídico.",
+                        "EKG basal (QTc).",
+                        "AIMS basal."
+                    ]
+                },
+                {
+                    "id": "systems_early_followup",
+                    "type": "list",
+                    "title": "Seguimiento 4-12 semanas",
+                    "items": [
+                        "Peso en semanas 4, 8 y 12.",
+                        "Evaluación clínica de EPS/acatisia.",
+                        "Presión arterial y frecuencia cardiaca."
+                    ]
+                },
+                {
+                    "id": "systems_three_months",
+                    "type": "list",
+                    "title": "Hito de 3 meses",
+                    "items": [
+                        "Glucosa y lípidos para detectar diabetes o hipertrigliceridemia.",
+                        "Considerar rotación a fármacos metabólicamente neutros si hay deterioro."
+                    ]
+                },
+                {
+                    "id": "systems_long_term",
+                    "type": "list",
+                    "title": "Monitoreo anual",
+                    "items": [
+                        "Perfil metabólico completo.",
+                        "AIMS cada 6-12 meses (más frecuente con típicos).",
+                        "Prolactina si hay síntomas o uso de risperidona/paliperidona.",
+                        "Salud visual y dental de rutina."
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "systems_alert_thresholds",
+            "type": "table",
+            "title": "Valores de alerta y acción",
+            "headers": [
+                "Parámetro",
+                "Valor de alerta",
+                "Acción sugerida"
+            ],
+            "rows": [
+                [
+                    "Peso",
+                    "Aumento ≥7% del basal",
+                    "Nutrición / rotación / metformina según protocolo."
+                ],
+                [
+                    "Presión arterial",
+                    "≥140/90 mmHg",
+                    "Manejo estándar de hipertensión."
+                ],
+                [
+                    "Glucosa",
+                    "Ayuno ≥126 mg/dL o HbA1c ≥6.5%",
+                    "Manejo de diabetes mellitus."
+                ],
+                [
+                    "Triglicéridos",
+                    ">200 mg/dL",
+                    "Dieta, ejercicio y considerar estatinas/fibratos."
+                ],
+                [
+                    "QTc",
+                    ">500 ms o aumento >60 ms",
+                    "Urgencia: reducir dosis o rotar fármaco."
+                ]
+            ]
+        },
+        {
+            "id": "systems_overshadowing",
+            "type": "section",
+            "title": "Opacamiento diagnóstico",
+            "content": "Evite atribuir síntomas somáticos a la psicosis sin evaluación física básica. El sesgo aumenta la mortalidad prevenible."
+        },
+        {
+            "id": "systems_infectious",
+            "type": "table",
+            "title": "Tamizaje infeccioso",
+            "headers": [
+                "Patología",
+                "Justificación",
+                "Prueba sugerida"
+            ],
+            "rows": [
+                [
+                    "VIH / Sífilis",
+                    "Mayor riesgo por conductas impulsivas en crisis.",
+                    "ELISA / VDRL (basal y anual)."
+                ],
+                [
+                    "Hepatitis C",
+                    "Mayor prevalencia con uso de sustancias.",
+                    "Anti-VHC (al menos una vez)."
+                ],
+                [
+                    "Tuberculosis",
+                    "Hacinamiento y albergues.",
+                    "PPD o IGRA si síntomas >2 semanas."
+                ]
+            ]
+        },
+        {
+            "id": "systems_cancer_screening",
+            "type": "section",
+            "title": "Tamizaje oncológico",
+            "content": "La detección suele tardar más en SMI; favorecer estrategias simplificadas.",
+            "sub_blocks": [
+                {
+                    "id": "systems_cancer_list",
+                    "type": "list",
+                    "items": [
+                        "Cérvix: citología o ADN-VPH según guías locales.",
+                        "Mama: mastografía según edad; vigilancia clínica en hipogonadismo.",
+                        "Pulmón: TAC de baja dosis anual si ≥20 paquetes-año.",
+                        "Colorrectal: FIT anual como alternativa práctica a colonoscopia."
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "systems_immunizations",
+            "type": "section",
+            "title": "Inmunizaciones",
+            "content": "Pacientes con SMI tienen mayor riesgo infeccioso.",
+            "sub_blocks": [
+                {
+                    "id": "systems_immunizations_list",
+                    "type": "list",
+                    "items": [
+                        "Influenza y neumococo.",
+                        "VPH en población joven.",
+                        "Hepatitis B en entornos de larga estancia."
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "systems_bone_health",
+            "type": "section",
+            "title": "Salud ósea y función sexual",
+            "content": "Hiperprolactinemia crónica aumenta riesgo de osteoporosis y disfunción sexual.",
+            "sub_blocks": [
+                {
+                    "id": "systems_bone_actions",
+                    "type": "list",
+                    "items": [
+                        "Densitometría (DEXA) si prolactina crónicamente elevada.",
+                        "Suplementación con vitamina D y calcio; ejercicio de resistencia.",
+                        "Evaluar función sexual (ASEX) por impacto en adherencia."
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "systems_app_alerts",
+            "type": "accordion",
+            "title": "Matriz de alertas para PWA",
+            "items": [
+                {
+                    "title": "Hematología",
+                    "content": "ANC bajo en clozapina: alerta crítica y suspensión según protocolo."
+                },
+                {
+                    "title": "Cardiología",
+                    "content": "QTc >500 ms: alerta crítica; revisar K+/Mg++ y rotar fármaco."
+                },
+                {
+                    "title": "Gastro (CIGH)",
+                    "content": ">2 días sin evacuar: alerta amarilla. >4 días o vómito: alerta roja y urgencias."
+                },
+                {
+                    "title": "Metabólico",
+                    "content": ">5% aumento de peso en 1 mes: alerta amarilla, considerar metformina o rotación."
+                },
+                {
+                    "title": "Endocrino",
+                    "content": "Amenorrea/galactorrea: medir prolactina y considerar aripiprazol."
+                }
+            ]
+        },
+        {
+            "id": "systems_qtc_pseudocode",
+            "type": "section",
+            "title": "Pseudocódigo QTc (Fridericia)",
+            "content": "function calcularAlertas(qt_manual, fc_paciente) {\n  const rr = 60 / fc_paciente;\n  const qtc_f = qt_manual / Math.pow(rr, 1/3);\n  if (qtc_f > 500) return 'ALERTA ROJA: Riesgo inminente de TdP';\n  if (qtc_f > 470) return 'ALERTA AMARILLA: Monitoreo estrecho';\n  return 'Estado cardiovascular: Seguro';\n}"
+        }
+    ],
+    "meta": {
+        "source": "guia_integrada_seguridad_antipsicoticos",
+        "version": "1.0",
+        "last_reviewed": "2026-01-06"
+    }
+}

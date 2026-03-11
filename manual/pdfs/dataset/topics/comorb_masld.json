@@ -1,0 +1,115 @@
+{
+    "id": "comorb_masld",
+    "title": "Hígado Graso (MASLD/MASH)",
+    "audience": "both",
+    "tags": [
+        "comorbilidad",
+        "hepatico",
+        "metabolico",
+        "fibrosis",
+        "resmetirom"
+    ],
+    "blocks": [
+        {
+            "id": "masld_intro_risk",
+            "type": "alert",
+            "title": "Triángulo de Riesgo",
+            "level": "warning",
+            "audience": "clinician",
+            "content": "La principal causa de muerte en MASLD es Cardiovascular, no hepática. El abordaje debe ser dual: proteger el hígado y el corazón."
+        },
+        {
+            "id": "masld_diagnosis",
+            "type": "section",
+            "title": "Diagnóstico (Criterios 2024)",
+            "audience": "clinician",
+            "items": [
+                "**Esteatosis:** Confirmada por imagen o biopsia.",
+                "**+ Riesgo Cardiometabólico (1 de 5):** IMC >25, Glucosa alterada/DM2, HTA, TG >150, HDL bajo.",
+                "**Exclusión:** Alcohol >140g/sem (Mujer) o >210g/sem (Hombre) -> Clasificar como MetALD."
+            ]
+        },
+        {
+            "id": "masld_stratification",
+            "type": "section",
+            "title": "Estratificación de Fibrosis",
+            "audience": "clinician",
+            "content": "Use FIB-4 como tamizaje inicial.",
+            "sub_blocks": [
+                {
+                    "id": "calc_fib4",
+                    "type": "calculator",
+                    "title": "Calculadora FIB-4",
+                    "fn": "fib4_calc",
+                    "inputs": [
+                        {
+                            "key": "age",
+                            "label": "Edad",
+                            "unit": "años"
+                        },
+                        {
+                            "key": "ast",
+                            "label": "AST (GOT)",
+                            "unit": "U/L"
+                        },
+                        {
+                            "key": "alt",
+                            "label": "ALT (GPT)",
+                            "unit": "U/L"
+                        },
+                        {
+                            "key": "platelets",
+                            "label": "Plaquetas",
+                            "unit": "10^9/L"
+                        }
+                    ],
+                    "share_variant": {
+                        "title": "Interpretación",
+                        "content": "<1.3: Bajo Riesgo (Reevaluar 2-3 años). >1.3: Riesgo Indeterminado/Alto -> Derivar a Elastografía (FibroScan)."
+                    }
+                }
+            ]
+        },
+        {
+            "id": "masld_treatment_axes",
+            "type": "section",
+            "title": "Tratamiento por Ejes",
+            "audience": "clinician",
+            "sub_blocks": [
+                {
+                    "type": "key_value",
+                    "title": "A. Estilo de Vida (Pérdida de Peso)",
+                    "data": {
+                        "3-5%": "Reduce Esteatosis.",
+                        "7-10%": "Resuelve Inflamación (MASH).",
+                        ">10%": "Regresión de Fibrosis."
+                    }
+                },
+                {
+                    "type": "list",
+                    "title": "B. Farmacológico (Según Fenotipo)",
+                    "items": [
+                        "**Obesidad/DM2:** Agonistas GLP-1 (Semaglutida/Tirzepatida). Alta eficacia CV y resolución de MASH.",
+                        "**MASH F2-F3 (Fibrosis):** Resmetirom (Agonista THR-beta). 80-100mg/día. Primer fármaco aprobado para fibrosis.",
+                        "**Riesgo CV:** Estatinas OBLIGATORIAS. No suspender por transaminasas leves (hasta 3x LSN)."
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "masld_patient_tips",
+            "type": "checklist",
+            "title": "Recomendaciones al Paciente",
+            "audience": "both",
+            "items": [
+                "**Café:** Beber >3 tazas al día protege el hígado.",
+                "**Dieta:** Mediterránea (Aceite de oliva, nueces, pescado).",
+                "**Ejercicio:** Pesas/Fuerza 2 veces por semana (El músculo es el motor metabólico)."
+            ]
+        }
+    ],
+    "meta": {
+        "source": "AASLD/EASL Guidelines 2024 + Resmetirom Approval",
+        "version": "1.0_new_era"
+    }
+}

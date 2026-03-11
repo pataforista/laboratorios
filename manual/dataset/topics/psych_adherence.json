@@ -1,0 +1,137 @@
+{
+  "id": "psych_adherence",
+  "title": "Adherencia terapéutica y alianza",
+  "audience": "clinician",
+  "tags": [
+    "psiquiatria",
+    "tratamiento",
+    "adherencia",
+    "educacion",
+    "alianza"
+  ],
+  "blocks": [
+    {
+      "id": "adherence_intro",
+      "type": "alert",
+      "title": "Cambio de Paradigma",
+      "level": "info",
+      "audience": "clinician",
+      "content": "La evidencia sugiere transitar del 'cumplimiento' (obediencia pasiva) a la **'alianza terapéutica'** (toma de decisiones compartida). El paciente debe participar activamente para mejorar el apego a largo plazo."
+    },
+    {
+      "id": "adherence_communication",
+      "type": "section",
+      "title": "1. Comunicación y Alianza Terapéutica",
+      "audience": "clinician",
+      "content": "La comunicación deficiente es una barrera mayor (40-60% de olvido de instrucciones).",
+      "sub_blocks": [
+        {
+          "id": "adherence_comm_strategies",
+          "type": "list",
+          "items": [
+            "**Decisiones compartidas:** Pregunte sobre creencias, miedos y expectativas.",
+            "**Explicación clara:** Cubra el Qué, Por qué, Cuándo y Cómo. Explique qué hacer si se olvida una dosis.",
+            "**Entorno libre de juicios:** Normalice la dificultad. En lugar de culpar, pregunte: *'Muchos pacientes tienen dificultad... ¿ha olvidado alguna toma recientemente?'*"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "adherence_simplification",
+      "type": "section",
+      "title": "2. Simplificación del Régimen",
+      "audience": "clinician",
+      "content": "La complejidad aumenta el error.",
+      "sub_blocks": [
+        {
+          "id": "adherence_simple_strategies",
+          "type": "list",
+          "items": [
+            "**Reducción de dosis:** Prescriba monodosis (una toma diaria) o dosis fijas combinadas siempre que sea posible.",
+            "**Sincronización:** Ajuste todos los medicamentos al mismo horario (ej. todos por la mañana) para evitar múltiples tomas."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "adherence_behavioral",
+      "type": "section",
+      "title": "3. Estrategias Conductuales ('Habit Stacking')",
+      "audience": "both",
+      "content": "Ayude a integrar la medicación en la vida diaria (el olvido causa el 50% de no adherencia).",
+      "sub_blocks": [
+        {
+          "id": "adherence_habit_stacking",
+          "type": "key_value",
+          "title": "Técnicas",
+          "data": {
+            "Anclaje a hábitos": "Asociar la toma con una rutina establecida (ej. 'Después de lavarme los dientes' o 'Con el desayuno').",
+            "Recordatorios": "Alarmas en el celular, apps específicas o SMS."
+          }
+        }
+      ]
+    },
+    {
+      "id": "adherence_tools",
+      "type": "section",
+      "title": "4. Herramientas Prácticas",
+      "audience": "both",
+      "content": "Facilitadores externos para el control.",
+      "sub_blocks": [
+        {
+          "id": "adherence_tools_list",
+          "type": "list",
+          "items": [
+            "**Pastilleros (SPD):** Organizadores semanales para verificación visual.",
+            "**Calendarios/Diarios:** Registro visible (ej. en la nevera) para marcar tomas y anotar efectos secundarios."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "adherence_education",
+      "type": "section",
+      "title": "5. Educación y Apoyo Social",
+      "audience": "clinician",
+      "sub_blocks": [
+        {
+          "id": "adherence_social_strategies",
+          "type": "list",
+          "items": [
+            "**Material escrito:** Entregue folletos e instrucciones legibles para reforzar lo verbal.",
+            "**Familia:** Involucre a cuidadores, clave en niños y ancianos.",
+            "**Grupos de apoyo:** Útiles en enfermedades crónicas para mejorar el afrontamiento."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "adherence_followup",
+      "type": "section",
+      "title": "6. Seguimiento y Manejo de Barreras",
+      "audience": "clinician",
+      "content": "La adherencia es dinámica y debe evaluarse en cada visita.",
+      "sub_blocks": [
+        {
+          "id": "adherence_followup_strategies",
+          "type": "list",
+          "items": [
+            "**Efectos adversos:** Advierta sobre ellos y cómo manejarlos. El miedo o aparición inesperada causa abandono.",
+            "**Revisión periódica:** Pregunte activamente sobre barreras prácticas (costo, deglución, envases) y simplifique el esquema."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "adherence_printable_link",
+      "type": "printable_ref",
+      "title": "Herramienta para el paciente",
+      "audience": "both",
+      "printable_id": "medication_log_a4"
+    }
+  ],
+  "meta": {
+    "source": "WHO Adherence to Long-Term Therapies + NICE Guidelines",
+    "version": "1.0_evidence_based"
+  }
+}

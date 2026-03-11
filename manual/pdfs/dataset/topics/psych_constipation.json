@@ -1,0 +1,107 @@
+{
+  "id": "psych_constipation",
+  "title": "Estreñimiento inducido por fármacos",
+  "audience": "both",
+  "tags": [
+    "efectos-secundarios",
+    "gastrointestinal",
+    "psicofarmacos",
+    "seguridad"
+  ],
+  "blocks": [
+    {
+      "id": "constipation_intro",
+      "type": "alert",
+      "title": "Fisiopatología y Riesgo",
+      "level": "info",
+      "audience": "both",
+      "content": "Los antipsicóticos inducen estreñimiento por mecanismos anticolinérgicos, dopaminérgicos e histaminérgicos que reducen la motilidad. No es un estreñimiento funcional simple."
+    },
+    {
+      "id": "constipation_risk_drugs",
+      "type": "section",
+      "title": "1. Fármacos de Alto Riesgo",
+      "audience": "clinician",
+      "content": "Precaución extrema con Clozapina y Olanzapina.",
+      "sub_blocks": [
+        {
+          "type": "text",
+          "title": "Grupos Principales",
+          "content": "- **Antipsicóticos:** Clozapina, Olanzapina, Quetiapina.\n- **Antidepresivos:** Amitriptilina, Nortriptilina (Tricíclicos).\n- **Anticolinérgicos:** Biperideno, Oxibutinina.\n- **Opioides:** Tramadol, Morfina (requieren antagonistas PAMORA si fallan laxantes)."
+        },
+        {
+          "type": "resource_link",
+          "link_id": "psych_clozapine_cigh",
+          "label": "🚨 Ver Protocolo CIGH (Clozapina) para Riesgo Vital"
+        }
+      ]
+    },
+    {
+      "id": "constipation_management",
+      "type": "section",
+      "title": "2. Estrategia de Manejo (Paso a Paso)",
+      "audience": "clinician",
+      "sub_blocks": [
+        {
+          "type": "text",
+          "title": "Paso 1: Prevención (Profilaxis)",
+          "content": "En fármacos de alto riesgo (ej. Clozapina), **iniciar laxantes desde el día 1**. No esperar síntomas."
+        },
+        {
+          "type": "text",
+          "title": "Paso 2: Revisión Farmacológica",
+          "content": "Evaluar carga anticolinérgica total. Reducir dosis o rotar fármacos si es posible (ej. cambiar Tricíclico por ISRS)."
+        },
+        {
+          "type": "list",
+          "title": "Paso 3: Intervención Escalonada",
+          "items": [
+            "1ª Línea (Osmóticos): **Polietilenglicol (PEG)** (Elección por seguridad/eficacia). Lactulosa es alternativa (más gases).",
+            "2ª Línea (Estimulantes): **Bisacodilo o Senósidos**. Necesarios para 'mover' el intestino hipomóvil.",
+            "3ª Línea (Procinéticos): Prucaloprida (agonista 5-HT4), Lubiprostona."
+          ]
+        },
+        {
+          "type": "alert",
+          "title": "Precaución con Fibra",
+          "level": "warning",
+          "content": "En tránsito lento por fármacos (esp. ancianos), el **exceso de fibra insoluble puede causar impactación** si no hay buena hidratación/motilidad. Aumentar con mucha cautela."
+        }
+      ]
+    },
+    {
+      "id": "constipation_patient_script",
+      "type": "section",
+      "title": "3. Guía para Explicar al Paciente",
+      "audience": "clinician",
+      "content": "Script sugerido para educación:",
+      "sub_blocks": [
+        {
+          "type": "text",
+          "title": "Sobre la Causa",
+          "content": "• \"El medicamento bloquea señales en el intestino, haciéndolo más lento y secando las heces.\"\n• \"No es una molestia menor; si se detiene por completo es una urgencia.\""
+        },
+        {
+          "type": "text",
+          "title": "Medidas Diarias",
+          "content": "• **Líquidos:** 1.5 - 2 litros/día (Crucial para que el laxante funcione).\n• **Rutina:** Ir al baño a la misma hora (post-desayuno).\n• **Posición:** Usar taburete para elevar rodillas."
+        },
+        {
+          "type": "text",
+          "title": "Tratamiento Médico",
+          "content": "• \"Probablemente necesite laxante mientras tome el medicamento. No es 'malo' usarlo a largo plazo aquí.\"\n• \"Evite laxantes de hierbas sin avisar (pueden irritar).\""
+        },
+        {
+          "type": "alert",
+          "title": "Signos de Alarma (Avisar)",
+          "level": "critical",
+          "content": "- Dolor abdominal severo.\n- No expulsar gases.\n- Distensión abdominal marcada.\n- > 3-4 días sin evacuar."
+        }
+      ]
+    }
+  ],
+  "meta": {
+    "source": "Guía de Manejo Estreñimiento Inducido por Fármacos",
+    "version": "1.0"
+  }
+}

@@ -1,0 +1,163 @@
+{
+  "id": "lifestyle_sleep",
+  "title": "Higiene del Sueño e Insomnio: Guía para el Médico",
+  "audience": "both",
+  "tags": [
+    "lifestyle",
+    "sleep",
+    "insomnio",
+    "salud_mental",
+    "tcc-i"
+  ],
+  "blocks": [
+    {
+      "id": "sleep_intro_clinician",
+      "type": "section",
+      "title": "1. Introducción para el Médico",
+      "audience": "clinician",
+      "content": "Aclare al paciente que la **higiene del sueño** por sí sola puede no ser suficiente para el insomnio crónico, pero es un componente necesario que debe acompañar a la **Terapia Cognitivo-Conductual para el Insomnio (TCC-I)**. El objetivo es eliminar obstáculos extrínsecos y optimizar el entorno biológico."
+    },
+    {
+      "id": "sleep_hygiene_measures",
+      "type": "section",
+      "title": "2. Medidas de Higiene del Sueño",
+      "audience": "both",
+      "content": "Modificación de estilo de vida y entorno para regular el reloj biológico.",
+      "sub_blocks": [
+        {
+          "id": "hygiene_a_schedules",
+          "type": "list",
+          "title": "A. Horarios y Rutinas (Ritmo Circadiano)",
+          "items": [
+            "**Regularidad:** Levántese a la misma hora todos los días (incluso fines de semana).",
+            "**Siestas:** Evítelas o limítelas a 15-20 min (máximo 30) y nunca después de las 15:00h.",
+            "**Luz:** Exposición a luz solar por la mañana (30-40 min); reduzca pantallas 1-2h antes de dormir."
+          ]
+        },
+        {
+          "id": "hygiene_b_substances",
+          "type": "list",
+          "title": "B. Sustancias y Dieta",
+          "items": [
+            "**Cafeína:** Evitar 4-6h antes de acostarse (café, té, refrescos, chocolate).",
+            "**Alcohol:** Evitar cerca de la hora de dormir; fragmenta el sueño y reduce REM.",
+            "**Nicotina:** Evitar antes de dormir (es un estimulante).",
+            "**Cena:** Ligera, 2-3h antes. No ir a la cama con hambre ni muy lleno. Limitar líquidos."
+          ]
+        },
+        {
+          "id": "hygiene_c_environment",
+          "type": "list",
+          "title": "C. Entorno del Dormitorio",
+          "items": [
+            "Mantenga la habitación oscura, silenciosa y fresca (18-22°C).",
+            "**Relojes:** Retire o cubra los relojes visibles. Mirar la hora genera ansiedad ('cálculo de horas')."
+          ]
+        },
+        {
+          "id": "hygiene_d_activity",
+          "type": "list",
+          "title": "D. Actividad Física",
+          "items": [
+            "Ejercicio aeróbico regular (30-40 min), pero finalizar al menos **3 horas antes** de dormir."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sleep_stimulus_control",
+      "type": "section",
+      "title": "3. Terapia de Control de Estímulos",
+      "audience": "both",
+      "content": "Intervención clave para romper la asociación CONDICIONADA entre Cama = Vigilia/Frustración.",
+      "sub_blocks": [
+        {
+          "id": "stimulus_rules",
+          "type": "list",
+          "title": "Reglas Estrictas",
+          "items": [
+            "**Uso exclusivo:** La cama es SOLO para dormir y tener relaciones sexuales. No leer, TV, comer, ni trabajar.",
+            "**Solo con sueño:** Vaya a la cama SOLO cuando tenga sueño (somnolencia real, no cansancio)."
+          ]
+        },
+        {
+          "id": "sleep_15min_rule",
+          "type": "warning",
+          "level": "warning",
+          "title": "La Regla de los 15-20 Minutos",
+          "content": "Si no logra dormirse en aprox. **15-20 minutos**:\n\n1.  **SALGA DE LA CAMA y de la habitación.**\n2.  Vaya a otro lugar tenue y realice una actividad aburrida/relajante.\n3.  Regrese a la cama SOLO cuando vuelva a tener sueño.\n4.  Repita el proceso cuantas veces sea necesario."
+        }
+      ]
+    },
+    {
+      "id": "sleep_other_interventions",
+      "type": "section",
+      "title": "4. Otras Intervenciones Conductuales",
+      "audience": "clinician",
+      "sub_blocks": [
+        {
+          "id": "behavioral_list",
+          "type": "list",
+          "items": [
+            "**Restricción del Sueño:** Limitar tiempo en cama para igualar al tiempo real de sueño (nunca <5h). Aumenta presión de sueño.",
+            "**Relajación:** Respiración diafragmática o relajación muscular progresiva.",
+            "**'Tiempo de Preocupación':** Dedicar 20-30 min por la tarde a escribir pendientes para no llevarlos a la cama.",
+            "**Rutina Pre-sueño (Wind-down):** Desconexión 1 hora antes (baño tibio, lectura suave)."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sleep_pharmaco",
+      "type": "section",
+      "title": "5. Consideraciones Farmacológicas",
+      "audience": "clinician",
+      "content": "Si se decide usar medicación:",
+      "sub_blocks": [
+        {
+          "id": "pharmaco_list",
+          "type": "list",
+          "items": [
+            "Usar dosis efectiva más baja posible y por tiempo limitado (3-4 semanas).",
+            "Considerar perfil (ansiedad, despertar precoz) para elección del fármaco.",
+            "Planear deprescripción gradual para evitar rebote."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sleep_calc_section",
+      "type": "section",
+      "title": "Herramientas",
+      "audience": "both",
+      "sub_blocks": [
+        {
+          "id": "calc_sleep_efficiency",
+          "type": "calculator",
+          "title": "Calculadora de Eficiencia de Sueño",
+          "fn": "sleep_eff",
+          "inputs": [
+            {
+              "key": "bed_time",
+              "label": "Tiempo total en cama (horas)",
+              "unit": "h"
+            },
+            {
+              "key": "sleep_time",
+              "label": "Tiempo real durmiendo (horas)",
+              "unit": "h"
+            }
+          ],
+          "share_variant": {
+            "title": "Eficiencia del Sueño",
+            "content": "Si es <85%, pasar más tiempo en cama empeora el insomnio. Considere Restricción del Sueño."
+          }
+        }
+      ]
+    }
+  ],
+  "meta": {
+    "source": "manual_local_comorbilidades + CBT-I Guidelines",
+    "version": "4.0_physician_guide"
+  }
+}

@@ -255,6 +255,30 @@
           ]
         },
         {
+          "analyte_id": "mono_abs",
+          "name": "Monocitos absolutos",
+          "units": "/µL",
+          "ref_ranges": [
+            {
+              "sex": "any",
+              "low": 200,
+              "high": 800
+            }
+          ]
+        },
+        {
+          "analyte_id": "baso_abs",
+          "name": "Basófilos absolutos",
+          "units": "/µL",
+          "ref_ranges": [
+            {
+              "sex": "any",
+              "low": 0,
+              "high": 200
+            }
+          ]
+        },
+        {
           "analyte_id": "plt",
           "name": "Plaquetas",
           "units": "/µL",

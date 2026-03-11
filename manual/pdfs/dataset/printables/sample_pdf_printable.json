@@ -1,0 +1,13 @@
+{
+  "id": "sample_pdf_printable",
+  "title": "Ejemplo — PDF (servidor)",
+  "format": "a4",
+  "template": "pdf",
+  "pdf": {
+    "url": "./pdfs/pon_aqui_tu_pdf.pdf"
+  },
+  "meta": {
+    "source": "sample",
+    "last_reviewed": "2026-01-06"
+  }
+}

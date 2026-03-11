@@ -1,0 +1,105 @@
+{
+    "id": "psych_depression",
+    "title": "Trastorno depresivo mayor",
+    "audience": "clinician",
+    "tags": [
+        "depresion",
+        "diagnostico",
+        "tratamiento",
+        "ISRS"
+    ],
+    "blocks": [
+        {
+            "id": "depression_diagnosis",
+            "type": "section",
+            "title": "Diagnóstico (DSM-5-TR)",
+            "content": "Requiere ≥5 síntomas por 2 semanas (al menos uno debe ser humor depresivo o anhedonia).",
+            "items": [
+                "Humor depresivo la mayor parte del día.",
+                "Anhedonia (pérdida de interés o placer).",
+                "Pérdida o aumento de peso/apetito significativos.",
+                "Insomnio o hipersomnia.",
+                "Agitación o enlentecimiento psicomotor.",
+                "Fatiga o pérdida de energía.",
+                "Sentimientos de inutilidad o culpa excesiva.",
+                "Disminución de la capacidad para pensar o concentrarse.",
+                "Pensamientos recurrentes de muerte o ideación suicida."
+            ]
+        },
+        {
+            "id": "depression_screening",
+            "type": "section",
+            "title": "Tamizaje y Severidad",
+            "content": "Utilice el PHQ-9 para cuantificar severidad y monitorear respuesta al tratamiento.",
+            "sub_blocks": [
+                {
+                    "type": "table",
+                    "title": "Puntajes PHQ-9",
+                    "headers": [
+                        "Puntuación",
+                        "Severidad",
+                        "Acción recomendada"
+                    ],
+                    "rows": [
+                        [
+                            "5-9",
+                            "Leve",
+                            "Vigilancia, psicoeducación."
+                        ],
+                        [
+                            "10-14",
+                            "Moderada",
+                            "Psicoterapia o fármacos."
+                        ],
+                        [
+                            "15-19",
+                            "Moderada-Grave",
+                            "Fármacos + Psicoterapia."
+                        ],
+                        [
+                            "> 20",
+                            "Grave",
+                            "Fármacos (posible combo) + Terapia intensa."
+                        ]
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "depression_treatment",
+            "type": "section",
+            "title": "Tratamiento Farmacológico (Primera línea)",
+            "content": "Los ISRS son la primera línea por seguridad y tolerabilidad.",
+            "sub_blocks": [
+                {
+                    "type": "list",
+                    "title": "Opciones comunes",
+                    "items": [
+                        "Sertralina: 50-200 mg (segura en cardiopatía).",
+                        "Escitalopram: 10-20 mg (pocos efectos secundarios).",
+                        "Fluoxetina: 20-60 mg (útil en bulimia y depresión infantil).",
+                        "Paroxetina: 20-50 mg (más sedante y anticolinérgica)."
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "depression_refractory",
+            "type": "warning",
+            "level": "caution",
+            "title": "Depresión Resistente",
+            "content": "Si no hay respuesta tras 2 ensayos adecuados (4-8 semanas a dosis máxima):",
+            "items": [
+                "Revisar adherencia y diagnóstico (¿Trastorno Bipolar?).",
+                "Optimización de dosis.",
+                "Potenciación (Litio, antipsicóticos atípicos) o combinación.",
+                "Referencia a psiquiatría especializada."
+            ]
+        }
+    ],
+    "meta": {
+        "source": "APA / CANMAT Guidelines",
+        "version": "1.1",
+        "last_reviewed": "2026-02-04"
+    }
+}

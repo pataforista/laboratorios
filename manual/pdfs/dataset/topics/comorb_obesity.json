@@ -1,0 +1,103 @@
+{
+  "id": "comorb_obesity",
+  "title": "Monitoreo Metabólico y Obesidad",
+  "audience": "both",
+  "tags": ["metabolico", "psiquiatria", "efectos_adversos", "peso"],
+  "blocks": [
+    {
+      "id": "obesity_calc_section",
+      "type": "section",
+      "title": "Evaluación Antropométrica",
+      "audience": "both",
+      "sub_blocks": [
+        {
+          "id": "calc_bmi_std",
+          "type": "calculator",
+          "title": "Calculadora de IMC",
+          "fn": "bmi",
+          "inputs": [
+            { "key": "weight", "label": "Peso", "unit": "kg", "step": "0.1" },
+            { "key": "height", "label": "Estatura", "unit": "m", "step": "0.01" }
+          ],
+          "share_variant": {
+            "title": "Su índice de masa corporal",
+            "content": "El IMC es una referencia matemática para saber si su peso es adecuado para su estatura."
+          }
+        }
+      ]
+    },
+    {
+      "id": "obesity_classification_table",
+      "type": "table",
+      "title": "Clasificación IMC (OMS)",
+      "audience": "clinician",
+      "headers": ["Clasificación", "Rango IMC (kg/m²)"],
+      "rows": [
+        { "class": "Bajo Peso", "range": "< 18.5" },
+        { "class": "Normal", "range": "18.5 - 24.9" },
+        { "class": "Sobrepeso", "range": "25.0 - 29.9" },
+        { "class": "Obesidad G1", "range": "30.0 - 34.9" },
+        { "class": "Obesidad G2", "range": "35.0 - 39.9" },
+        { "class": "Obesidad G3 (Mórbida)", "range": "≥ 40.0" }
+      ]
+    },
+    {
+      "id": "obesity_waist_alert",
+      "type": "alert",
+      "title": "Riesgo Cardiovascular (Cintura)",
+      "level": "warning",
+      "audience": "clinician",
+      "content": "Perímetro abdominal elevado implica mayor riesgo metabólico independientemente del IMC:\n\n• Hombres: > 90 cm\n• Mujeres: > 80 cm\n*(Criterios IDF para población latinoamericana)*"
+    },
+    {
+      "id": "obesity_monitoring_protocol",
+      "type": "section",
+      "title": "Protocolo en uso de Antipsicóticos",
+      "audience": "clinician",
+      "content": "Vigilancia estricta de efectos adversos metabólicos.",
+      "sub_blocks": [
+        {
+          "id": "obesity_check_moments",
+          "type": "checklist",
+          "title": "Momentos de Evaluación",
+          "items": [
+            "Basal: Al iniciar tratamiento.",
+            "Mensual: Durante los primeros 3 meses.",
+            "Trimestral: Durante el primer año.",
+            "Anual: Si se mantiene estable."
+          ]
+        },
+        {
+          "id": "obesity_alarm_sign",
+          "type": "alert",
+          "level": "danger",
+          "title": "Señal de Alarma",
+          "content": "Aumento >7% del peso corporal inicial requiere reevaluar la intervención farmacológica o referir a nutrición."
+        }
+      ]
+    },
+    {
+      "id": "obesity_patient_tips",
+      "type": "section",
+      "title": "Hábitos Saludables",
+      "audience": "both",
+      "sub_blocks": [
+        {
+          "id": "obesity_tips_list",
+          "type": "checklist",
+          "title": "Pequeños cambios, grandes resultados",
+          "items": [
+            "Evite bebidas azucaradas (refrescos, jugos).",
+            "Aumente el consumo de agua simple.",
+            "Camine al menos 30 minutos al día.",
+            "Duerma entre 7 y 8 horas diarias (el mal sueño aumenta el hambre)."
+          ]
+        }
+      ]
+    }
+  ],
+  "meta": {
+    "source": "manual_local_comorbilidades",
+    "version": "2.1_aligned_calc"
+  }
+}

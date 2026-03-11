@@ -1,0 +1,186 @@
+{
+    "id": "psych_eps",
+    "title": "Efectos secundarios extrapiramidales (EPS)",
+    "audience": "clinician",
+    "tags": [
+        "antipsicoticos",
+        "seguridad",
+        "EPS",
+        "movimiento"
+    ],
+    "blocks": [
+        {
+            "id": "eps_overview",
+            "type": "section",
+            "title": "Visión general",
+            "content": "Los antipsicóticos de segunda generación reducen el riesgo extrapiramidal, pero no lo eliminan (especialmente con risperidona >6 mg, lurasidona o ziprasidona). Divida la evaluación en síndromes agudos y tardíos para una detección temprana."
+        },
+        {
+            "id": "eps_acute_dystonia",
+            "type": "section",
+            "title": "Distonía aguda",
+            "content": "Emergencia temprana que suele aparecer en 24-96 horas tras iniciar o aumentar dosis. Contracción muscular sostenida y dolorosa.",
+            "sub_blocks": [
+                {
+                    "id": "eps_acute_dystonia_risk",
+                    "type": "list",
+                    "title": "Factores de riesgo",
+                    "items": [
+                        "Edad < 30 años.",
+                        "Sexo masculino.",
+                        "Alta masa muscular.",
+                        "Antipsicóticos de alta potencia (haloperidol).",
+                        "Paciente naive (primer tratamiento)."
+                    ]
+                },
+                {
+                    "id": "eps_acute_dystonia_presentations",
+                    "type": "list",
+                    "title": "Presentaciones clínicas",
+                    "items": [
+                        "Crisis oculógira (desviación sostenida de la mirada).",
+                        "Tortícolis o retrocolis.",
+                        "Trismo.",
+                        "Espasmo laríngeo con estridor (riesgo vital)."
+                    ]
+                },
+                {
+                    "id": "eps_acute_dystonia_management",
+                    "type": "warning",
+                    "level": "danger",
+                    "title": "Manejo inmediato",
+                    "content": "Respuesta rápida a anticolinérgicos parenterales: biperideno IM o difenhidramina IM/IV. Monitorizar vía aérea si hay estridor."
+                }
+            ]
+        },
+        {
+            "id": "eps_akathisia",
+            "type": "section",
+            "title": "Acatisia",
+            "content": "Inquietud interna disfórica con necesidad de moverse. Es frecuente y subdiagnosticada, asociada a ideación suicida, agresividad impulsiva y abandono de tratamiento.",
+            "sub_blocks": [
+                {
+                    "id": "eps_akathisia_signs",
+                    "type": "list",
+                    "title": "Signos clínicos",
+                    "items": [
+                        "Tasikinesia (marcha en el sitio).",
+                        "Cruzar/descruzar piernas de forma constante.",
+                        "Incapacidad para relajarse."
+                    ]
+                },
+                {
+                    "id": "eps_akathisia_pitfall",
+                    "type": "warning",
+                    "level": "caution",
+                    "title": "Error común",
+                    "content": "Confundir acatisia con agitación psicótica o ansiedad puede llevar a subir la dosis y empeorar el cuadro."
+                },
+                {
+                    "id": "eps_akathisia_management",
+                    "type": "list",
+                    "title": "Manejo",
+                    "items": [
+                        "Reducir dosis o cambiar a fármaco de baja afinidad (quetiapina, clozapina).",
+                        "Primera línea: beta-bloqueadores lipofílicos (propranolol 10-40 mg).",
+                        "Los anticolinérgicos suelen ser ineficaces en acatisia."
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "eps_parkinsonism",
+            "type": "section",
+            "title": "Parkinsonismo inducido por neurolépticos",
+            "content": "Inicio subagudo (semanas-meses) por bloqueo dopaminérgico nigroestriado. Puede mimetizar Parkinson idiopático.",
+            "sub_blocks": [
+                {
+                    "id": "eps_parkinsonism_triad",
+                    "type": "list",
+                    "title": "Tríada clásica",
+                    "items": [
+                        "Temblor de reposo bilateral y simétrico.",
+                        "Rigidez en rueda dentada (cogwheel).",
+                        "Bradicinesia/acinesia."
+                    ]
+                },
+                {
+                    "id": "eps_parkinsonism_tip",
+                    "type": "warning",
+                    "level": "info",
+                    "title": "Tip diagnóstico",
+                    "content": "Diferenciar bradicinesia de síntomas negativos: la rigidez en muñecas/codos sugiere parkinsonismo y no abulia."
+                }
+            ]
+        },
+        {
+            "id": "eps_tardive_dyskinesia",
+            "type": "section",
+            "title": "Discinesia tardía",
+            "content": "Aparece tras exposición prolongada (>3 meses) y puede ser irreversible. Se asocia a hipersensibilidad dopaminérgica postsináptica (upregulation).",
+            "sub_blocks": [
+                {
+                    "id": "eps_td_clinical",
+                    "type": "list",
+                    "title": "Clínica típica",
+                    "items": [
+                        "Movimientos oro-buco-linguales (masticación, protusión lingual, muecas).",
+                        "Movimientos coreoatetoides en dedos o pelvis."
+                    ]
+                },
+                {
+                    "id": "eps_td_management",
+                    "type": "list",
+                    "title": "Prevención y manejo",
+                    "items": [
+                        "Evitar anticolinérgicos crónicos (pueden empeorar la discinesia tardía).",
+                        "Cambiar a clozapina si es clínicamente posible.",
+                        "Considerar inhibidores VMAT2 (valbenazina, deutetrabenazina)."
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "eps_aims",
+            "type": "section",
+            "title": "Evaluación estructurada: AIMS",
+            "content": "La escala AIMS permite documentar movimientos involuntarios (0-4) en 7 áreas corporales.",
+            "sub_blocks": [
+                {
+                    "id": "eps_aims_setup",
+                    "type": "list",
+                    "title": "Protocolo de aplicación",
+                    "items": [
+                        "Paciente sentado en silla dura sin reposabrazos.",
+                        "Observación en reposo mientras se conversa (sin alertar al paciente).",
+                        "Maniobras: abrir boca, sacar lengua, tapping pulgar-dedos, ponerse de pie y extender brazos."
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "eps_digital_ideas",
+            "type": "accordion",
+            "title": "Ideas para tu PWA",
+            "items": [
+                {
+                    "title": "Temporizador AIMS",
+                    "content": "Integrar un temporizador de 60 segundos para observación previa al checklist."
+                },
+                {
+                    "title": "Videos de referencia",
+                    "content": "Clips cortos mostrando temblor rítmico vs discinesia arrítmica/coreica."
+                },
+                {
+                    "title": "Calculadora de equivalencias",
+                    "content": "Herramienta para rotación de antipsicóticos ante acatisia severa."
+                }
+            ]
+        }
+    ],
+    "meta": {
+        "source": "docencia_y_literatura_clinica",
+        "version": "1.0",
+        "last_reviewed": "2026-01-06"
+    }
+}

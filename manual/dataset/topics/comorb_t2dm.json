@@ -1,0 +1,128 @@
+{
+  "id": "comorb_t2dm",
+  "title": "Manejo de Diabetes Mellitus Tipo 2",
+  "audience": "both",
+  "tags": ["comorbilidad", "metabolico", "cronico", "guia"],
+  "blocks": [
+    {
+      "id": "t2dm_calc_section",
+      "type": "section",
+      "title": "Calculadora de Resistencia (HOMA-IR)",
+      "audience": "clinician",
+      "sub_blocks": [
+        {
+          "id": "calc_homa",
+          "type": "calculator",
+          "title": "Índice HOMA-IR",
+          "fn": "homa_ir",
+          "inputs": [
+            { "key": "glucose", "label": "Glucosa Ayuno", "unit": "mg/dL" },
+            { "key": "insulin", "label": "Insulina Basal", "unit": "µUI/mL" }
+          ],
+          "share_variant": {
+            "title": "¿Qué es la resistencia a la insulina?",
+            "content": "Es cuando sus células no 'abren la puerta' para dejar entrar el azúcar, obligando al páncreas a trabajar doble."
+          }
+        }
+      ]
+    },
+    {
+      "id": "t2dm_diagnosis_section",
+      "type": "section",
+      "title": "Criterios Diagnósticos",
+      "audience": "clinician",
+      "content": "Se requieren 2 pruebas alteradas para confirmar, salvo síntomas inequívocos.",
+      "sub_blocks": [
+        {
+          "id": "t2dm_dx_table",
+          "type": "table",
+          "title": "Parámetros Locales",
+          "headers": ["Prueba", "Punto de Corte"],
+          "rows": [
+            { "test": "Glucosa Ayuno (GPA)", "cut": "> 126 mg/dL" },
+            { "test": "HbA1c (Ver nota)", "cut": "> 7.0 %" },
+            { "test": "GPA + Síntomas", "cut": "> 200 mg/dL (Directo)" }
+          ]
+        },
+        {
+          "id": "t2dm_note_alert",
+          "type": "alert",
+          "level": "info",
+          "content": "Nota: El criterio local de HbA1c (>7%) difiere de guías ADA (≥6.5%). Privilegiar criterio clínico."
+        }
+      ]
+    },
+    {
+      "id": "t2dm_step1",
+      "type": "section",
+      "title": "Paso 1: Metformina + Estilo de Vida",
+      "audience": "clinician",
+      "sub_blocks": [
+        {
+          "id": "t2dm_metformin_titration",
+          "type": "key_value",
+          "title": "Estrategia de Titulación (Evitar diarrea)",
+          "data": {
+            "Inicio": "425 mg (1/2 de 850) por 4 días",
+            "Progresión": "Subir dosis cada 3-5 días si se tolera",
+            "Dosis Óptima": "850 mg c/24h o 500 mg c/12h"
+          }
+        },
+        {
+          "id": "t2dm_side_effects",
+          "type": "warning",
+          "title": "Efectos Adversos",
+          "content": "Advertir sobre diarrea, sabor metálico o malestar estomacal. Suelen desaparecer en 2 semanas."
+        }
+      ]
+    },
+    {
+      "id": "t2dm_step2",
+      "type": "section",
+      "title": "Paso 2: Terapia Dual",
+      "audience": "clinician",
+      "content": "Agregar Inhibidor DPP-4 (Ej. Sitagliptina).",
+      "sub_blocks": [
+        {
+          "id": "t2dm_dual_indications",
+          "type": "checklist",
+          "title": "¿Cuándo iniciar dual?",
+          "items": [
+            "Inicio inmediato si HbA1c > 8% al diagnóstico.",
+            "Si tras 3 meses de Metformina no baja de 7%."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "t2dm_patient_edu",
+      "type": "section",
+      "title": "Educación al Paciente",
+      "audience": "both",
+      "sub_blocks": [
+        {
+          "id": "t2dm_hypo_signs",
+          "type": "checklist",
+          "title": "Signos de Azúcar Baja (Hipoglucemia)",
+          "items": [
+            "Sudor frío y temblor de manos.",
+            "Hambre intensa repentina.",
+            "Mareo o confusión.",
+            "¿Qué hacer? Tome medio vaso de jugo o refresco y espere 15 min."
+          ]
+        },
+        {
+          "id": "t2dm_foot_care",
+          "type": "text",
+          "title": "Cuidado de los Pies",
+          "content": "• Revise sus pies todos los días con un espejo.\n• Nunca camine descalzo.\n• Use crema humectante (pero NO entre los dedos).\n• Corte las uñas en línea recta."
+        }
+      ]
+    }
+  ],
+  "meta": {
+    "source": "manual_local_comorbilidades",
+    "version": "2.2_interactive",
+    "last_reviewed": "2026-01-06"
+  }
+}

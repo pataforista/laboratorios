@@ -1,0 +1,45 @@
+{
+    "id": "patient_psychoeducation_guide",
+    "title": "Guía breve para pacientes y familias",
+    "format": "a4",
+    "template": "guide_checklist",
+    "sections": [
+        {
+            "title": "Sobre el tratamiento",
+            "items": [
+                "Tome la medicación exactamente como se indicó.",
+                "No suspenda medicamentos sin hablar con su equipo de salud.",
+                "Informe efectos adversos o cambios importantes de ánimo."
+            ]
+        },
+        {
+            "title": "Autocuidado",
+            "items": [
+                "Mantenga rutina de sueño y alimentación regular.",
+                "Evite alcohol y drogas, pueden empeorar los síntomas.",
+                "Realice actividad física acorde a su capacidad."
+            ]
+        },
+        {
+            "title": "Señales de alarma",
+            "items": [
+                "Pensamientos de hacerse daño o sentir desesperanza intensa.",
+                "Escuchar voces o ver cosas que otros no perciben.",
+                "Cambios bruscos de ánimo con conductas de riesgo.",
+                "Incapacidad para dormir varios días seguidos."
+            ]
+        },
+        {
+            "title": "Cuándo pedir ayuda",
+            "items": [
+                "Si las señales de alarma aparecen, busque ayuda inmediata.",
+                "Acuda a urgencias si no puede mantenerse a salvo.",
+                "Comparta este plan con un familiar o amigo de confianza."
+            ]
+        }
+    ],
+    "meta": {
+        "source": "psicoeducacion_clinica",
+        "last_reviewed": "2026-01-06"
+    }
+}

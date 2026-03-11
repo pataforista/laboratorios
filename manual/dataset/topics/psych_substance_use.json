@@ -1,0 +1,88 @@
+{
+    "id": "psych_substance_use",
+    "title": "Trastornos por uso de sustancias",
+    "audience": "clinician",
+    "tags": [
+        "sustancias",
+        "adicciones",
+        "SBIRT"
+    ],
+    "blocks": [
+        {
+            "id": "psych_substance_screen",
+            "type": "section",
+            "title": "Tamizaje y evaluación",
+            "audience": "clinician",
+            "content": "Utilice herramientas breves y evalúe riesgos de abstinencia.",
+            "sub_blocks": [
+                {
+                    "id": "psych_substance_tools",
+                    "type": "list",
+                    "title": "Herramientas útiles",
+                    "audience": "clinician",
+                    "items": [
+                        "AUDIT-C para alcohol.",
+                        "DAST-10 o ASSIST para otras sustancias.",
+                        "Evaluar consumo concomitante de benzodiacepinas y opioides."
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "psych_substance_red_flags",
+            "type": "alert",
+            "title": "Riesgo de abstinencia grave",
+            "level": "danger",
+            "audience": "clinician",
+            "content": "Alcohol o benzodiacepinas: riesgo de convulsiones y delirium. Requiere vigilancia médica y posible ingreso."
+        },
+        {
+            "id": "psych_substance_intervention",
+            "type": "section",
+            "title": "Intervención breve",
+            "audience": "clinician",
+            "content": "Aplicar SBIRT cuando sea posible.",
+            "sub_blocks": [
+                {
+                    "id": "psych_substance_sbirg",
+                    "type": "checklist",
+                    "title": "Componentes SBIRT",
+                    "audience": "clinician",
+                    "items": [
+                        "Screening: identificar consumo riesgoso.",
+                        "Brief Intervention: retroalimentación y metas.",
+                        "Referral to Treatment: derivación a tratamiento especializado."
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "psych_substance_guidelines",
+            "type": "resource_list",
+            "title": "Guías clínicas recomendadas",
+            "audience": "clinician",
+            "items": [
+                {
+                    "name": "WHO ASSIST",
+                    "link": "https://www.who.int/publications/i/item/9789241599382",
+                    "description": "Herramienta de tamizaje para alcohol, tabaco y otras sustancias."
+                },
+                {
+                    "name": "NICE NG135: Alcohol-use disorders",
+                    "link": "https://www.nice.org.uk/guidance/ng135",
+                    "description": "Diagnóstico y manejo del consumo de alcohol."
+                },
+                {
+                    "name": "CENETEC México: Trastornos por uso de sustancias",
+                    "link": "https://www.gob.mx/cenetec/acciones-y-programas/guias-de-practica-clinica",
+                    "description": "Consultar la guía nacional vigente."
+                }
+            ]
+        }
+    ],
+    "meta": {
+        "source": "guias_internacionales_y_nacionales",
+        "last_reviewed": "2026-01-06",
+        "notes": "Coordinar manejo con medicina general y adicciones."
+    }
+}

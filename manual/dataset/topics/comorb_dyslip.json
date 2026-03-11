@@ -1,0 +1,123 @@
+{
+  "id": "comorb_dyslip",
+  "title": "Dislipidemias y Riesgo CV (2025)",
+  "audience": "both",
+  "tags": [
+    "comorbilidad",
+    "metabolico",
+    "cardiovascular",
+    "ldl",
+    "estatinas"
+  ],
+  "blocks": [
+    {
+      "id": "dyslip_new_markers",
+      "type": "section",
+      "title": "Evaluación Avanzada (2025)",
+      "audience": "clinician",
+      "content": "Más allá del LDL estándar:",
+      "items": [
+        "**Lp(a):** Medir una vez en la vida. >50 mg/dL re-clasifica a alto riesgo.",
+        "**ApoB:** Mejor marcador de carga aterogénica en obesidad/diabetes/TG altos.",
+        "**Índice AIP:** Log(TG/HDL). >0.31 indica alto riesgo CV y esteatosis hepática."
+      ]
+    },
+    {
+      "id": "dyslip_targets_2025",
+      "type": "table",
+      "title": "Metas de LDL-C (Cuanto más bajo, mejor)",
+      "audience": "clinician",
+      "headers": [
+        "Riesgo CV (SCORE2)",
+        "Meta LDL",
+        "Reducción"
+      ],
+      "rows": [
+        {
+          "risk": "Muy Alto (ECV previa, DM con daño)",
+          "target": "< 55 mg/dL",
+          "reduction": "> 50%"
+        },
+        {
+          "risk": "Alto (LDL >190, DM >10a)",
+          "target": "< 70 mg/dL",
+          "reduction": "> 50%"
+        },
+        {
+          "risk": "Moderado",
+          "target": "< 100 mg/dL",
+          "reduction": "-"
+        }
+      ]
+    },
+    {
+      "id": "dyslip_tx_algorithm",
+      "type": "section",
+      "title": "Algoritmo Terapéutico (Golpear fuerte)",
+      "audience": "clinician",
+      "sub_blocks": [
+        {
+          "type": "list",
+          "title": "Eje A: Reducción de LDL",
+          "items": [
+            "1. **Estatinas Alta Intensidad:** Atorvastatina 40-80mg o Rosuvastatina 20-40mg. (Seguras en Hígado Graso).",
+            "2. **Ezetimiba:** Añadir si no hay meta en 6-8 semanas.",
+            "3. **Inhibidores PCSK9 / Ácido Bempedoico:** Tercera línea si falla lo anterior o intolerancia real."
+          ]
+        },
+        {
+          "type": "list",
+          "title": "Eje B: Triglicéridos (Riesgo Residual)",
+          "items": [
+            "**TG 135-499 + Alto Riesgo:** Icosapent Etilo 2g/12h (REDUCE-IT).",
+            "**TG > 500:** Fibratos (Fenofibrato) para prevenir pancreatitis."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dyslip_calc_section",
+      "type": "section",
+      "audience": "clinician",
+      "sub_blocks": [
+        {
+          "type": "calculator",
+          "title": "Calcular LDL (Friedewald)",
+          "fn": "ldl_calc",
+          "inputs": [
+            {
+              "key": "tc",
+              "label": "Colesterol Total",
+              "unit": "mg/dL"
+            },
+            {
+              "key": "hdl",
+              "label": "HDL",
+              "unit": "mg/dL"
+            },
+            {
+              "key": "tg",
+              "label": "Triglicéridos",
+              "unit": "mg/dL"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dyslip_patient_info",
+      "type": "section",
+      "title": "Mensajes Clave para el Paciente",
+      "audience": "clinician",
+      "content": "Tips para comunicar adherencia:",
+      "items": [
+        "\"Las estatinas limpian las 'tuberías' y evitan infartos. Son seguras para su hígado.\"",
+        "\"La dieta es la base, pero en alto riesgo, los suplementos naturales NO sustituyen al medicamento.\""
+      ]
+    }
+  ],
+  "meta": {
+    "source": "ESC/EAS 2025 Focused Update + AHA/ACC",
+    "version": "3.0_aggressive_targets"
+  }
+}

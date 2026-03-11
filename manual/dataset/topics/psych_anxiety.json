@@ -1,0 +1,98 @@
+{
+    "id": "psych_anxiety",
+    "title": "Trastornos de ansiedad",
+    "audience": "clinician",
+    "tags": [
+        "ansiedad",
+        "GAD",
+        "panic"
+    ],
+    "blocks": [
+        {
+            "id": "psych_anxiety_eval",
+            "type": "section",
+            "title": "Evaluación",
+            "audience": "clinician",
+            "content": "Diferencie ansiedad generalizada, pánico, fobias y ansiedad secundaria a sustancias o condiciones médicas."
+        },
+        {
+            "id": "psych_anxiety_screen",
+            "type": "text",
+            "title": "Herramientas de apoyo",
+            "audience": "clinician",
+            "content": "GAD-7 y escalas de pánico ayudan a seguimiento, sin reemplazar entrevista clínica."
+        },
+        {
+            "id": "psych_anxiety_treatment",
+            "type": "section",
+            "title": "Tratamiento general",
+            "audience": "clinician",
+            "content": "Combine intervenciones psicoterapéuticas y farmacológicas según severidad.",
+            "sub_blocks": [
+                {
+                    "id": "psych_anxiety_recs",
+                    "type": "list",
+                    "title": "Recomendaciones",
+                    "audience": "clinician",
+                    "items": [
+                        "Terapia cognitivo-conductual como primera línea.",
+                        "ISRS/IRSN como primera línea farmacológica.",
+                        "Benzodiacepinas: uso corto y con cautela; evitar en TUS o riesgo de dependencia.",
+                        "Reforzar higiene del sueño, actividad física y reducción de estimulantes."
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "psych_anxiety_patient",
+            "type": "section",
+            "title": "Material para el paciente",
+            "audience": "clinician",
+            "content": "Entregue herramientas de autocuidado.",
+            "sub_blocks": [
+                {
+                    "id": "psych_anxiety_print_sleep",
+                    "type": "resource_link",
+                    "audience": "clinician",
+                    "link_id": "sleep_hygiene_checklist_a4",
+                    "label": "🖨️ Checklist de higiene del sueño"
+                },
+                {
+                    "id": "psych_anxiety_print_guide",
+                    "type": "resource_link",
+                    "audience": "clinician",
+                    "link_id": "patient_psychoeducation_guide",
+                    "label": "🖨️ Guía breve para pacientes y familias"
+                }
+            ]
+        },
+        {
+            "id": "psych_anxiety_guidelines",
+            "type": "resource_list",
+            "title": "Guías clínicas recomendadas",
+            "audience": "clinician",
+            "items": [
+                {
+                    "name": "NICE CG113: Generalised anxiety disorder and panic disorder",
+                    "link": "https://www.nice.org.uk/guidance/cg113",
+                    "description": "Guía internacional para GAD y pánico."
+                },
+                {
+                    "name": "WHO mhGAP Intervention Guide",
+                    "link": "https://www.who.int/publications/i/item/9789241549790",
+                    "description": "Recomendaciones internacionales para trastornos de ansiedad."
+                },
+                {
+                    "name": "CENETEC México: Ansiedad",
+                    "link": "https://www.gob.mx/cenetec/acciones-y-programas/guias-de-practica-clinica",
+                    "description": "Consultar la guía nacional vigente."
+                }
+            ]
+        }
+    ],
+    "meta": {
+        "source": "guias_internacionales_y_nacionales",
+        "last_reviewed": "2026-01-06",
+        "notes": "Evitar benzodiacepinas como única intervención de largo plazo."
+    }
+}

@@ -1,0 +1,44 @@
+{
+  "id": "sleep_hygiene_checklist_a4",
+  "title": "Checklist de higiene del sueño (A4)",
+  "format": "a4",
+  "template": "guide_checklist",
+  "sections": [
+    {
+      "title": "Rutina diaria",
+      "items": [
+        "Mantenga horarios regulares para dormir y despertar.",
+        "Evite siestas prolongadas o tarde por la tarde.",
+        "Realice actividad física en el día; evite ejercicio intenso 3 horas antes de dormir."
+      ]
+    },
+    {
+      "title": "Entorno de sueño",
+      "items": [
+        "Reserve la cama solo para dormir o actividad sexual.",
+        "Mantenga la habitación oscura, silenciosa y fresca.",
+        "Evite pantallas y luz intensa 60 minutos antes de dormir."
+      ]
+    },
+    {
+      "title": "Hábitos y sustancias",
+      "items": [
+        "Evite cafeína, nicotina y alcohol en la tarde-noche.",
+        "Cene ligero 2-3 horas antes de acostarse.",
+        "Limite líquidos antes de dormir para evitar despertares."
+      ]
+    },
+    {
+      "title": "Si no concilia el sueño",
+      "items": [
+        "Si pasan 20 minutos sin dormir, levántese y haga una actividad tranquila.",
+        "Regrese a la cama cuando tenga sueño.",
+        "No mire el reloj de forma repetida."
+      ]
+    }
+  ],
+  "meta": {
+    "source": "recomendaciones_de_higiene_del_sueno",
+    "last_reviewed": "2026-01-06"
+  }
+}

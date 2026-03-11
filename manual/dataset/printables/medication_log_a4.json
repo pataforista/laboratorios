@@ -1,0 +1,16 @@
+{
+    "id": "medication_log_a4",
+    "title": "Registro de medicación (A4)",
+    "format": "a4",
+    "headers": [
+        "Fecha",
+        "Medicamento",
+        "Dosis",
+        "Horario",
+        "Observaciones"
+    ],
+    "meta": {
+        "source": "formato_clinico",
+        "last_reviewed": "2026-01-06"
+    }
+}

@@ -1,0 +1,65 @@
+{
+  "id": "lifestyle_master_guide",
+  "template": "guide_checklist",
+  "title": "Guía Integral de Estilo de Vida",
+  "sections": [
+    {
+      "title": "🍎 Alimentación e Hidratación",
+      "items": [
+        "💧 Agua: Beba aprox. 2 litros de agua simple al día. Evite jugos y refrescos.",
+        "🍽️ Plato del Bien Comer: Visualice su plato: Mitad verdura, cuarto proteína, cuarto cereal.",
+        "🌽 Dieta de la Milpa: Combine Maíz (tortilla) + Frijol para obtener proteína de alta calidad y bajo costo.",
+        "✋ Porciones: Use su mano. Verduras = 2 manos llenas; Carne = palma de la mano."
+      ]
+    },
+    {
+      "title": "🦷 Higiene Bucal (Salud del Corazón)",
+      "items": [
+        "🪥 Técnica: Cepille suavemente inclinando el cepillo 45° hacia la encía (masaje, no fuerza).",
+        "Rutina: 3 veces al día + Hilo dental en la noche (indispensable para diabéticos).",
+        "Alerta: Si le sangran las encías, acuda al dentista. La infección bucal sube el azúcar."
+      ]
+    },
+    {
+      "title": "💤 Higiene del Sueño",
+      "items": [
+        "⏰ Horario fijo: Levántese y acuéstese siempre a la misma hora (incluso domingos).",
+        "🛏️ Solo dormir: No use el celular ni vea TV en la cama.",
+        "Regla de los 15 min: Si no duerme rápido, SALGA de la cama. Regrese solo cuando tenga sueño.",
+        "Cena: Ligera y sin irritantes, 2 horas antes de dormir."
+      ]
+    },
+    {
+      "title": "🏃 Actividad Física",
+      "items": [
+        "Meta: 150 minutos a la semana (ej. caminar rápido 30 min x 5 días).",
+        "Intensidad: Debe poder hablar oraciones completas pero no cantar.",
+        "Seguridad: Deténgase de inmediato si siente dolor de pecho o falta de aire excesiva."
+      ]
+    },
+    {
+      "title": "🧘 Manejo de Ansiedad (Crisis)",
+      "items": [
+        "🧊 Temperatura: Mójese la cara con agua helada o sostenga un hielo para frenar la crisis.",
+        "📦 Respiración en Caja: Inhale 4s, Retenga 4s, Exhale 4s, Pausa 4s.",
+        "⚡ Descarga: Haga ejercicio intenso breve (sentadillas/saltos) para quemar la adrenalina."
+      ]
+    },
+    {
+      "title": "🤝 Ocupación y Vida Social",
+      "items": [
+        "🧠 Rutina: Estructure su día. El cerebro necesita saber qué va a pasar mañana.",
+        "Plan Semanal: Asegure al menos una actividad social y una actividad fuera de casa.",
+        "Conexión: El aislamiento empeora la salud. Llame a un amigo o familiar o únase a un grupo local."
+      ]
+    },
+    {
+      "title": "🚫 Hábitos a Eliminar",
+      "items": [
+        "🚬 Tabaco/Vapeo: La meta es 0. Cada día sin fumar su corazón se repara.",
+        "🍺 Alcohol: Máximo 1 bebida (Mujeres) o 2 (Hombres). Nunca para 'dormir mejor'.",
+        "☕ Café: Evítelo después de las 4:00 PM."
+      ]
+    }
+  ]
+}
