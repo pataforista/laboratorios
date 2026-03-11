@@ -18,6 +18,113 @@
   <script type="module" crossorigin src="assets/index-DnpFSY7c.js"></script>
   <link rel="stylesheet" crossorigin href="assets/index-C9eFa_mk.css">
   <link rel="manifest" href="manifest.webmanifest">
+
+  <!-- ── Theme sync with parent app ─────────────────────────── -->
+  <style>
+    /* Override: use data-theme attribute instead of prefers-color-scheme.
+       This lets the parent app control our theme via postMessage.         */
+
+    /* LIGHT (default / explicit) — higher specificity overrides :root defaults */
+    html[data-theme="light"],
+    html:not([data-theme="dark"]) {
+      --bg-clinical: #FFFDF5;
+      --bg-paper:    #FFFFFF;
+      --text-main:   #1C1F2B;
+      --text-muted:  #424650;
+      --primary-spirit: #00A37A;
+      --accent-coral:   #E8613A;
+      --accent-gold:    #D4920A;
+      --danger:         #C0392B;
+      --danger-bg:      #fff0f0;
+      --warning:        #D4720A;
+      --warning-bg:     #fff8ed;
+      --success:        #00875E;
+      --success-bg:     #edfff8;
+      --info-bg:        #eef3fb;
+      --border-ink:     2.5px solid #1C1F2B;
+      --shadow-flat:    4px 4px 0px rgba(28,31,43,.12);
+    }
+
+    /* DARK (explicit via data-theme on <html>) */
+    html[data-theme="dark"] {
+      --bg-clinical: #120C18;
+      --bg-paper:    #1b1424;
+      --text-main:   #E4D8EB;
+      --text-muted:  #9fa8b4;
+      --primary-spirit: #00FFC2;
+      --accent-coral:   #FF3C3C;
+      --accent-gold:    #FFA600;
+      --danger:         #FF3C3C;
+      --danger-bg:      rgba(255,60,60,.1);
+      --warning:        #FFA600;
+      --warning-bg:     rgba(255,166,0,.1);
+      --success:        #00FFC2;
+      --success-bg:     rgba(0,255,194,.1);
+      --info-bg:        rgba(0,255,194,.05);
+      --font-main:      "JetBrains Mono", monospace;
+      --border-ink:     1.5px solid #00FFC2;
+      --shadow-flat:    0 0 15px rgba(0,255,194,.2);
+    }
+
+    /* Header & nav follow theme */
+    html[data-theme="dark"] header,
+    html[data-theme="dark"] .nav-bottom {
+      background: #120C18;
+      border-color: #00FFC2;
+    }
+    html[data-theme="dark"] .search-hero {
+      background: linear-gradient(180deg,#120c18,#1b1424);
+      border-bottom: 2px solid var(--primary-spirit);
+      box-shadow: 0 5px 20px rgba(0,255,194,.1);
+    }
+    html[data-theme="dark"] .card {
+      border: 1px solid rgba(0,255,194,.2);
+      box-shadow: 0 0 10px rgba(0,255,194,.05);
+    }
+    html[data-theme="dark"] .card.clickable:hover {
+      box-shadow: 0 0 20px rgba(0,255,194,.3);
+      border-color: var(--primary-spirit);
+    }
+    html[data-theme="dark"] .clinical-box {
+      border: none;
+      box-shadow: inset 0 0 15px rgba(255,255,255,.05);
+    }
+    html[data-theme="dark"] .clinical-box.danger {
+      box-shadow: 0 0 15px var(--danger);
+      border: 1px solid var(--danger);
+    }
+    html[data-theme="dark"] .clinical-box.pearl {
+      box-shadow: 0 0 15px var(--primary-spirit);
+      border: 1px solid var(--primary-spirit);
+    }
+  </style>
+
+  <script>
+    (function () {
+      // Apply saved theme immediately to avoid flash
+      var THEME_KEY = 'manual_theme';
+      var saved = localStorage.getItem(THEME_KEY);
+      if (saved) {
+        document.documentElement.setAttribute('data-theme', saved);
+      }
+
+      // Listen for theme messages from the parent app
+      window.addEventListener('message', function (e) {
+        if (e.data && e.data.type === 'setTheme') {
+          var t = e.data.theme;
+          document.documentElement.setAttribute('data-theme', t);
+          localStorage.setItem(THEME_KEY, t);
+        }
+      });
+
+      // On load, if no saved theme, ask the parent for the current theme
+      window.addEventListener('load', function () {
+        if (!localStorage.getItem(THEME_KEY)) {
+          window.parent.postMessage({ type: 'getTheme' }, '*');
+        }
+      });
+    })();
+  </script>
 </head>
 
 <body>

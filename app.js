@@ -88,11 +88,26 @@ function initTheme() {
   document.body.dataset.theme = saved;
 }
 
+function sendThemeToManual(theme) {
+  const frame = $('#manualFrame');
+  if (frame && frame.contentWindow) {
+    frame.contentWindow.postMessage({ type: 'setTheme', theme }, '*');
+  }
+}
+
 function toggleTheme() {
   const current = document.body.dataset.theme === "light" ? "dark" : "light";
   document.body.dataset.theme = current;
   localStorage.setItem(LS_THEME, current);
+  sendThemeToManual(current);
 }
+
+// Listen for theme requests from the manual iframe
+window.addEventListener('message', (e) => {
+  if (e.data?.type === 'getTheme') {
+    sendThemeToManual(document.body.dataset.theme || localStorage.getItem(LS_THEME) || 'dark');
+  }
+});
 
 /* ---------- OmniSearch data cache ---------- */
 const omniCache = { topics: [], resources: [] };
@@ -325,6 +340,8 @@ function showTab(tab) {
   const manualEl = $('#tabManual');
   if (tab === 'manual') {
     if (manualEl) manualEl.classList.remove('hidden');
+    // Sync theme to the iframe whenever the manual tab is shown
+    setTimeout(() => sendThemeToManual(document.body.dataset.theme || localStorage.getItem(LS_THEME) || 'dark'), 150);
   } else {
     if (manualEl) manualEl.classList.add('hidden');
     // Show the correct in-container tab
