@@ -1,5 +1,5 @@
 // LabNotes PWA Service Worker v3.1
-const CACHE_NAME = "labnotes-v3.1";
+const CACHE_NAME = "labnotes-v3.2";
 
 const STATIC_ASSETS = [
   "./",
@@ -39,7 +39,14 @@ self.addEventListener("activate", (event) => {
 
 self.addEventListener("fetch", (event) => {
   const url = new URL(event.request.url);
-  const isFresh = FRESH_ASSETS.some(asset => url.pathname.endsWith(asset.replace('./', '')));
+  // Ensure that HTML, JS, CSS, JSON always try Network First. 
+  // This explicitly prevents the app from being stuck on old versions or 404ing due to stale Vite chunks.
+  const isFresh = FRESH_ASSETS.some(asset => url.pathname.endsWith(asset.replace('./', ''))) ||
+                  url.pathname.endsWith('.html') ||
+                  url.pathname.endsWith('.js') ||
+                  url.pathname.endsWith('.css') ||
+                  url.pathname.endsWith('.json') ||
+                  url.pathname.endsWith('/');
 
   if (isFresh) {
     // Network First
@@ -53,16 +60,17 @@ self.addEventListener("fetch", (event) => {
         .catch(() => caches.match(event.request))
     );
   } else {
-    // Cache First
+    // Stale While Revalidate for images/fonts/other media
     event.respondWith(
       caches.match(event.request).then(cached => {
-        return cached || fetch(event.request).then(res => {
+        const fetchPromise = fetch(event.request).then(res => {
           const copy = res.clone();
           if (event.request.method === "GET" && url.origin === location.origin) {
             caches.open(CACHE_NAME).then(cache => cache.put(event.request, copy));
           }
           return res;
-        });
+        }).catch(() => {});
+        return cached || fetchPromise;
       })
     );
   }
