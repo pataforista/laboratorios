@@ -1,5 +1,5 @@
-// LabNotes PWA Service Worker v3.1
-const CACHE_NAME = "labnotes-v3.2";
+// LabNotes PWA Service Worker v4.0
+const CACHE_NAME = "labnotes-v4.0";
 
 const STATIC_ASSETS = [
   "./",
@@ -10,7 +10,11 @@ const STATIC_ASSETS = [
   "./manifest.json",
   "./icon-192.png",
   "./icon-512.png",
-  "./manual/index.html"
+  "./manual/index.html",
+  "./manual/assets/index-DnpFSY7c.js",
+  "./manual/assets/index-C9eFa_mk.css",
+  "./manual/dataset/manifest.json",
+  "./manual/dataset/printables/generated_index.json"
 ];
 
 // Network-First files (always try to get fresh)

@@ -6,8 +6,8 @@
 
 /* ── TOKENS ─────────────────────────────────────────────────────── */
 :root {
-  /* Primary - Purple (M3 default) */
-  --m3-primary:             #D0BCFF;
+  /* Primary - Vivid Purple for better pop in dark mode */
+  --m3-primary:             #D0BCFF; 
   --m3-on-primary:          #381E72;
   --m3-primary-container:   #4F378B;
   --m3-on-primary-container:#EADDFF;
@@ -25,26 +25,27 @@
   --m3-on-tertiary-container:#FFD8E4;
 
   /* Error */
-  --m3-error:               #F2B8B5;
+  --m3-error:               #F18B82;
   --m3-on-error:            #601410;
   --m3-error-container:     #8C1D18;
   --m3-on-error-container:  #F9DEDC;
 
-  /* Surfaces — Dark scheme default */
-  --m3-surface:             #141218;
-  --m3-surface-dim:         #0F0D13;
-  --m3-surface-bright:      #3B383E;
-  --m3-surface-container-lowest: #0F0D13;
-  --m3-surface-container-low:    #1D1B20;
-  --m3-surface-container:        #211F26;
-  --m3-surface-container-high:   #2B2930;
-  --m3-surface-container-highest:#36343B;
-  --m3-on-surface:          #E6E1E5;
-  --m3-on-surface-variant:  #D4CDDB; /* Brighter for better contrast */
-  --m3-outline:             #A8A3B0; /* Brighter than default */
-  --m3-outline-variant:     #6A6573; /* Much brighter than default #49454F */
+  /* Surfaces — Deep Midnight Theme */
+  --m3-surface:             #0B0A0D; /* Slightly darker than default for higher contrast */
+  --m3-surface-dim:         #050505;
+  --m3-surface-bright:      #211F26;
+  --m3-surface-container-lowest: #050505;
+  --m3-surface-container-low:    #121115;
+  --m3-surface-container:        #1A191E;
+  --m3-surface-container-high:   #252329;
+  --m3-surface-container-highest:#302E36;
+  
+  --m3-on-surface:          #F0E7F5; /* Higher contrast than E6E1E5 */
+  --m3-on-surface-variant:  #E0D9E6; /* Significantly brighter for readability */
+  --m3-outline:             #B0A8B9; /* Brighter for definition */
+  --m3-outline-variant:     #787282; /* Brighter than 49454F */
   --m3-inverse-surface:     #E6E1E5;
-  --m3-inverse-on-surface:  #322F35;
+  --m3-inverse-on-surface:  #1A191E;
 
   /* Typography */
   --font-base:  'Inter', system-ui, sans-serif;
@@ -63,17 +64,17 @@
   --m3-shape-xl:   28px;
   --m3-shape-full: 9999px;
 
-  /* Elevation (dark, via tint not shadow) */
-  --m3-elevation-1: rgba(208,188,255,0.08);
-  --m3-elevation-2: rgba(208,188,255,0.12);
-  --m3-elevation-3: rgba(208,188,255,0.16);
+  /* Elevation (Premium glow) */
+  --m3-elevation-1: rgba(208,188,255,0.06);
+  --m3-elevation-2: rgba(208,188,255,0.10);
+  --m3-elevation-3: rgba(208,188,255,0.14);
 }
 
 [data-theme="light"] {
-  --m3-primary:             #6750A4;
+  --m3-primary:             #594396;
   --m3-on-primary:          #FFFFFF;
   --m3-primary-container:   #EADDFF;
-  --m3-on-primary-container:#21005D;
+  --m3-on-primary-container:#1D005D;
   --m3-secondary:           #625B71;
   --m3-on-secondary:        #FFFFFF;
   --m3-secondary-container: #E8DEF8;
@@ -86,23 +87,23 @@
   --m3-on-error:            #FFFFFF;
   --m3-error-container:     #F9DEDC;
   --m3-on-error-container:  #410E0B;
-  --m3-surface:             #FEF7FF;
+  --m3-surface:             #FFFFFF;
   --m3-surface-dim:         #DED8E1;
-  --m3-surface-bright:      #FEF7FF;
+  --m3-surface-bright:      #FFFFFF;
   --m3-surface-container-lowest: #FFFFFF;
   --m3-surface-container-low:    #F7F2FA;
   --m3-surface-container:        #F3EDF7;
   --m3-surface-container-high:   #ECE6F0;
   --m3-surface-container-highest:#E6E0E9;
-  --m3-on-surface:          #1D1B20;
-  --m3-on-surface-variant:  #49454F;
-  --m3-outline:             #605D66; /* Darker than default */
-  --m3-outline-variant:     #AFAAB8; /* Much darker than default #CAC4D0 */
-  --m3-inverse-surface:     #322F35;
-  --m3-inverse-on-surface:  #F5EFF7;
-  --m3-elevation-1: rgba(103,80,164,0.08);
-  --m3-elevation-2: rgba(103,80,164,0.12);
-  --m3-elevation-3: rgba(103,80,164,0.16);
+  --m3-on-surface:          #1C1B1F;
+  --m3-on-surface-variant:  #44474F;
+  --m3-outline:             #79747E;
+  --m3-outline-variant:     #C4C7C5;
+  --m3-inverse-surface:     #313033;
+  --m3-inverse-on-surface:  #F4F0F4;
+  --m3-elevation-1: rgba(0,0,0,0.05);
+  --m3-elevation-2: rgba(0,0,0,0.08);
+  --m3-elevation-3: rgba(0,0,0,0.12);
 }
 
 /* ── BASE ───────────────────────────────────────────────────────── */
