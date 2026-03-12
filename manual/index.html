@@ -123,6 +123,21 @@
           window.parent.postMessage({ type: 'getTheme' }, '*');
         }
       });
+
+      // Listen for navigation commands from parent app
+      window.addEventListener('message', function (e) {
+        if (!e.data || e.data.action !== 'navigate') return;
+        var view = e.data.view; // 'topic' | 'print'
+        var id   = e.data.id;
+        if (!id) return;
+        // Try hash-based navigation (works if the SPA uses HashRouter)
+        var hash = view === 'print' ? '#/print/' + id : '#/topic/' + id;
+        if (window.location.hash !== hash) {
+          window.location.hash = hash;
+        }
+        // Also dispatch a custom event the app can subscribe to
+        window.dispatchEvent(new CustomEvent('labnotes:navigate', { detail: { view: view, id: id } }));
+      });
     })();
   </script>
 </head>
