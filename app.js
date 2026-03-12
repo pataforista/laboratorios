@@ -430,7 +430,7 @@ function renderClozapineTab() {
   const ancData = clzRecords.filter(r => r.data?.anc !== undefined).slice(0, 10).reverse();
   if (ancData.length >= 2) {
     $('#clzTrendCard').classList.remove('hidden');
-    drawTrendChart($('#clzTrendChart'), ancData, 'anc');
+    drawChart($('#clzTrendChart'), ancData, 'anc');
   } else {
     $('#clzTrendCard').classList.add('hidden');
   }
@@ -580,13 +580,17 @@ function drawChart(canvas, dataPoints, metric) {
   const sh = 200;
   ctx.clearRect(0, 0, sw, sh);
 
+  const isDark = document.body.dataset.theme !== 'light';
+  const gridColor = isDark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.1)";
+  const textColor = isDark ? "#e4d8eb" : "#1c1f2b";
+
   const values = dataPoints.map(p => p.data[metric]);
   const min = Math.min(...values) * 0.9;
   const max = Math.max(...values) * 1.1;
   const range = max - min || 1;
 
   // Grid lines
-  ctx.strokeStyle = "rgba(255,255,255,0.1)";
+  ctx.strokeStyle = gridColor;
   ctx.lineWidth = 1;
   for (let i = 1; i < 4; i++) {
     const y = sh - (sh * (i / 4));
@@ -611,7 +615,7 @@ function drawChart(canvas, dataPoints, metric) {
     const y = sh - 30 - ((p.data[metric] - min) / range) * (sh - 60);
     ctx.fillStyle = "#7c3aed";
     ctx.beginPath(); ctx.arc(x, y, 5, 0, Math.PI * 2); ctx.fill();
-    ctx.fillStyle = "#fff";
+    ctx.fillStyle = textColor;
     ctx.font = "10px Inter";
     ctx.fillText(p.date.slice(5), x - 12, sh - 5);
     ctx.fillText(p.data[metric].toString(), x - 10, y - 10);
@@ -796,7 +800,7 @@ function saveNewRecord() {
   });
 
   const record = {
-    id: "rec_" + Date.now(), // Assuming no editingId for new records
+    id: state.editingId || "rec_" + Date.now(),
     date: $("#nrDate").value || new Date().toISOString().split("T")[0],
     sex: $("#nrSex").value,
     context: $("#nrContext").value,
