@@ -91,7 +91,7 @@ function initTheme() {
 function sendThemeToManual(theme) {
   const frame = $('#manualFrame');
   if (frame && frame.contentWindow) {
-    frame.contentWindow.postMessage({ type: 'setTheme', theme }, '*');
+    frame.contentWindow.postMessage({ type: 'setTheme', theme }, location.origin);
   }
 }
 
@@ -104,6 +104,7 @@ function toggleTheme() {
 
 // Listen for theme requests from the manual iframe
 window.addEventListener('message', (e) => {
+  if (e.origin !== location.origin) return;
   if (e.data?.type === 'getTheme') {
     sendThemeToManual(document.body.dataset.theme || localStorage.getItem(LS_THEME) || 'dark');
   }
@@ -190,7 +191,7 @@ function renderOmniResults(results) {
   el.querySelectorAll('.omni-result').forEach(item => {
     item.addEventListener('click', () => {
       const bucket = item.dataset.bucket;
-      const idx = parseInt(item.dataset.idx);
+      const idx = parseInt(item.dataset.idx, 10);
       const map = { rec: results.records, top: results.topics, res: results.resources };
       map[bucket][idx].action();
       closeOmni();
@@ -218,7 +219,7 @@ function openManualTopic(id) {
   showTab('manual');
   const iframe = $('#manualFrame');
   if (iframe) {
-    const navigate = () => iframe.contentWindow?.postMessage({ action: 'navigate', view: 'topic', id }, '*');
+    const navigate = () => iframe.contentWindow?.postMessage({ action: 'navigate', view: 'topic', id }, location.origin);
     if (iframe.dataset.loaded) navigate();
     else { iframe.onload = () => { iframe.dataset.loaded = '1'; setTimeout(navigate, 300); }; }
   }
@@ -228,7 +229,7 @@ function openManualResource(id) {
   showTab('manual');
   const iframe = $('#manualFrame');
   if (iframe) {
-    const navigate = () => iframe.contentWindow?.postMessage({ action: 'navigate', view: 'print', id }, '*');
+    const navigate = () => iframe.contentWindow?.postMessage({ action: 'navigate', view: 'print', id }, location.origin);
     if (iframe.dataset.loaded) navigate();
     else { iframe.onload = () => { iframe.dataset.loaded = '1'; setTimeout(navigate, 300); }; }
   }
@@ -1011,7 +1012,7 @@ function openDetail(id) {
             </div>
             <div><span class="badge ${e.status}">${e.statusLabel || e.status}</span></div>
           </div>
-          ${(e.status !== 'normal' && e.hints?.length) ? `<div class="hints small muted">${e.hints[0]}</div>` : ""}
+          ${(e.status !== 'normal' && e.hints?.length) ? `<div class="hints small muted">${sanitize(e.hints[0])}</div>` : ""}
         </div>`;
     });
     w.appendChild(c);
@@ -1093,7 +1094,10 @@ function importJSON(e) {
   reader.onload = (ev) => {
     try {
       const data = JSON.parse(ev.target.result);
-      if (!data.records) throw new Error("Formato inválido");
+      if (!data || typeof data !== 'object') throw new Error("Formato inválido: no es un objeto JSON");
+      if (!Array.isArray(data.records)) throw new Error("Formato inválido: falta el arreglo 'records'");
+      const invalid = data.records.findIndex(r => !r.id || !r.date || !Array.isArray(r.panels));
+      if (invalid !== -1) throw new Error(`Registro inválido en posición ${invalid}: falta id, date o panels`);
       if (confirm(`¿Importar ${data.records.length} registros? Los datos existentes se mantendrán.`)) {
         // Simple merge by ID
         const existingIds = new Set(state.records.map(r => r.id));
