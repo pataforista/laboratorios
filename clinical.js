@@ -78,5 +78,15 @@ export function auditSideEffects(effects = {}) {
         });
     }
 
+    if (effects.somnolence >= CLINICAL_RULES.SIDE_EFFECTS.SOMNOLENCE_MAX) {
+        alerts.push({
+            type: 'Sedation_Risk',
+            title: 'SOMNOLENCIA SEVERA',
+            severity: 'HIGH',
+            message: `Somnolencia ${effects.somnolence}/5. Riesgo de sedación excesiva.`,
+            advice: 'Evaluar ajuste de dosis. Evitar conducción/maquinaria. Descartar hipotiroidismo.'
+        });
+    }
+
     return alerts;
 }
