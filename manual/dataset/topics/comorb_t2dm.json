@@ -1,128 +1,87 @@
 {
   "id": "comorb_t2dm",
-  "title": "Manejo de Diabetes Mellitus Tipo 2",
-  "audience": "both",
-  "tags": ["comorbilidad", "metabolico", "cronico", "guia"],
+  "title": "Manejo de Diabetes Mellitus Tipo 2 (SMI-Context)",
+  "audience": "clinician",
+  "tags": ["comorbilidad", "metabolico", "SGLT2i", "GLP1", "guia"],
   "blocks": [
     {
-      "id": "t2dm_calc_section",
+      "id": "t2dm_baseline",
       "type": "section",
-      "title": "Calculadora de Resistencia (HOMA-IR)",
-      "audience": "clinician",
-      "sub_blocks": [
-        {
-          "id": "calc_homa",
-          "type": "calculator",
-          "title": "Índice HOMA-IR",
-          "fn": "homa_ir",
-          "inputs": [
-            { "key": "glucose", "label": "Glucosa Ayuno", "unit": "mg/dL" },
-            { "key": "insulin", "label": "Insulina Basal", "unit": "µUI/mL" }
-          ],
-          "share_variant": {
-            "title": "¿Qué es la resistencia a la insulina?",
-            "content": "Es cuando sus células no 'abren la puerta' para dejar entrar el azúcar, obligando al páncreas a trabajar doble."
-          }
-        }
+      "title": "Evaluación Basal en Psiquiatría",
+      "content": "Obligatorio antes de iniciar antipsicóticos de alto riesgo (clozapina, olanzapina, quetiapina).",
+      "items": [
+        "Glucosa en ayuno y Hemoglobina Glucosilada (HbA1c).",
+        "Perfil de lípidos completo.",
+        "Peso, IMC y circunferencia abdominal.",
+        "Historia familiar de enfermedad cardiaca temprana."
       ]
     },
     {
-      "id": "t2dm_diagnosis_section",
+      "id": "t2dm_dx",
+      "type": "table",
+      "title": "Criterios Diagnósticos (ADA 2024)",
+      "headers": ["Prueba", "Prediabetes", "Diabetes"],
+      "rows": [
+        ["HbA1c (%)", "5.7 - 6.4", ">= 6.5"],
+        ["Glucosa Ayuno (mg/dL)", "100 - 125", ">= 126"],
+        ["Glucosa 2h s/carga (mg/dL)", "140 - 199", ">= 200"]
+      ]
+    },
+    {
+      "id": "t2dm_tx_algorithm",
       "type": "section",
-      "title": "Criterios Diagnósticos",
-      "audience": "clinician",
-      "content": "Se requieren 2 pruebas alteradas para confirmar, salvo síntomas inequívocos.",
+      "title": "Algoritmo de Tratamiento Moderno",
+      "content": "La meta general es HbA1c < 7%. En pacientes con SMI, se debe priorizar la simplicidad y la protección cardiovascular.",
       "sub_blocks": [
         {
-          "id": "t2dm_dx_table",
-          "type": "table",
-          "title": "Parámetros Locales",
-          "headers": ["Prueba", "Punto de Corte"],
-          "rows": [
-            { "test": "Glucosa Ayuno (GPA)", "cut": "> 126 mg/dL" },
-            { "test": "HbA1c (Ver nota)", "cut": "> 7.0 %" },
-            { "test": "GPA + Síntomas", "cut": "> 200 mg/dL (Directo)" }
+          "id": "t2dm_step1",
+          "type": "list",
+          "title": "Primera Línea: Metformina",
+          "items": [
+            "**Dosis**: Iniciar 425-500 mg/día, titular hasta 1000 mg c/12h.",
+            "**Beneficio Extra**: Ayuda a mitigar la ganancia de peso inducida por antipsicóticos (SMI-off-label beneficial)."
           ]
         },
         {
-          "id": "t2dm_note_alert",
-          "type": "alert",
-          "level": "info",
-          "content": "Nota: El criterio local de HbA1c (>7%) difiere de guías ADA (≥6.5%). Privilegiar criterio clínico."
-        }
-      ]
-    },
-    {
-      "id": "t2dm_step1",
-      "type": "section",
-      "title": "Paso 1: Metformina + Estilo de Vida",
-      "audience": "clinician",
-      "sub_blocks": [
-        {
-          "id": "t2dm_metformin_titration",
-          "type": "key_value",
-          "title": "Estrategia de Titulación (Evitar diarrea)",
-          "data": {
-            "Inicio": "425 mg (1/2 de 850) por 4 días",
-            "Progresión": "Subir dosis cada 3-5 días si se tolera",
-            "Dosis Óptima": "850 mg c/24h o 500 mg c/12h"
-          }
-        },
-        {
-          "id": "t2dm_side_effects",
+          "id": "t2dm_step2",
           "type": "warning",
-          "title": "Efectos Adversos",
-          "content": "Advertir sobre diarrea, sabor metálico o malestar estomacal. Suelen desaparecer en 2 semanas."
-        }
-      ]
-    },
-    {
-      "id": "t2dm_step2",
-      "type": "section",
-      "title": "Paso 2: Terapia Dual",
-      "audience": "clinician",
-      "content": "Agregar Inhibidor DPP-4 (Ej. Sitagliptina).",
-      "sub_blocks": [
-        {
-          "id": "t2dm_dual_indications",
-          "type": "checklist",
-          "title": "¿Cuándo iniciar dual?",
+          "level": "info",
+          "title": "Protección Cardio-Renal (Novedad 2024)",
+          "content": "Si el paciente tiene riesgo cardiovascular alto (común en esquizofrenia/bipolar), considerar añadir:",
           "items": [
-            "Inicio inmediato si HbA1c > 8% al diagnóstico.",
-            "Si tras 3 meses de Metformina no baja de 7%."
+            "**SGLT2i (Empagliflozina/Dapagliflozina)**: Protege riñón y corazón. Vigilar hidratación.",
+            "**GLP-1 RA (Semaglutida/Liraglutida)**: Alta eficacia en pérdida de peso. Útil si hay obesidad marcada."
           ]
         }
       ]
     },
     {
-      "id": "t2dm_patient_edu",
-      "type": "section",
-      "title": "Educación al Paciente",
-      "audience": "both",
-      "sub_blocks": [
-        {
-          "id": "t2dm_hypo_signs",
-          "type": "checklist",
-          "title": "Signos de Azúcar Baja (Hipoglucemia)",
-          "items": [
-            "Sudor frío y temblor de manos.",
-            "Hambre intensa repentina.",
-            "Mareo o confusión.",
-            "¿Qué hacer? Tome medio vaso de jugo o refresco y espere 15 min."
-          ]
-        },
-        {
-          "id": "t2dm_foot_care",
-          "type": "text",
-          "title": "Cuidado de los Pies",
-          "content": "• Revise sus pies todos los días con un espejo.\n• Nunca camine descalzo.\n• Use crema humectante (pero NO entre los dedos).\n• Corte las uñas en línea recta."
-        }
+      "id": "t2dm_psych_warnings",
+      "type": "warning",
+      "level": "danger",
+      "title": "Alertas para el Psiquiatra",
+      "content": "Interacciones y riesgos específicos:",
+      "items": [
+        "**Cetoacidosis Euglucémica**: Riesgo con SGLT2i si el paciente deja de comer o consume alcohol en exceso (vigilar en crisis psicóticas).",
+        "**Hipoglucemia**: Bajo riesgo con Metformina/SGLT2i, pero alto si se usan Sulfonilureas (evitarlas si es posible).",
+        "**Polidipsia Psicógena**: Puede confundir el control glucémico; monitorizar sodio."
       ]
+    },
+    {
+      "id": "t2dm_homa_calc",
+      "type": "calculator",
+      "title": "Calculadora HOMA-IR",
+      "fn": "homa_ir",
+      "inputs": [
+        { "key": "glucose", "label": "Glucosa (mg/dL)", "unit": "mg/dL" },
+        { "key": "insulin", "label": "Insulina (µUI/mL)", "unit": "µUI/mL" }
+      ],
+      "content": "HOMA-IR > 2.5 sugiere resistencia a la insulina, común en tratamiento con antipsicóticos atípicos."
     }
   ],
   "meta": {
-    "source": "manual_local_comorbilidades",
-    "version": "2.2_interactive",
-    "last_reviewed": "2026-01-06"
+    "source": "ADA Standards of Care in Diabetes 2024 / Maudsley Prescribing Guidelines",
+    "version": "3.0_psych_focused",
+    "last_reviewed": "2026-03-26"
   }
 }

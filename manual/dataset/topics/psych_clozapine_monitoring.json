@@ -1,0 +1,60 @@
+{
+    "id": "psych_clozapine_monitoring",
+    "title": "Protocolo: Monitoreo Hematológico de Clozapina",
+    "audience": "clinician",
+    "tags": ["clozapina", "seguridad", "ANC", "neutropenia", "REMS"],
+    "blocks": [
+        {
+            "id": "clz_monitoring_overview",
+            "type": "section",
+            "title": "Resumen del Monitoreo (REMS 2024)",
+            "content": "El monitoreo del recuento absoluto de neutrófilos (ANC) es obligatorio para mitigar el riesgo de agranulocitosis inducida por clozapina. Lab Notes integra estos umbrales para facilitar la decisión clínica."
+        },
+        {
+            "id": "clz_thresholds_table",
+            "type": "table",
+            "title": "Umbrales de Decisión Clínica (Población General)",
+            "headers": ["Estado ANC (k/µL)", "Acción Recomendada"],
+            "rows": [
+                [">= 1.5", "NORMAL: Continuar tratamiento y monitoreo regular."],
+                ["1.0 - 1.49", "NEUTROPENIA LEVE: Monitoreo frecuente (3 veces por semana) hasta >= 1.5."],
+                ["0.5 - 0.99", "NEUTROPENIA MODERADA: Suspender clozapina, interconsulta a hematología, monitoreo diario."],
+                ["< 0.5", "AGRANULOCITOSIS: Suspender permanentemente, emergencia médica."]
+            ]
+        },
+        {
+            "id": "clz_ben_thresholds",
+            "type": "section",
+            "title": "Población BEN (Neutropenia Étnica Benigna)",
+            "content": "Para pacientes con diagnóstico de BEN (Duffy-null), los umbrales son más bajos según el programa REMS:",
+            "items": [
+                "**Normal**: ANC >= 1.0 k/µL",
+                "**Neutropenia Leve**: 0.5 - 0.99 k/µL (Monitoreo 3 veces/semana)",
+                "**Neutropenia Moderada/Severa**: < 0.5 k/µL (Suspender tratamiento)"
+            ]
+        },
+        {
+            "id": "clz_clinical_triage",
+            "type": "warning",
+            "level": "danger",
+            "title": "Triage Clínico: Más allá del ANC",
+            "content": "No ignore los síntomas sistémicos incluso con ANC normal.",
+            "items": [
+                "**Fiebre**: Alerta de Miocarditis o infección oculta.",
+                "**Estreñimiento**: Riesgo de Íleo (CIGH). Evalué escala de Bristol.",
+                "**Dolor Torácico**: Descartar Miocarditis (especialmente en el primer mes)."
+            ]
+        },
+        {
+            "id": "clz_app_integration",
+            "type": "section",
+            "title": "Uso en Lab Notes",
+            "content": "Al ingresar datos en la app, marque la casilla 'Monitorizar Clozapina'. La app multiplicará automáticamente sus valores x10³ si usa el modificador y comparará contra estos umbrales en la vista de Detalle."
+        }
+    ],
+    "meta": {
+        "source": "FDA Clozapine REMS Program / Maudsley Prescribing Guidelines",
+        "version": "1.1",
+        "last_reviewed": "2026-03-26"
+    }
+}

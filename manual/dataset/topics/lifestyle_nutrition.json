@@ -1,14 +1,8 @@
 {
   "id": "lifestyle_nutrition",
-  "title": "Alimentación Saludable (MNT)",
+  "title": "Nutrición y Riesgo Metabólico",
   "audience": "both",
-  "tags": [
-    "lifestyle",
-    "estilo de vida",
-    "dieta",
-    "milpa",
-    "clinician"
-  ],
+  "tags": ["lifestyle", "nutricion", "metabolico", "psiquiatria"],
   "blocks": [
     {
       "id": "nutrition_clinical_intro",
@@ -38,6 +32,31 @@
             "Fibra": "> 25 g/día (Leguminosas, verduras)."
           }
         }
+      ]
+    },
+    {
+      "id": "nutrition_psych_context",
+      "type": "alert",
+      "title": "Contexto Psiquiátrico (SMI)",
+      "level": "info",
+      "content": "Antipsicóticos como Clozapina y Olanzapina aumentan el apetito y antojos por carbohidratos. La prevención debe iniciar desde la primera dosis.",
+      "sub_blocks": [
+        {
+          "id": "nutrition_metabolic_syndrome",
+          "type": "warning",
+          "title": "Síndrome Metabólico",
+          "content": "Priorice la Dieta Mediterránea o DASH para mitigar el riesgo de hipertensión y dislipidemia inducida por fármacos."
+        }
+      ]
+    },
+    {
+      "id": "nutrition_imc_calc",
+      "type": "calculator",
+      "title": "Calculadora de IMC",
+      "fn": "bmi",
+      "inputs": [
+        { "key": "weight", "label": "Peso (kg)", "unit": "kg" },
+        { "key": "height", "label": "Altura (m)", "unit": "m" }
       ]
     },
     {

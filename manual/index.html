@@ -124,19 +124,35 @@
         }
       });
 
-      // Listen for navigation commands from parent app
+      // Listen for navigation/scroll commands from parent app
       window.addEventListener('message', function (e) {
-        if (!e.data || e.data.action !== 'navigate') return;
-        var view = e.data.view; // 'topic' | 'print'
-        var id   = e.data.id;
-        if (!id) return;
-        // Try hash-based navigation (works if the SPA uses HashRouter)
-        var hash = view === 'print' ? '#/print/' + id : '#/topic/' + id;
-        if (window.location.hash !== hash) {
-          window.location.hash = hash;
+        if (!e.data) return;
+        
+        if (e.data.action === 'navigate') {
+          var view = e.data.view; 
+          var id   = e.data.id;
+          if (!id) return;
+          var hash = view === 'print' ? '#/print/' + id : '#/topic/' + id;
+          if (window.location.hash !== hash) {
+            window.location.hash = hash;
+          }
+          window.dispatchEvent(new CustomEvent('labnotes:navigate', { detail: { view: view, id: id } }));
         }
-        // Also dispatch a custom event the app can subscribe to
-        window.dispatchEvent(new CustomEvent('labnotes:navigate', { detail: { view: view, id: id } }));
+
+        if (e.data.action === 'scroll') {
+          var targetId = e.data.id;
+          if (!targetId) return;
+          // Wait for DOM to catch up
+          setTimeout(function() {
+            var el = document.getElementById(targetId);
+            if (el) {
+              el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+              el.style.outline = '2px solid var(--primary-spirit)';
+              el.style.outlineOffset = '4px';
+              setTimeout(function() { el.style.outline = 'none'; }, 2000);
+            }
+          }, 300);
+        }
       });
     })();
   </script>

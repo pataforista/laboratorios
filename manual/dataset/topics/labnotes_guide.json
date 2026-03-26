@@ -1,0 +1,70 @@
+{
+    "id": "labnotes_guide",
+    "title": "Guía de Uso: Lab Notes",
+    "audience": "clinician",
+    "tags": [
+        "tutorial",
+        "guia",
+        "clozapina",
+        "registros"
+    ],
+    "blocks": [
+        {
+            "id": "guide_intro",
+            "type": "section",
+            "title": "Introducción",
+            "content": "Lab Notes es una herramienta diseñada para facilitar el seguimiento de pacientes en tratamiento con Clozapina y la gestión de laboratorios generales. Funciona de manera local (offline-first) para garantizar la privacidad de los datos clínicos."
+        },
+        {
+            "id": "guide_records",
+            "type": "section",
+            "title": "Creación de Registros",
+            "content": "Para crear un nuevo registro, presione el botón '+' en la pantalla principal. El proceso se divide en tres pasos:",
+            "items": [
+                "**Información**: Fecha del estudio, sexo biológico y contexto (ej. Control mensual). Aquí puede activar el monitoreo de Clozapina.",
+                "**Estudios**: Seleccione los paneles realizados (Biometría, Perfil Renal, etc.). Puede buscar estudios por nombre.",
+                "**Captura**: Ingrese los valores directamente. Si activó Clozapina, podrá registrar también el Triage Clínico (fever, estreñimiento, etc.)."
+            ]
+        },
+        {
+            "id": "guide_clozapine",
+            "type": "section",
+            "title": "Monitoreo de Clozapina",
+            "content": "El sistema automatiza dos procesos críticos:",
+            "sub_blocks": [
+                {
+                    "id": "guide_anc",
+                    "type": "warning",
+                    "level": "info",
+                    "title": "Cálculo de ANC",
+                    "content": "Si ingresa el valor de Neutrófilos/WBC, el sistema calculará el ANC absoluto y lo comparará con los umbrales de la FDA (REMS) y guías APA. Soporta perfiles BEN (Neutropenia Étnica Benigna)."
+                },
+                {
+                    "id": "guide_triage",
+                    "type": "warning",
+                    "level": "caution",
+                    "title": "Triage GI y Sedación",
+                    "content": "Permite registrar escalas de estreñimiento y somnolencia (0-5). Valores >= 3 en estreñimiento activan alertas de riesgo de íleo paralítico."
+                }
+            ]
+        },
+        {
+            "id": "guide_export",
+            "type": "section",
+            "title": "Exportación de Notas",
+            "content": "Una vez guardado el registro, puede usar la función 'Exportar' para generar una nota clínica en texto plano. Esta nota está diseñada para ser copiada y pegada directamente en el expediente clínico electrónico (ECE/EMR)."
+        },
+        {
+            "id": "guide_privacy",
+            "type": "warning",
+            "level": "danger",
+            "title": "Privacidad y Datos",
+            "content": "Lab Notes no envía datos a ningún servidor. Toda la información reside en su navegador. Se recomienda realizar respaldos periódicos usando la función 'Exportar JSON' en la sección de Ajustes."
+        }
+    ],
+    "meta": {
+        "source": "Lab Notes Documentation",
+        "version": "1.0",
+        "last_reviewed": "2026-03-26"
+    }
+}

@@ -53,8 +53,8 @@
     </div>
 
     <div class="top-actions">
-      <button id="btnTheme" class="btn btn-text btn-icon" title="Cambiar tema">◐</button>
-      <button id="btnSettings" class="btn btn-text btn-icon" title="Ajustes">⚙</button>
+      <button id="btnTheme" class="btn btn-text btn-icon" title="Cambiar tema" aria-label="Cambiar tema claro/oscuro">◐</button>
+      <button id="btnSettings" class="btn btn-text btn-icon" title="Ajustes" aria-label="Ajustes de la aplicación">⚙</button>
     </div>
   </header>
 
@@ -66,7 +66,7 @@
     <section id="tabLab" class="tab-section active">
       <div class="tab-header">
         <h2>Registros</h2>
-        <span class="label-chip">Guardado local</span>
+        <button class="btn btn-text btn-sm" onclick="openManualTopic('labnotes_guide')" style="color:var(--m3-primary); font-weight:bold;">📖 Guía de Uso</button>
       </div>
 
       <div id="recordsList" class="records-list"></div>
@@ -253,13 +253,13 @@
           <div class="grid2">
             <label class="field">
               <span class="field-label">Estreñimiento (0–5)</span>
-              <input id="nrConstipation" type="range" min="0" max="5" value="0" oninput="this.nextElementSibling.value = this.value">
-              <output>0</output>
+              <input id="nrConstipation" type="range" min="0" max="5" value="0" oninput="this.nextElementSibling.value = this.value" aria-valuemin="0" aria-valuemax="5">
+              <output aria-hidden="true">0</output>
             </label>
             <label class="field">
               <span class="field-label">Somnolencia (0–5)</span>
-              <input id="nrSomnolence" type="range" min="0" max="5" value="0" oninput="this.nextElementSibling.value = this.value">
-              <output>0</output>
+              <input id="nrSomnolence" type="range" min="0" max="5" value="0" oninput="this.nextElementSibling.value = this.value" aria-valuemin="0" aria-valuemax="5">
+              <output aria-hidden="true">0</output>
             </label>
           </div>
           <div class="grid2" style="margin-top:8px;">
@@ -317,7 +317,11 @@
     <section id="viewExport" class="view hidden">
       <div class="view-topbar">
         <button id="btnBackFromExport" class="btn btn-text">← Detalle</button>
-        <h2 style="font-size:18px; margin:0;">Nota Clínica</h2>
+        <div style="flex:1; margin:0 12px;">
+          <select id="exportTemplate" class="btn btn-outlined btn-sm" style="width:100%; border-color:var(--m3-outline-variant);">
+            <option value="default">Resumen compacto (Default)</option>
+          </select>
+        </div>
         <button id="btnCopyExport" class="btn btn-filled btn-sm">📋 Copiar</button>
       </div>
       <div class="card">
@@ -368,11 +372,25 @@
   </main>
 
   <!-- Manual tab lives outside container so iframe fills full viewport -->
-  <section id="tabManual" class="tab-manual hidden">
+  <section id="tabManual" class="tab-section hidden" style="padding:0; overflow:hidden; display: flex; flex-direction: column;">
+    <!-- ── Manual Dashboard Overlay ─────────────────────────────────── -->
+    <div class="manual-header">
+      <div class="manual-search-box">
+        <input type="text" id="manualSearch" placeholder="🔍 Buscar tema, calculadora o guía..." autocomplete="off">
+        <div id="manualResults" class="manual-results hidden"></div>
+      </div>
+      <div class="manual-chips-scroll">
+        <button class="m-chip active" data-filter="all">Todos</button>
+        <button class="m-chip" data-filter="calculator">🧮 Calculadoras</button>
+        <button class="m-chip" data-filter="printable">🖨️ Imprimibles</button>
+        <button class="m-chip" data-filter="protocol">🩺 Protocolos</button>
+      </div>
+    </div>
+
     <iframe
-      id="manualFrame"
-      src="./manual/index.html"
-      class="manual-frame"
+      id="manualIframe"
+      src="manual/index.html"
+      style="width:100%; flex: 1; border:none;"
       title="Manual Clínico de Consulta"
       loading="lazy"
     ></iframe>

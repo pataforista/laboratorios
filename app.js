@@ -3,11 +3,13 @@ import { analyzeANC, auditSideEffects } from './clinical.js';
 const $ = s => document.querySelector(s);
 const $$ = s => [...document.querySelectorAll(s)];
 
-const LS_KEY = "labnotes_records_v1";
+const LS_KEY = "labnotes_records_v2";
+const LS_KEY_V1 = "labnotes_records_v1";
 const LS_THEME = "labnotes_theme";
 
 const state = {
   catalog: null,
+  templates: null,
   records: [],
   selected: null,
   editingId: null,
@@ -31,6 +33,36 @@ const CONVERSIONS = {
   bili_direct: { factor: 17.1, unit: "µmol/L" }
 };
 
+const MANUAL_INDEX = [
+  // Calculators
+  { id: 't2dm_homa_calc', topic: 'comorb_t2dm', title: 'Calculadora HOMA-IR', type: 'calculator', desc: 'Resistencia a la insulina' },
+  { id: 'dyslip_calc', topic: 'comorb_dyslip', title: 'Calculadora LDL (Friedewald)', type: 'calculator', desc: 'Perfil lipídico' },
+  { id: 'masld_fib4_calc', topic: 'comorb_masld', title: 'Calculadora FIB-4', type: 'calculator', desc: 'Fibrosis hepática' },
+  { id: 'calc_sleep_efficiency', topic: 'lifestyle_sleep', title: 'Eficiencia del Sueño', type: 'calculator', desc: 'Higiene del sueño' },
+  { id: 'mrs_scale', topic: 'womens_health', title: 'Escala MRS (Menopausia)', type: 'calculator', desc: 'Síntomas climatéricos' },
+  { id: 'lifestyle_bmi_calc', topic: 'comorb_obesity', title: 'Calculadora IMC', type: 'calculator', desc: 'Obesidad y sobrepeso' },
+  
+  // Printables
+  { id: 'bp_log_a4', topic: 'comorb_htn', title: 'Hoja Registro Presión', type: 'printable', desc: 'Seguimiento HTA' },
+  { id: 'medication_log_a4', topic: 'comorb_hypothy', title: 'Registro de Medicación', type: 'printable', desc: 'Adherencia' },
+  { id: 'lifestyle_master_guide', topic: 'lifestyle_overview', title: 'Guía Maestra Vida Sana', type: 'printable', desc: 'Resumen integral' },
+
+  // Protocols
+  { id: 'psych_clozapine_monitoring', topic: 'psych_clozapine_monitoring', title: 'Monitoreo ANC (Clozapina)', type: 'protocol', desc: 'Protocolo REMS 2024' },
+  { id: 'psych_clozapine_cigh', topic: 'psych_clozapine_cigh', title: 'Gastro: CIGH Clozapina', type: 'protocol', desc: 'Manejo de estreñimiento' },
+  { id: 'psych_qt_antipsychotics', topic: 'psych_qt_antipsychotics', title: 'QTc y Antipsicóticos', type: 'protocol', desc: 'Seguridad cardiaca' },
+  { id: 'psych_eps', topic: 'psych_eps', title: 'EPS: Extrapiramidalismo', type: 'protocol', desc: 'Akatisia, Distonía, Parkinsonismo' },
+  { id: 'psych_antipsychotic_systems_monitoring', topic: 'psych_antipsychotic_systems_monitoring', title: 'Monitoreo Sistémico', type: 'protocol', desc: 'Cronograma de laboratorios' },
+  
+  // Topics (General)
+  { id: 'comorb_t2dm', topic: 'comorb_t2dm', title: 'Diabetes Mellitus', type: 'topic', desc: 'Guía ADA 2024' },
+  { id: 'comorb_htn', topic: 'comorb_htn', title: 'Hipertensión Arterial', type: 'topic', desc: 'Guía AHA 2025' },
+  { id: 'comorb_hypothy', topic: 'comorb_hypothy', title: 'Hipotiroidismo', type: 'topic', desc: 'Manejo en psiquiatría' },
+  { id: 'lifestyle_sleep', topic: 'lifestyle_sleep', title: 'Higiene del Sueño', type: 'topic', desc: 'Contexto SMI' },
+  { id: 'lifestyle_nutrition', topic: 'lifestyle_nutrition', title: 'Nutrición y Cardio', type: 'topic', desc: 'Prevención metabólica' },
+  { id: 'lifestyle_activity', topic: 'lifestyle_activity', title: 'Actividad Física', type: 'topic', desc: 'Prescripción en SMI' }
+];
+
 /* ---------- helpers ---------- */
 function localISODate() {
   const d = new Date();
@@ -43,6 +75,32 @@ function sanitize(str) {
   const d = document.createElement("div");
   d.textContent = str;
   return d.innerHTML;
+}
+
+function validateRecord(r) {
+  if (!r || typeof r !== 'object') return false;
+  if (!r.id || !r.date || !Array.isArray(r.panels)) return false;
+  // Basic check for data structure
+  if (typeof r.isClozapine !== 'boolean') return false;
+  return true;
+}
+
+function migrateFromV1() {
+  const v1Data = localStorage.getItem(LS_KEY_V1);
+  if (v1Data && !localStorage.getItem(LS_KEY)) {
+    try {
+      const parsed = JSON.parse(v1Data);
+      if (parsed && Array.isArray(parsed.records)) {
+        // Simple migration: v1 and v2 have similar structures for now
+        // but we ensure all records are valid
+        const validRecords = parsed.records.filter(validateRecord);
+        localStorage.setItem(LS_KEY, JSON.stringify({ records: validRecords }));
+        console.log(`Migrated ${validRecords.length} records from V1 to V2`);
+      }
+    } catch (e) {
+      console.error("Migration failed:", e);
+    }
+  }
 }
 
 function getActualValue(v, mod) {
@@ -89,7 +147,7 @@ function initTheme() {
 }
 
 function sendThemeToManual(theme) {
-  const frame = $('#manualFrame');
+  const frame = $('#manualIframe');
   if (frame && frame.contentWindow) {
     frame.contentWindow.postMessage({ type: 'setTheme', theme }, location.origin);
   }
@@ -109,6 +167,66 @@ window.addEventListener('message', (e) => {
     sendThemeToManual(document.body.dataset.theme || localStorage.getItem(LS_THEME) || 'dark');
   }
 });
+
+/* ---------- Manual Dashboard (OmniSearch) ---------- */
+function initManualDashboard() {
+  const input = $("#manualSearch");
+  const results = $("#manualResults");
+  const chips = $$(".m-chip");
+
+  if (!input) return;
+
+  input.oninput = (e) => {
+    const q = e.target.value.toLowerCase().trim();
+    if (!q) { results.classList.add("hidden"); return; }
+    
+    const filtered = MANUAL_INDEX.filter(item => 
+      item.title.toLowerCase().includes(q) || 
+      item.desc.toLowerCase().includes(q)
+    );
+    renderManualResults(filtered);
+  };
+
+  chips.forEach(chip => {
+    chip.onclick = () => {
+      chips.forEach(c => c.classList.remove("active"));
+      chip.classList.add("active");
+      const filter = chip.dataset.filter;
+      const filtered = filter === "all" ? MANUAL_INDEX : MANUAL_INDEX.filter(i => i.type === filter);
+      renderManualResults(filtered);
+      results.classList.remove("hidden");
+    };
+  });
+
+  // Close results on blur
+  document.addEventListener("click", (e) => {
+    if (!input.contains(e.target) && !results.contains(e.target)) {
+      results.classList.add("hidden");
+    }
+  });
+}
+
+function renderManualResults(items) {
+  const el = $("#manualResults");
+  if (!items.length) {
+    el.innerHTML = '<div class="manual-result-item">Sin resultados</div>';
+    el.classList.remove("hidden");
+    return;
+  }
+
+  const icons = { calculator: "🧮", printable: "🖨️", protocol: "🩺", topic: "📖" };
+  
+  el.innerHTML = items.map(item => `
+    <div class="manual-result-item" onclick="openManualTopic('${item.topic}', '${item.id}')">
+      <div class="manual-result-icon">${icons[item.type] || "📖"}</div>
+      <div class="manual-result-info">
+        <h4>${sanitize(item.title)}</h4>
+        <p>${sanitize(item.desc)}</p>
+      </div>
+    </div>
+  `).join("");
+  el.classList.remove("hidden");
+}
 
 /* ---------- OmniSearch data cache ---------- */
 const omniCache = { topics: [], resources: [] };
@@ -215,58 +333,90 @@ function closeOmni() {
   $('#omniInput').value = '';
 }
 
-function openManualTopic(id) {
+function openManualTopic(id, blockId = null) {
   showTab('manual');
-  const iframe = $('#manualFrame');
+  const iframe = $('#manualIframe');
   if (iframe) {
-    const navigate = () => iframe.contentWindow?.postMessage({ action: 'navigate', view: 'topic', id }, location.origin);
+    const navigate = () => {
+      iframe.contentWindow?.postMessage({ action: 'navigate', view: 'topic', id }, location.origin);
+      if (blockId) {
+        // Small delay to allow topic load before scrolling to block
+        setTimeout(() => {
+          iframe.contentWindow?.postMessage({ action: 'scroll', id: blockId }, location.origin);
+        }, 500);
+      }
+    };
     if (iframe.dataset.loaded) navigate();
-    else { iframe.onload = () => { iframe.dataset.loaded = '1'; setTimeout(navigate, 300); }; }
+    else { 
+      iframe.onload = () => { 
+        iframe.dataset.loaded = '1'; 
+        setTimeout(navigate, 400); 
+      }; 
+    }
   }
 }
 
 function openManualResource(id) {
   showTab('manual');
-  const iframe = $('#manualFrame');
+  const iframe = $('#manualIframe');
   if (iframe) {
     const navigate = () => iframe.contentWindow?.postMessage({ action: 'navigate', view: 'print', id }, location.origin);
     if (iframe.dataset.loaded) navigate();
-    else { iframe.onload = () => { iframe.dataset.loaded = '1'; setTimeout(navigate, 300); }; }
+    else { iframe.onload = () => { iframe.dataset.loaded = '1'; setTimeout(navigate, 400); }; }
   }
 }
 
 function openManualClzProtocol() {
-  openManualTopic('psych_clozapine_cigh');
+  openManualTopic('psych_clozapine_monitoring');
 }
 
 /* ---------- init ---------- */
 window.onload = async () => {
-  initTheme();
-  const catalog = await fetch("lab_catalog.json").then(r => r.json());
+  try {
+    initTheme();
+    migrateFromV1();
 
-  // Resolve analytes_refs in panels
-  const allAnalytes = {};
-  catalog.panels.forEach(p => {
-    p.analytes.forEach(a => {
-      if (!allAnalytes[a.analyte_id]) allAnalytes[a.analyte_id] = a;
+    const catalog = await fetch("lab_catalog.json")
+      .then(r => {
+        if (!r.ok) throw new Error("No se pudo cargar el catálogo de laboratorio");
+        return r.json();
+      });
+
+    // Resolve analytes_refs in panels
+    const allAnalytes = {};
+    catalog.panels.forEach(p => {
+      p.analytes.forEach(a => {
+        if (!allAnalytes[a.analyte_id]) allAnalytes[a.analyte_id] = a;
+      });
     });
-  });
 
-  catalog.panels.forEach(p => {
-    if (p.analytes_refs && (!p.analytes || p.analytes.length === 0)) {
-      p.analytes = p.analytes_refs
-        .map(id => allAnalytes[id])
-        .filter(Boolean);
-    }
-  });
+    catalog.panels.forEach(p => {
+      if (p.analytes_refs && (!p.analytes || p.analytes.length === 0)) {
+        p.analytes = p.analytes_refs
+          .map(id => allAnalytes[id])
+          .filter(Boolean);
+      }
+    });
 
-  state.catalog = catalog;
-  const saved = localStorage.getItem(LS_KEY);
-  state.records = saved ? JSON.parse(saved).records : [];
-  $("#nrDate").value = localISODate();
-  initUI();
-  initOmniSearch();
-  renderTabContent('lab');
+    state.catalog = catalog;
+    state.templates = await fetch("export_templates.json").then(r => r.json()).catch(() => null);
+
+    const saved = localStorage.getItem(LS_KEY);
+    state.records = saved ? JSON.parse(saved).records.filter(validateRecord) : [];
+    
+    $("#nrDate").value = localISODate();
+    initUI();
+    initOmniSearch();
+    initManualDashboard();
+    renderTabContent('lab');
+    checkStorageQuota();
+  } catch (err) {
+    console.error("Initialization error:", err);
+    alert("Error al iniciar la aplicación: " + err.message);
+    // Even if it fails, try to init UI components that don't depend on catalog
+    initTheme();
+    initUI();
+  }
 };
 
 /* ---------- UI ---------- */
@@ -291,9 +441,9 @@ function initUI() {
   $("#btnSettings").onclick = () => show("#viewSettings");
 
   // Wire up iframe theme sync on load
-  const manualFrame = $('#manualFrame');
-  if (manualFrame) {
-    manualFrame.addEventListener('load', () => {
+  const manualIframe = $('#manualIframe');
+  if (manualIframe) {
+    manualIframe.addEventListener('load', () => {
       const theme = document.body.dataset.theme || localStorage.getItem(LS_THEME) || 'dark';
       // Small delay to ensure the iframe's message listener is registered
       setTimeout(() => sendThemeToManual(theme), 80);
@@ -401,8 +551,16 @@ function renderClozapineTab() {
   if (latestWithData) {
     statsEl.classList.remove('hidden');
     statsEl.innerHTML = [
-      latestWithData.data?.anc !== undefined ? `<div class="clz-stat-chip"><span class="clz-stat-value">${latestWithData.data.anc}</span><div class="clz-stat-label">ANC último</div></div>` : '',
-      latestWithData.data?.wbc !== undefined ? `<div class="clz-stat-chip"><span class="clz-stat-value">${latestWithData.data.wbc}</span><div class="clz-stat-label">WBC último</div></div>` : '',
+      latestWithData.data?.anc !== undefined ? `
+        <div class="clz-stat-chip ${analyzeANC(latestWithData.data.anc/1000, latestWithData.isBEN)?.status.toLowerCase() || ''}">
+          <span class="clz-stat-value">${(latestWithData.data.anc/1000).toFixed(2)} <small>k/µL</small></span>
+          <div class="clz-stat-label">ANC (${latestWithData.data.anc})</div>
+        </div>` : '',
+      latestWithData.data?.wbc !== undefined ? `
+        <div class="clz-stat-chip">
+          <span class="clz-stat-value">${(latestWithData.data.wbc/1000).toFixed(2)} <small>k/µL</small></span>
+          <div class="clz-stat-label">WBC (${latestWithData.data.wbc})</div>
+        </div>` : '',
       `<div class="clz-stat-chip"><span class="clz-stat-value">${clzRecords.length}</span><div class="clz-stat-label">Registros CLZ</div></div>`
     ].join('');
   } else if (clzRecords.length > 0) {
@@ -573,6 +731,7 @@ function renderDashboard() {
  * Renders a simple line chart on the canvas for the selected metric
  */
 function drawChart(canvas, dataPoints, metric) {
+  if (!canvas || canvas.offsetWidth === 0) return;
   const ctx = canvas.getContext("2d");
   canvas.width  = canvas.offsetWidth * 2;
   canvas.height = 400;
@@ -647,6 +806,10 @@ function deleteRecord(id) {
 }
 
 /* ---------- new ---------- */
+/**
+ * Opens the New Record form.
+ * @param {string|number|null} id - ID of the record to edit, or null for a new one.
+ */
 function openNew(id = null) {
   if (id && typeof id !== "string" && typeof id !== "number") id = null;
   state.editingId = id;
@@ -771,6 +934,10 @@ function renderCapture() {
   });
 }
 
+/**
+ * Saves the current record from the form state to localStorage.
+ * Validates date and panel selection before persisting.
+ */
 function saveNewRecord() {
   if (!$("#nrDate").value) { alert("Fecha obligatoria"); return; }
   if (!state.new.selectedPanels.size) { alert("Selecciona al menos un panel"); return; }
@@ -789,7 +956,11 @@ function saveNewRecord() {
           data[a.analyte_id] = v;
         } else {
           const numV = Number(v);
-          if (numV < 0 && !["urine_ph"].includes(a.analyte_id)) return;
+          const allowNegative = ["urine_ph"].includes(a.analyte_id);
+          if (numV < 0 && !allowNegative) {
+            console.warn(`Valor negativo detectado y omitido para ${a.analyte_id}`);
+            return;
+          }
           const m = $(`#mod_${a.analyte_id}`)?.checked ? "x10^3" : null;
           const scaledV = getActualValue(numV, m);
           res.push({ analyte_id: a.analyte_id, value: numV, modifier: m });
@@ -838,6 +1009,7 @@ function saveNewRecord() {
     state.records.push(record);
   }
   persist();
+  state.editingId = null; // Reset editing state after save
 
   // Feedback visual
   $("#btnSaveRecord").textContent = "Guardado...";
@@ -848,6 +1020,11 @@ function saveNewRecord() {
 }
 
 /* ---------- evaluation ---------- */
+/**
+ * Evaluates a record against catalog rules and clinical thresholds.
+ * @param {Object} rec - The record object to evaluate.
+ * @returns {Object} Evaluation result containing alerts and panel-specific data.
+ */
 function evaluate(rec) {
   const alerts = [];
   const panelEvals = {};
@@ -980,6 +1157,28 @@ function openDetail(id) {
     $("#detailAlerts").innerHTML = `<span class="badge ok">Resultados sin alertas críticas</span>`;
   }
 
+  // Phase 4: Enhanced Clinical Analysis Box for Clozapine
+  let clozAnalysisHtml = "";
+  if (r.isClozapine) {
+    const ancAnalysis = analyzeANC((r.data?.anc || 0)/1000, r.isBEN);
+    clozAnalysisHtml = `
+      <div class="cloz-analysis-card" style="margin-top:16px; padding:12px; border-radius:8px; border:1px solid var(--m3-outline-variant); background:var(--m3-surface-container-low); margin-bottom:12px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+          <h3 style="margin:0; font-size:16px;">🔬 Análisis Clozapina (REMS 2024)</h3>
+          <span class="badge ${ancAnalysis?.status.toLowerCase() || 'ok'}">${ancAnalysis?.status || 'OK'}</span>
+        </div>
+        <p style="font-size:14px; margin:4px 0;"><strong>ANC:</strong> ${(r.data?.anc/1000 || 0).toFixed(2)} k/µL (${r.data?.anc || 0} /µL)</p>
+        <p style="font-size:13px; color:var(--m3-on-surface-variant);">${ancAnalysis?.message || 'Sin datos suficientes.'}</p>
+        ${ancAnalysis?.action ? `<p style="font-size:13px; font-weight:bold; color:var(--m3-error); margin-top:8px;">Acción: ${ancAnalysis.action}</p>` : ''}
+        
+        <div style="margin-top:12px; border-top:1px solid var(--m3-outline-variant); padding-top:8px; font-size:12px; opacity:0.8; display:flex; justify-content:space-between; align-items:center;">
+          <p style="margin:2px 0;"><strong>Fuente:</strong> FDA REMS / APA 2024-25</p>
+          <button class="btn btn-text btn-sm" onclick="openManualTopic('psych_clozapine_monitoring')" style="padding:0; min-height:0; color:var(--m3-primary);">Ver Protocolo →</button>
+        </div>
+      </div>
+    `;
+  }
+
   const checklists = [];
   Object.values(r.eval.panelEvals).flat().forEach(e => { if (e.status !== 'normal' && e.checklist?.length) checklists.push({ name: e.name, items: e.checklist }); });
 
@@ -990,7 +1189,7 @@ function openDetail(id) {
   } else { $("#detailChecklists").innerHTML = ""; }
 
   const w = $("#detailPanels");
-  w.innerHTML = "";
+  w.innerHTML = clozAnalysisHtml; 
   r.panels.forEach(p => {
     const panelDef = state.catalog.panels.find(x => x.panel_id === p.panel_id);
     const c = document.createElement("div");
@@ -1023,60 +1222,109 @@ function openDetail(id) {
 /* ---------- export ---------- */
 function openExport() {
   const r = state.selected;
-  let text = `LABS: ${r.date} | ${r.context || "Sin contexto"}\n`;
-  const sexLabel = r.sex === 'male' ? 'M' : r.sex === 'female' ? 'F' : '—';
-  text += `Sex: ${sexLabel} | Lab: ${r.labName || "—"}\n`;
-  if (r.isClozapine) text += `[CLZ${r.isBEN ? ' / BEN' : ''}]\n`;
-  text += '\n';
-
-  const abnormal = [];
-  const normal = [];
-
-  Object.values(r.eval.panelEvals).flat().forEach(e => {
-    if (e.isDerived) return; // Skip derived for compact note unless critical?
-    const v = e.modifier ? e.scaled : e.value;
-    const statusChar = e.status === 'high' ? '↑' : e.status === 'low' ? '↓' : e.status === 'critical' ? '‼' : '';
-    if (statusChar) {
-      abnormal.push(`${e.name}: ${v}${statusChar}`);
-    } else {
-      normal.push(`${e.name}: ${v}`);
-    }
-  });
-
-  if (abnormal.length) {
-    text += `ALTERA.: ${abnormal.join(", ")}\n`;
-  }
-  if (normal.length) {
-    text += `NORMAL: ${normal.join(", ")}\n`;
+  const selector = $("#exportTemplate");
+  
+  // Populate templates if not done
+  if (selector && state.templates && selector.options.length === 0) {
+    state.templates.export_templates.forEach(t => {
+      const opt = document.createElement("option");
+      opt.value = t.template_id;
+      opt.textContent = t.name;
+      selector.appendChild(opt);
+    });
+    selector.onchange = () => renderExport();
   }
 
-  // Derived metrics if abnormal
-  const derivedAbnormal = Object.values(r.eval.panelEvals).flat().filter(e => e.isDerived && e.status !== 'normal');
-  if (derivedAbnormal.length) {
-    text += `METRICAS: ${derivedAbnormal.map(e => `${e.name}: ${e.value}${e.status === 'high' ? '↑' : '↓'}`).join(", ")}\n`;
-  }
-
-  if (r.eval.alerts.length) {
-    text += `\nALERTAS: ${r.eval.alerts.map(a => a.msg).join(" | ")}\n`;
-  }
-
-  // Clinical triage section for Clozapine records
-  if (r.isClozapine && r.clinical?.triage) {
-    const t = r.clinical.triage;
-    const h = r.clinical.habits || {};
-    text += `\nCLÍNICO: Estreñim.${t.constipation}/5 · Somnol.${t.somnolence}/5`;
-    if (t.fever) text += ` · FIEBRE`;
-    if (t.chestPain) text += ` · DOLOR TORÁCICO`;
-    if (h.smoking) text += `\nHábitos: Fumador`;
-    if (h.quit) text += ` · Cese reciente`;
-    if (h.fluvox) text += ` · Fluvoxamina`;
-    if (h.caffeine === "high") text += ` · Cafeína alta`;
-    if (t.notes) text += `\nNotas: ${t.notes}`;
-    text += "\n";
-  }
-
-  $("#exportText").value = text.trim();
+  renderExport();
   show("#viewExport");
+}
+
+function renderExport() {
+  const r = state.selected;
+  const templateId = $("#exportTemplate")?.value || "default";
+  
+  if (templateId === "default" || !state.templates) {
+    // Original hardcoded logic as fallback
+    let text = `LABS: ${r.date} | ${r.context || "Sin contexto"}\n`;
+    const sexLabel = r.sex === 'male' ? 'M' : r.sex === 'female' ? 'F' : '—';
+    text += `Sex: ${sexLabel} | Lab: ${r.labName || "—"}\n`;
+    if (r.isClozapine) text += `[CLZ${r.isBEN ? ' / BEN' : ''}]\n`;
+    text += '\n';
+
+    const abnormal = [];
+    const normal = [];
+
+    Object.values(r.eval.panelEvals).flat().forEach(e => {
+      if (e.isDerived) return;
+      const v = e.modifier ? e.scaled : e.value;
+      const statusChar = e.status === 'high' ? '↑' : e.status === 'low' ? '↓' : e.status === 'critical' ? '‼' : '';
+      if (statusChar) abnormal.push(`${e.name}: ${v}${statusChar}`);
+      else normal.push(`${e.name}: ${v}`);
+    });
+
+    if (abnormal.length) text += `ALTERA.: ${abnormal.join(", ")}\n`;
+    if (normal.length) text += `NORMAL: ${normal.join(", ")}\n`;
+
+    const derivedAbnormal = Object.values(r.eval.panelEvals).flat().filter(e => e.isDerived && e.status !== 'normal');
+    if (derivedAbnormal.length) {
+      text += `METRICAS: ${derivedAbnormal.map(e => `${e.name}: ${e.value}${e.status === 'high' ? '↑' : '↓'}`).join(", ")}\n`;
+    }
+
+    if (r.eval.alerts.length) text += `\nALERTAS: ${r.eval.alerts.map(a => a.msg).join(" | ")}\n`;
+
+    if (r.isClozapine && r.clinical?.triage) {
+      const t = r.clinical.triage;
+      const h = r.clinical.habits || {};
+      text += `\nCLÍNICO: Estreñim.${t.constipation}/5 · Somnol.${t.somnolence}/5`;
+      if (t.fever) text += ` · FIEBRE`;
+      if (t.chestPain) text += ` · DOLOR TORÁCICO`;
+      if (h.smoking) text += `\nHábitos: Fumador`;
+      if (h.quit) text += ` · Cese reciente`;
+      if (h.fluvox) text += ` · Fluvoxamina`;
+      if (h.caffeine === "high") text += ` · Cafeína alta`;
+      if (t.notes) text += `\nNotas: ${t.notes}`;
+      text += "\n";
+    }
+    $("#exportText").value = text.trim();
+  } else {
+    // Use selected template
+    const tmpl = state.templates.export_templates.find(t => t.template_id === templateId);
+    const panelTmpl = state.templates.export_templates.find(t => t.template_id === "panel_block_v1");
+    const lineTmpl = state.templates.export_templates.find(t => t.template_id === "line_v1");
+
+    let panelBlocks = "";
+    r.panels.forEach(p => {
+      const panelDef = state.catalog.panels.find(pd => pd.panel_id === p.panel_id);
+      let lines = "";
+      r.eval.panelEvals[p.panel_id].forEach(e => {
+        if (e.isDerived) return;
+        const v = e.modifier ? e.scaled : e.value;
+        // Find ref range for display
+        const analyteDef = panelDef.analytes.find(ad => ad.analyte_id === e.analyte_id);
+        const refRange = analyteDef?.ref_ranges?.find(rr => rr.sex === r.sex || rr.sex === "any") || (analyteDef?.ref_ranges ? analyteDef.ref_ranges[0] : {});
+        
+        lines += lineTmpl.body
+          .replace("{analyte_name}", e.name)
+          .replace("{value}", v)
+          .replace("{units}", e.units || "")
+          .replace("{ref_low}", refRange.low || "—")
+          .replace("{ref_high}", refRange.high || "—")
+          .replace("{status}", e.status.toUpperCase());
+      });
+      panelBlocks += panelTmpl.body
+        .replace("{panel_name}", panelDef.name)
+        .replace("{lines}", lines);
+    });
+
+    let text = tmpl.body
+      .replace("{date}", r.date)
+      .replace("{context}", r.context || "Sin contexto")
+      .replace("{lab_name}", r.labName || "—")
+      .replace("{panel_blocks}", panelBlocks)
+      .replace("{alerts}", r.eval.alerts.map(a => a.msg).join(" | ") || "Sin alertas");
+
+    $("#exportText").value = text.trim();
+  }
 }
 
 function exportAll() {
@@ -1090,6 +1338,13 @@ function exportAll() {
 function importJSON(e) {
   const file = e.target.files[0];
   if (!file) return;
+  
+  // Phase 3: Limit size to 2MB to prevent browser freezing
+  if (file.size > 2 * 1024 * 1024) {
+    alert("Error: El archivo es demasiado grande (máximo 2MB).");
+    return;
+  }
+
   const reader = new FileReader();
   reader.onload = (ev) => {
     try {
@@ -1116,7 +1371,24 @@ function importJSON(e) {
 }
 
 function persist() {
-  localStorage.setItem(LS_KEY, JSON.stringify({ records: state.records }));
+  try {
+    localStorage.setItem(LS_KEY, JSON.stringify({ records: state.records }));
+  } catch (e) {
+    if (e.name === 'QuotaExceededError') {
+      alert("Error: El almacenamiento local está lleno. Por favor, elimina registros antiguos o exporta tus datos.");
+    }
+  }
+}
+
+async function checkStorageQuota() {
+  if (navigator.storage && navigator.storage.estimate) {
+    const quota = await navigator.storage.estimate();
+    const percent = (quota.usage / quota.quota) * 100;
+    if (percent > 80) {
+      console.warn(`Storage usage is high: ${percent.toFixed(2)}%`);
+      // We could add a UI indicator here later
+    }
+  }
 }
 
 /* ── Expose to global scope (required because app.js is type=module) ── */
@@ -1127,3 +1399,5 @@ window.showTab             = showTab;
 window.openManualClzProtocol = openManualClzProtocol;
 window.toggleClozapineFields = toggleClozapineFields;
 window.openExport          = openExport;
+window.openManualTopic     = openManualTopic;
+window.openManualResource  = openManualResource;
