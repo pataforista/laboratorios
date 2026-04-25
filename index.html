@@ -87,15 +87,15 @@
       <!-- Tendencias Clínicas -->
       <div id="trendsCard" class="card hidden" style="margin-top: 24px;">
         <div class="row">
-          <h3>Tendencias Clínicas</h3>
-          <select id="trendMetric" class="btn btn-outlined btn-sm">
+          <h3>Tendencia Histórica</h3>
+          <select id="trendMetric" class="btn btn-outlined btn-sm" aria-label="Seleccionar métrica para el gráfico">
             <option value="anc">ANC (Neutrófilos)</option>
             <option value="wbc">WBC (Leucocitos)</option>
             <option value="plt">PLT (Plaquetas)</option>
           </select>
         </div>
         <canvas id="trendChart" style="width: 100%; height: 200px; margin-top: 16px; border-radius: 12px;"></canvas>
-        <p class="body-sm muted" style="margin-top: 8px;">Últimos 10 registros con datos de la métrica seleccionada.</p>
+        <p class="body-sm muted" style="margin-top: 8px;">Muestra los últimos 10 registros con datos válidos.</p>
       </div>
     </section>
 
@@ -134,189 +134,216 @@
     <!-- ═══════════════════════════════════════════════════════════════
          VIEW: NUEVO / EDITAR REGISTRO (overlay over tabs)
     ══════════════════════════════════════════════════════════════════ -->
-    <section id="viewNew" class="view hidden">
+    <!-- ═══════════════════════════════════════════════════════════════
+         VIEW: NUEVO / EDITAR REGISTRO (overlay over tabs)
+    ══════════════════════════════════════════════════════════════════ -->
+    <dialog id="viewNew" class="view-dialog">
       <div class="view-topbar">
-        <button id="btnBackFromNew" class="btn btn-text">← Volver</button>
+        <button id="btnBackFromNew" class="btn btn-text" aria-label="Cerrar y volver">← Volver</button>
         <h2 id="nrTitle" style="font-size:18px; margin:0;">Nuevo Registro</h2>
         <div style="width:80px;"></div>
       </div>
 
-      <!-- Stepper -->
-      <div class="stepper" id="stepperBar">
-        <div class="step-dot active" data-step="1">1</div>
-        <div class="step-line"></div>
-        <div class="step-dot" data-step="2">2</div>
-        <div class="step-line"></div>
-        <div class="step-dot" data-step="3">3</div>
-      </div>
+      <div class="dialog-content">
+        <!-- Stepper -->
+        <div class="stepper" id="stepperBar">
+          <div class="step-dot active" data-step="1">1</div>
+          <div class="step-line"></div>
+          <div class="step-dot" data-step="2">2</div>
+          <div class="step-line"></div>
+          <div class="step-dot" data-step="3">3</div>
+        </div>
 
-      <!-- Step 1: Información -->
-      <div id="nrStep1" class="step">
-        <div class="card">
-          <h3>Información Básica</h3>
-          <div class="grid2">
+        <!-- Step 1: Información -->
+        <div id="nrStep1" class="step">
+          <div class="card">
+            <h3>Información Básica</h3>
+            <div class="grid2">
+              <label class="field">
+                <span class="field-label">Fecha</span>
+                <input id="nrDate" type="date" />
+              </label>
+              <label class="field">
+                <span class="field-label">Sexo biológico</span>
+                <select id="nrSex">
+                  <option value="any">No especificado</option>
+                  <option value="female">Femenino</option>
+                  <option value="male">Masculino</option>
+                </select>
+              </label>
+            </div>
             <label class="field">
-              <span class="field-label">Fecha</span>
-              <input id="nrDate" type="date" />
+              <span class="field-label">Contexto clínico</span>
+              <input id="nrContext" placeholder="Ej. Control mensual, urgencias..." />
             </label>
             <label class="field">
-              <span class="field-label">Sexo biológico</span>
-              <select id="nrSex">
-                <option value="any">No especificado</option>
-                <option value="female">Femenino</option>
-                <option value="male">Masculino</option>
-              </select>
+              <span class="field-label">Laboratorio</span>
+              <input id="nrLabName" placeholder="Ej. Lab Central, IMSS..." />
             </label>
-          </div>
-          <label class="field">
-            <span class="field-label">Contexto clínico</span>
-            <input id="nrContext" placeholder="Ej. Control mensual, urgencias..." />
-          </label>
-          <label class="field">
-            <span class="field-label">Laboratorio</span>
-            <input id="nrLabName" placeholder="Ej. Lab Central, IMSS..." />
-          </label>
 
-          <!-- Clozapina -->
-          <div class="divider" style="margin: 16px 0;"></div>
-          <div class="grid2">
-            <label class="checkrow">
-              <input id="nrClozapine" type="checkbox" onchange="toggleClozapineFields()">
-              <span>Monitorizar Clozapina</span>
-            </label>
-            <label class="checkrow">
-              <input id="nrBEN" type="checkbox">
-              <span>BEN / Duffy-null</span>
-            </label>
-          </div>
-
-          <!-- Factores Clozapina -->
-          <div id="clozHabits" class="hidden surface-container" style="margin-top:16px; border-radius:12px; padding:16px;">
-            <p class="label-md" style="margin-bottom:12px;">Factores de Interacción CYP1A2</p>
+            <!-- Clozapina -->
+            <div class="divider" style="margin: 16px 0;"></div>
             <div class="grid2">
               <label class="checkrow">
-                <input id="nrSmoking" type="checkbox">
-                <span>Fumador activo</span>
+                <input id="nrClozapine" type="checkbox" onchange="toggleClozapineFields()">
+                <span>Monitorizar Clozapina</span>
               </label>
               <label class="checkrow">
-                <input id="nrQuitSmoking" type="checkbox">
-                <span>Cese reciente (&lt;14 días)</span>
+                <input id="nrBEN" type="checkbox">
+                <span>BEN / Duffy-null</span>
+              </label>
+            </div>
+
+            <!-- Factores Clozapina -->
+            <div id="clozHabits" class="hidden surface-container" style="margin-top:16px; border-radius:12px; padding:16px;">
+              <p class="label-md" style="margin-bottom:12px;">Factores de Interacción CYP1A2</p>
+              <div class="grid2">
+                <label class="checkrow">
+                  <input id="nrSmoking" type="checkbox">
+                  <span>Fumador activo</span>
+                </label>
+                <label class="checkrow">
+                  <input id="nrQuitSmoking" type="checkbox">
+                  <span>Cese reciente (&lt;14 días)</span>
+                </label>
+              </div>
+              <div class="grid2" style="margin-top:8px;">
+                <label class="field">
+                  <span class="field-label">Cafeína</span>
+                  <select id="nrCaffeine">
+                    <option value="normal">Normal / Baja</option>
+                    <option value="high">&gt;3 tazas/día</option>
+                  </select>
+                </label>
+                <label class="checkrow" style="align-self:flex-end; padding-bottom:8px;">
+                  <input id="nrFluvoxamine" type="checkbox">
+                  <span>Uso de Fluvoxamina</span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div class="actions">
+            <button id="btnNext1" class="btn btn-filled">Siguiente: Estudios →</button>
+          </div>
+        </div>
+
+        <!-- Step 2: Selección de estudios -->
+        <div id="nrStep2" class="step hidden">
+          <div class="card">
+            <div class="row">
+              <h3>Selección de Estudios</h3>
+              <button id="btnClearPanels" class="btn btn-text btn-sm">Limpiar</button>
+            </div>
+            <div class="search-bar" style="margin-bottom:12px;">
+              <span class="search-icon">🔍</span>
+              <input type="text" id="nrPanelSearch" placeholder="Buscar estudio (ej. renal, biometría)...">
+            </div>
+            <div id="nrPanels" class="panel-pills"></div>
+          </div>
+          <div class="actions">
+            <button id="btnPrev2" class="btn btn-outlined">← Volver</button>
+            <button id="btnNext2" class="btn btn-filled">Siguiente: Captura →</button>
+          </div>
+        </div>
+
+        <!-- Step 3: Captura de datos -->
+        <div id="nrStep3" class="step hidden">
+          <div id="nrCaptureArea"></div>
+
+          <!-- Triage Clozapina -->
+          <div id="clozTriage" class="card hidden" style="margin-top:16px; border: 1px solid var(--m3-primary);">
+            <h3>🔬 Triage Clínico (Clozapina)</h3>
+            <div class="grid2">
+              <label class="field">
+                <span class="field-label">Estreñimiento (0–5)</span>
+                <input id="nrConstipation" type="range" min="0" max="5" value="0" 
+                  oninput="this.nextElementSibling.value = this.value; this.setAttribute('aria-valuetext', this.value + ' de 5')" 
+                  aria-valuemin="0" aria-valuemax="5" aria-valuetext="0 de 5" aria-label="Grado de estreñimiento">
+                <output aria-hidden="true">0</output>
+              </label>
+              <label class="field">
+                <span class="field-label">Somnolencia (0–5)</span>
+                <input id="nrSomnolence" type="range" min="0" max="5" value="0" 
+                  oninput="this.nextElementSibling.value = this.value; this.setAttribute('aria-valuetext', this.value + ' de 5')" 
+                  aria-valuemin="0" aria-valuemax="5" aria-valuetext="0 de 5" aria-label="Grado de somnolencia">
+                <output aria-hidden="true">0</output>
               </label>
             </div>
             <div class="grid2" style="margin-top:8px;">
               <label class="field">
-                <span class="field-label">Cafeína</span>
-                <select id="nrCaffeine">
-                  <option value="normal">Normal / Baja</option>
-                  <option value="high">&gt;3 tazas/día</option>
-                </select>
+                <span class="field-label">FC (lpm)</span>
+                <input id="nrHR" type="number" placeholder="Ej. 80">
               </label>
-              <label class="checkrow" style="align-self:flex-end; padding-bottom:8px;">
-                <input id="nrFluvoxamine" type="checkbox">
-                <span>Uso de Fluvoxamina</span>
+              <label class="field">
+                <span class="field-label">TA (mmHg)</span>
+                <input id="nrBP" type="text" placeholder="Ej. 120/80">
               </label>
             </div>
+            <div class="grid2" style="margin-top:8px;">
+              <label class="checkrow">
+                <input id="nrFever" type="checkbox">
+                <span>Fiebre (&gt;38°C)</span>
+              </label>
+              <label class="checkrow">
+                <input id="nrChestPain" type="checkbox">
+                <span>Dolor Torácico</span>
+              </label>
+            </div>
+            <label class="field" style="margin-top:12px;">
+              <span class="field-label">Notas clínicas breves</span>
+              <textarea id="nrClinicalNotes" rows="3" placeholder="Ej. Taquicardia leve, mejoría en el sueño..."></textarea>
+            </label>
           </div>
-        </div>
 
-        <div class="actions">
-          <button id="btnNext1" class="btn btn-filled">Siguiente: Estudios →</button>
+          <div class="actions">
+            <button id="btnPrev3" class="btn btn-outlined">← Volver</button>
+            <button id="btnSaveRecord" class="btn btn-filled">💾 Guardar Registro</button>
+          </div>
         </div>
       </div>
-
-      <!-- Step 2: Selección de estudios -->
-      <div id="nrStep2" class="step hidden">
-        <div class="card">
-          <div class="row">
-            <h3>Selección de Estudios</h3>
-            <button id="btnClearPanels" class="btn btn-text btn-sm">Limpiar</button>
-          </div>
-          <div class="search-bar" style="margin-bottom:12px;">
-            <span class="search-icon">🔍</span>
-            <input type="text" id="nrPanelSearch" placeholder="Buscar estudio (ej. renal, biometría)...">
-          </div>
-          <div id="nrPanels" class="panel-pills"></div>
-        </div>
-        <div class="actions">
-          <button id="btnPrev2" class="btn btn-outlined">← Volver</button>
-          <button id="btnNext2" class="btn btn-filled">Siguiente: Captura →</button>
-        </div>
-      </div>
-
-      <!-- Step 3: Captura de datos -->
-      <div id="nrStep3" class="step hidden">
-        <div id="nrCaptureArea"></div>
-
-        <!-- Triage Clozapina -->
-        <div id="clozTriage" class="card hidden" style="margin-top:16px; border: 1px solid var(--m3-primary);">
-          <h3>🔬 Triage Clínico (Clozapina)</h3>
-          <div class="grid2">
-            <label class="field">
-              <span class="field-label">Estreñimiento (0–5)</span>
-              <input id="nrConstipation" type="range" min="0" max="5" value="0" oninput="this.nextElementSibling.value = this.value" aria-valuemin="0" aria-valuemax="5">
-              <output aria-hidden="true">0</output>
-            </label>
-            <label class="field">
-              <span class="field-label">Somnolencia (0–5)</span>
-              <input id="nrSomnolence" type="range" min="0" max="5" value="0" oninput="this.nextElementSibling.value = this.value" aria-valuemin="0" aria-valuemax="5">
-              <output aria-hidden="true">0</output>
-            </label>
-          </div>
-          <div class="grid2" style="margin-top:8px;">
-            <label class="checkrow">
-              <input id="nrFever" type="checkbox">
-              <span>Fiebre (&gt;38°C)</span>
-            </label>
-            <label class="checkrow">
-              <input id="nrChestPain" type="checkbox">
-              <span>Dolor Torácico</span>
-            </label>
-          </div>
-          <label class="field" style="margin-top:12px;">
-            <span class="field-label">Notas clínicas breves</span>
-            <textarea id="nrClinicalNotes" rows="3" placeholder="Ej. Taquicardia leve, mejoría en el sueño..."></textarea>
-          </label>
-        </div>
-
-        <div class="actions">
-          <button id="btnPrev3" class="btn btn-outlined">← Volver</button>
-          <button id="btnSaveRecord" class="btn btn-filled">💾 Guardar Registro</button>
-        </div>
-      </div>
-    </section>
+    </dialog>
 
     <!-- ═══════════════════════════════════════════════════════════════
          VIEW: DETALLE DEL REGISTRO
     ══════════════════════════════════════════════════════════════════ -->
-    <section id="viewDetail" class="view hidden">
+    <!-- ═══════════════════════════════════════════════════════════════
+         VIEW: DETALLE DEL REGISTRO
+    ══════════════════════════════════════════════════════════════════ -->
+    <dialog id="viewDetail" class="view-dialog">
       <div class="view-topbar">
-        <button id="btnBackFromDetail" class="btn btn-text">← Registros</button>
+        <button id="btnBackFromDetail" class="btn btn-text" aria-label="Cerrar y volver">← Registros</button>
         <div class="right">
           <button id="btnEditRecord" class="btn btn-tonal btn-sm">✏ Editar</button>
           <button id="btnExport" class="btn btn-tonal btn-sm">📋 Exportar</button>
         </div>
       </div>
-      <div id="detailHeader" class="card card-hero"></div>
-      <div class="card">
-        <h3>Alertas e Interpretación</h3>
-        <div id="detailAlerts" class="chips"></div>
-        <div id="detailChecklists" class="checklists"></div>
+      <div class="dialog-content">
+        <div id="detailHeader" class="card card-hero"></div>
+        <div class="card">
+          <h3>Alertas e Interpretación</h3>
+          <div id="detailAlerts" class="chips"></div>
+          <div id="detailChecklists" class="checklists"></div>
+        </div>
+        <!-- Manual bridge button (shown only for CLZ records) -->
+        <div id="clzManualBridge" class="hidden" style="margin-bottom:12px;">
+          <button class="btn btn-outlined clz-btn" onclick="openManualClzProtocol()">
+            📖 Ver Protocolo Clozapina en Manual →
+          </button>
+        </div>
+        <div id="detailPanels"></div>
       </div>
-      <!-- Manual bridge button (shown only for CLZ records) -->
-      <div id="clzManualBridge" class="hidden" style="margin-bottom:12px;">
-        <button class="btn btn-outlined clz-btn" onclick="openManualClzProtocol()">
-          📖 Ver Protocolo Clozapina en Manual →
-        </button>
-      </div>
-      <div id="detailPanels"></div>
-    </section>
+    </dialog>
 
     <!-- ═══════════════════════════════════════════════════════════════
          VIEW: EXPORTACIÓN
     ══════════════════════════════════════════════════════════════════ -->
-    <section id="viewExport" class="view hidden">
+    <!-- ═══════════════════════════════════════════════════════════════
+         VIEW: EXPORTACIÓN
+    ══════════════════════════════════════════════════════════════════ -->
+    <dialog id="viewExport" class="view-dialog">
       <div class="view-topbar">
-        <button id="btnBackFromExport" class="btn btn-text">← Detalle</button>
+        <button id="btnBackFromExport" class="btn btn-text" aria-label="Cerrar y volver">← Detalle</button>
         <div style="flex:1; margin:0 12px;">
           <select id="exportTemplate" class="btn btn-outlined btn-sm" style="width:100%; border-color:var(--m3-outline-variant);">
             <option value="default">Resumen compacto (Default)</option>
@@ -324,50 +351,131 @@
         </div>
         <button id="btnCopyExport" class="btn btn-filled btn-sm">📋 Copiar</button>
       </div>
-      <div class="card">
-        <textarea id="exportText" rows="20" style="font-family: var(--font-mono); font-size: 13px;"></textarea>
+      <div class="dialog-content">
+        <div class="card">
+          <textarea id="exportText" rows="20" style="font-family: var(--font-mono); font-size: 13px;"></textarea>
+        </div>
       </div>
-    </section>
+    </dialog>
 
     <!-- ═══════════════════════════════════════════════════════════════
          VIEW: AJUSTES
     ══════════════════════════════════════════════════════════════════ -->
-    <section id="viewSettings" class="view hidden">
+    <!-- ═══════════════════════════════════════════════════════════════
+         VIEW: AJUSTES
+    ══════════════════════════════════════════════════════════════════ -->
+    <dialog id="viewSettings" class="view-dialog">
       <div class="view-topbar">
-        <button id="btnBackFromSettings" class="btn btn-text">← Volver</button>
+        <button id="btnBackFromSettings" class="btn btn-text" aria-label="Cerrar y volver">← Volver</button>
         <h2 style="font-size:18px; margin:0;">Ajustes</h2>
         <div style="width:80px;"></div>
       </div>
 
-      <div class="card">
-        <h3>Gestión de Datos</h3>
-        <p class="body-sm muted" style="margin-bottom:16px;">Exporta o importa todos tus registros. Los datos se guardan solo en este dispositivo.</p>
-        <div class="grid2">
-          <button id="btnExportAll" class="btn btn-tonal">⬇ Exportar JSON</button>
-          <label class="btn btn-tonal" style="margin:0; text-align:center; cursor:pointer;">
-            ⬆ Importar JSON
-            <input type="file" id="inputImport" accept=".json" style="display:none;">
-          </label>
+      <div class="dialog-content">
+        <div class="card">
+          <h3>Tema y Apariencia</h3>
+          <p class="body-sm muted" style="margin-bottom:12px;">Selecciona el modo visual de la aplicación.</p>
+          <div class="theme-selector">
+            <button class="btn btn-outlined btn-sm" onclick="setTheme('light')" id="theme-light">☀️ Luz</button>
+            <button class="btn btn-outlined btn-sm" onclick="setTheme('dark')" id="theme-dark">🌙 Noche</button>
+            <button class="btn btn-outlined btn-sm" onclick="setTheme('auto')" id="theme-auto">💻 Sistema</button>
+          </div>
         </div>
-        <div class="divider" style="margin:16px 0;"></div>
-        <button id="btnReset" class="btn btn-danger" style="width:100%;">🗑 Borrar todos los datos locales</button>
-      </div>
 
-      <div class="card">
-        <h3>Acerca de</h3>
-        <p><strong>Dr. César Celada</strong></p>
-        <p class="body-sm muted">Registro clínico de laboratorio · Monitoreo de Clozapina</p>
-        <p><a href="mailto:drceladapsiquiatria@gmail.com" class="link">drceladapsiquiatria@gmail.com</a></p>
-        <div style="margin-top:16px;">
-          <a href="https://buymeacoffee.com/herramente" target="_blank" class="btn btn-coffee">☕ Apoyar el proyecto</a>
+        <div class="card">
+          <h3>Gestión de Datos</h3>
+          <p class="body-sm muted" style="margin-bottom:16px;">Exporta o importa todos tus registros. Los datos se guardan solo en este dispositivo.</p>
+          <div class="grid2">
+            <button id="btnExportAll" class="btn btn-tonal">⬇ Exportar JSON</button>
+            <label class="btn btn-tonal" style="margin:0; text-align:center; cursor:pointer;">
+              ⬆ Importar JSON
+              <input type="file" id="inputImport" accept=".json" style="display:none;">
+            </label>
+          </div>
+          <div class="divider" style="margin:16px 0;"></div>
+          <button id="btnReset" class="btn btn-danger" style="width:100%;">🗑 Borrar todos los datos locales</button>
+        </div>
+
+        <div class="card">
+          <h3>Acerca de</h3>
+          <p><strong>Dr. César Celada</strong></p>
+          <p class="body-sm muted">Registro clínico de laboratorio · Monitoreo de Clozapina</p>
+          <p><a href="mailto:drceladapsiquiatria@gmail.com" class="link">drceladapsiquiatria@gmail.com</a></p>
+          <div style="margin-top:16px;">
+            <a href="https://buymeacoffee.com/herramente" target="_blank" class="btn btn-coffee">☕ Apoyar el proyecto</a>
+          </div>
+        </div>
+
+        <div class="card surface-container">
+          <h3>⚠ Aviso Legal</h3>
+          <p class="body-sm">Esta herramienta es de apoyo técnico. <strong>No sustituye el juicio clínico.</strong> Los rangos de referencia son orientativos y deben validarse individualmente.</p>
         </div>
       </div>
+    </dialog>
 
-      <div class="card surface-container">
-        <h3>⚠ Aviso Legal</h3>
-        <p class="body-sm">Esta herramienta es de apoyo técnico. <strong>No sustituye el juicio clínico.</strong> Los rangos de referencia son orientativos y deben validarse individualmente.</p>
+    <dialog id="viewCalculator" class="view-dialog">
+      <div class="view-topbar">
+        <button id="btnBackFromCalc" class="btn btn-text" aria-label="Cerrar y volver">← Volver</button>
+        <h2 id="calcTitle" style="font-size:18px; margin:0;">Calculadora</h2>
+        <div style="width:80px;"></div>
       </div>
-    </section>
+      <div class="dialog-content">
+        <div id="calcFib4" class="hidden">
+          <div class="card">
+            <h3>FIB-4 (Fibrosis Hepática)</h3>
+            <p class="body-sm muted">Estimación de fibrosis en MASLD/MASH.</p>
+            <div class="grid2">
+              <label class="field">
+                <span class="field-label">Edad</span>
+                <input id="fibAge" type="number" placeholder="Años">
+              </label>
+              <label class="field">
+                <span class="field-label">Plaquetas (k/µL)</span>
+                <input id="fibPlt" type="number" placeholder="Ej. 250">
+              </label>
+            </div>
+            <div class="grid2" style="margin-top:8px;">
+              <label class="field">
+                <span class="field-label">AST (U/L)</span>
+                <input id="fibAst" type="number" placeholder="Ej. 30">
+              </label>
+              <label class="field">
+                <span class="field-label">ALT (U/L)</span>
+                <input id="fibAlt" type="number" placeholder="Ej. 25">
+              </label>
+            </div>
+            <button class="btn btn-filled" style="width:100%; margin-top:16px;" onclick="runFib4()">Calcular FIB-4</button>
+            <div id="fibResult" class="card-hero hidden" style="margin-top:16px; text-align:center;">
+              <div class="label-md">Resultado FIB-4</div>
+              <div id="fibVal" class="display-lg">--</div>
+              <div id="fibInterpretation" class="body-sm"></div>
+            </div>
+          </div>
+        </div>
+        <div id="calcQtc" class="hidden">
+          <div class="card">
+            <h3>Calculadora QTc (Fridericia)</h3>
+            <p class="body-sm muted">Monitoreo de seguridad en antipsicóticos.</p>
+            <div class="grid2">
+              <label class="field">
+                <span class="field-label">QT (ms)</span>
+                <input id="qtVal" type="number" placeholder="Ej. 400">
+              </label>
+              <label class="field">
+                <span class="field-label">FC (lpm)</span>
+                <input id="qtHr" type="number" placeholder="Ej. 70">
+              </label>
+            </div>
+            <button class="btn btn-filled" style="width:100%; margin-top:16px;" onclick="runQtc()">Calcular QTc</button>
+            <div id="qtcResult" class="card-hero hidden" style="margin-top:16px; text-align:center;">
+              <div class="label-md">Resultado QTc (Fridericia)</div>
+              <div id="qtcVal" class="display-lg">--</div>
+              <div id="qtcInterpretation" class="body-sm"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </dialog>
 
   </main>
 
@@ -387,29 +495,36 @@
       </div>
     </div>
 
-    <iframe
-      id="manualIframe"
-      src="manual/index.html"
-      style="width:100%; flex: 1; border:none;"
-      title="Manual Clínico de Consulta"
-      loading="lazy"
-    ></iframe>
+    <div id="manualView" class="manual-view" style="flex: 1; overflow-y: auto;">
+      <!-- Manual Home: Search and Chips remain above, results render here -->
+      <div id="manualHome" class="container" style="padding: 16px;">
+        <div id="manualGrid" class="manual-grid">
+           <!-- Dynamically populated topics grid -->
+        </div>
+      </div>
+
+      <!-- Manual Topic View: Renders a single topic -->
+      <div id="manualTopic" class="manual-topic-content hidden container" style="padding: 16px;">
+        <button id="btnBackToManual" class="btn btn-text" style="margin-bottom: 16px;">← Volver al Índice</button>
+        <div id="topicRender"></div>
+      </div>
+    </div>
   </section>
 
   <!-- ── BOTTOM NAVIGATION BAR ─────────────────────────────────────── -->
-  <nav class="bottom-nav" id="bottomNav">
-    <button class="nav-item active" data-tab="lab" onclick="showTab('lab')">
-      <span class="nav-icon">🧪</span>
+  <nav class="bottom-nav" id="bottomNav" role="tablist" aria-label="Navegación principal">
+    <button class="nav-item active" data-tab="lab" role="tab" aria-selected="true" aria-controls="tabLab" aria-label="Ver registros de laboratorios">
+      <span class="nav-icon" aria-hidden="true">🧪</span>
       <span class="nav-label">Laboratorios</span>
       <span class="nav-indicator"></span>
     </button>
-    <button class="nav-item" data-tab="cloz" onclick="showTab('cloz')">
-      <span class="nav-icon">🩺</span>
+    <button class="nav-item" data-tab="cloz" role="tab" aria-selected="false" aria-controls="tabCloz" aria-label="Ver monitoreo de Clozapina">
+      <span class="nav-icon" aria-hidden="true">🩺</span>
       <span class="nav-label">Clozapina</span>
       <span class="nav-indicator"></span>
     </button>
-    <button class="nav-item" data-tab="manual" onclick="showTab('manual')">
-      <span class="nav-icon">📖</span>
+    <button class="nav-item" data-tab="manual" role="tab" aria-selected="false" aria-controls="tabManual" aria-label="Ver manual de consulta">
+      <span class="nav-icon" aria-hidden="true">📖</span>
       <span class="nav-label">Manual</span>
       <span class="nav-indicator"></span>
     </button>
@@ -421,6 +536,12 @@
   <footer class="footer">
     Dr. César Celada · Lab Notes 2026
   </footer>
+
+  <!-- Global Snackbar -->
+  <div id="globalSnackbar" class="snackbar" aria-live="polite">
+    <span id="snackbarText" class="snackbar-text"></span>
+    <button class="btn btn-text btn-sm" onclick="hideSnackbar()">OK</button>
+  </div>
 
   <script type="module" src="app.js?v=2026.2"></script>
   <script>

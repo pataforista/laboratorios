@@ -97,6 +97,13 @@
       box-shadow: 0 0 15px var(--primary-spirit);
       border: 1px solid var(--primary-spirit);
     }
+
+    /* Hide patient-specific elements (Only clinician use) */
+    [data-share="1"],
+    .patient-only,
+    button:contains("Ver para paciente") {
+      display: none !important;
+    }
   </style>
 
   <script>

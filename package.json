@@ -1,0 +1,20 @@
+{
+  "name": "labspss",
+  "version": "1.0.0",
+  "description": "**Lab Notes** is a specialized clinical laboratory record management tool, designed with an \"offline-first\" approach for healthcare professionals. It features advanced monitoring for Clozapine treatment and general laboratory data visualization.",
+  "main": "app.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "type": "module",
+  "scripts": {
+    "test": "vitest run"
+  },
+  "bugs": {
+    "url": "https://github.com/pataforista/laboratorios/issues"
+  },
+  "homepage": "https://github.com/pataforista/laboratorios#readme",
+  "devDependencies": {
+    "vitest": "^4.1.5"
+  }
+}

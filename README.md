@@ -26,7 +26,7 @@ As a Progressive Web App (PWA), Lab Notes can be installed on any device:
 
 ## Development & Contribution
 - **Setup**: No build step required. Simply serve the root directory.
-- **Testing**: Vitest is used for clinical logic verification (see `tests/` directory - *Coming soon in Phase 2*).
+- **Testing**: Vitest is used for clinical logic verification (run `npm test`).
 - **Guidelines**: Follow Material Design 3 principles for UI additions.
 
 ---

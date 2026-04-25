@@ -1,4 +1,5 @@
 import { analyzeANC, auditSideEffects } from './clinical.js';
+import * as manualLoader from './manualLoader.js';
 
 const $ = s => document.querySelector(s);
 const $$ = s => [...document.querySelectorAll(s)];
@@ -18,6 +19,10 @@ const state = {
   },
   filters: {
     search: ""
+  },
+  manual: {
+    manifest: null,
+    currentTopic: null
   }
 };
 
@@ -32,36 +37,6 @@ const CONVERSIONS = {
   bili_total: { factor: 17.1, unit: "µmol/L" },
   bili_direct: { factor: 17.1, unit: "µmol/L" }
 };
-
-const MANUAL_INDEX = [
-  // Calculators
-  { id: 't2dm_homa_calc', topic: 'comorb_t2dm', title: 'Calculadora HOMA-IR', type: 'calculator', desc: 'Resistencia a la insulina' },
-  { id: 'dyslip_calc', topic: 'comorb_dyslip', title: 'Calculadora LDL (Friedewald)', type: 'calculator', desc: 'Perfil lipídico' },
-  { id: 'masld_fib4_calc', topic: 'comorb_masld', title: 'Calculadora FIB-4', type: 'calculator', desc: 'Fibrosis hepática' },
-  { id: 'calc_sleep_efficiency', topic: 'lifestyle_sleep', title: 'Eficiencia del Sueño', type: 'calculator', desc: 'Higiene del sueño' },
-  { id: 'mrs_scale', topic: 'womens_health', title: 'Escala MRS (Menopausia)', type: 'calculator', desc: 'Síntomas climatéricos' },
-  { id: 'lifestyle_bmi_calc', topic: 'comorb_obesity', title: 'Calculadora IMC', type: 'calculator', desc: 'Obesidad y sobrepeso' },
-  
-  // Printables
-  { id: 'bp_log_a4', topic: 'comorb_htn', title: 'Hoja Registro Presión', type: 'printable', desc: 'Seguimiento HTA' },
-  { id: 'medication_log_a4', topic: 'comorb_hypothy', title: 'Registro de Medicación', type: 'printable', desc: 'Adherencia' },
-  { id: 'lifestyle_master_guide', topic: 'lifestyle_overview', title: 'Guía Maestra Vida Sana', type: 'printable', desc: 'Resumen integral' },
-
-  // Protocols
-  { id: 'psych_clozapine_monitoring', topic: 'psych_clozapine_monitoring', title: 'Monitoreo ANC (Clozapina)', type: 'protocol', desc: 'Protocolo REMS 2024' },
-  { id: 'psych_clozapine_cigh', topic: 'psych_clozapine_cigh', title: 'Gastro: CIGH Clozapina', type: 'protocol', desc: 'Manejo de estreñimiento' },
-  { id: 'psych_qt_antipsychotics', topic: 'psych_qt_antipsychotics', title: 'QTc y Antipsicóticos', type: 'protocol', desc: 'Seguridad cardiaca' },
-  { id: 'psych_eps', topic: 'psych_eps', title: 'EPS: Extrapiramidalismo', type: 'protocol', desc: 'Akatisia, Distonía, Parkinsonismo' },
-  { id: 'psych_antipsychotic_systems_monitoring', topic: 'psych_antipsychotic_systems_monitoring', title: 'Monitoreo Sistémico', type: 'protocol', desc: 'Cronograma de laboratorios' },
-  
-  // Topics (General)
-  { id: 'comorb_t2dm', topic: 'comorb_t2dm', title: 'Diabetes Mellitus', type: 'topic', desc: 'Guía ADA 2024' },
-  { id: 'comorb_htn', topic: 'comorb_htn', title: 'Hipertensión Arterial', type: 'topic', desc: 'Guía AHA 2025' },
-  { id: 'comorb_hypothy', topic: 'comorb_hypothy', title: 'Hipotiroidismo', type: 'topic', desc: 'Manejo en psiquiatría' },
-  { id: 'lifestyle_sleep', topic: 'lifestyle_sleep', title: 'Higiene del Sueño', type: 'topic', desc: 'Contexto SMI' },
-  { id: 'lifestyle_nutrition', topic: 'lifestyle_nutrition', title: 'Nutrición y Cardio', type: 'topic', desc: 'Prevención metabólica' },
-  { id: 'lifestyle_activity', topic: 'lifestyle_activity', title: 'Actividad Física', type: 'topic', desc: 'Prescripción en SMI' }
-];
 
 /* ---------- helpers ---------- */
 function localISODate() {
@@ -142,49 +117,37 @@ function calcAbsolute(aid, pctValue) {
 
 /* ---------- theme ---------- */
 function initTheme() {
-  const saved = localStorage.getItem(LS_THEME) || "dark";
-  document.body.dataset.theme = saved;
+  const saved = localStorage.getItem(LS_THEME) || "auto";
+  setTheme(saved, false);
 }
 
-function sendThemeToManual(theme) {
-  const frame = $('#manualIframe');
-  if (frame && frame.contentWindow) {
-    frame.contentWindow.postMessage({ type: 'setTheme', theme }, location.origin);
-  }
 }
 
-function toggleTheme() {
-  const current = document.body.dataset.theme === "light" ? "dark" : "light";
-  document.body.dataset.theme = current;
-  localStorage.setItem(LS_THEME, current);
-  sendThemeToManual(current);
-}
-
-// Listen for theme requests from the manual iframe
-window.addEventListener('message', (e) => {
-  if (e.origin !== location.origin) return;
-  if (e.data?.type === 'getTheme') {
-    sendThemeToManual(document.body.dataset.theme || localStorage.getItem(LS_THEME) || 'dark');
-  }
-});
-
-/* ---------- Manual Dashboard (OmniSearch) ---------- */
-function initManualDashboard() {
+/* ---------- Manual Dashboard (Native) ---------- */
+async function initManualDashboard() {
   const input = $("#manualSearch");
   const results = $("#manualResults");
   const chips = $$(".m-chip");
+  const backBtn = $("#btnBackToManual");
 
   if (!input) return;
+
+  // Initial load
+  state.manual.manifest = await manualLoader.loadManualIndex();
+  renderManualHome();
 
   input.oninput = (e) => {
     const q = e.target.value.toLowerCase().trim();
     if (!q) { results.classList.add("hidden"); return; }
     
-    const filtered = MANUAL_INDEX.filter(item => 
+    // Combine hardcoded MANUAL_INDEX with manifest topics if needed
+    // For now, search manifest topics
+    const filtered = state.manual.manifest?.topics.filter(item => 
       item.title.toLowerCase().includes(q) || 
-      item.desc.toLowerCase().includes(q)
-    );
-    renderManualResults(filtered);
+      (item.tags && item.tags.some(t => t.toLowerCase().includes(q)))
+    ) || [];
+    
+    renderManualSearchResults(filtered);
   };
 
   chips.forEach(chip => {
@@ -192,13 +155,18 @@ function initManualDashboard() {
       chips.forEach(c => c.classList.remove("active"));
       chip.classList.add("active");
       const filter = chip.dataset.filter;
-      const filtered = filter === "all" ? MANUAL_INDEX : MANUAL_INDEX.filter(i => i.type === filter);
-      renderManualResults(filtered);
-      results.classList.remove("hidden");
+      renderManualHome(filter);
     };
   });
 
-  // Close results on blur
+  if (backBtn) {
+    backBtn.onclick = () => {
+      $("#manualHome").classList.remove("hidden");
+      $("#manualTopic").classList.add("hidden");
+    };
+  }
+
+  // Close search results on blur
   document.addEventListener("click", (e) => {
     if (!input.contains(e.target) && !results.contains(e.target)) {
       results.classList.add("hidden");
@@ -206,26 +174,97 @@ function initManualDashboard() {
   });
 }
 
-function renderManualResults(items) {
-  const el = $("#manualResults");
-  if (!items.length) {
-    el.innerHTML = '<div class="manual-result-item">Sin resultados</div>';
-    el.classList.remove("hidden");
+function renderManualHome(filter = "all") {
+  const grid = $("#manualGrid");
+  if (!grid) return;
+  
+  if (!state.manual.manifest) {
+    grid.innerHTML = '<div class="body-sm muted">Cargando manual...</div>';
     return;
   }
 
-  const icons = { calculator: "🧮", printable: "🖨️", protocol: "🩺", topic: "📖" };
-  
-  el.innerHTML = items.map(item => `
-    <div class="manual-result-item" onclick="openManualTopic('${item.topic}', '${item.id}')">
-      <div class="manual-result-icon">${icons[item.type] || "📖"}</div>
-      <div class="manual-result-info">
-        <h4>${sanitize(item.title)}</h4>
-        <p>${sanitize(item.desc)}</p>
-      </div>
+  let topics = state.manual.manifest.topics;
+  if (filter !== "all") {
+    // Basic filter logic
+    if (filter === "protocol") topics = topics.filter(t => t.id.startsWith("psych_"));
+    else if (filter === "calculator") topics = topics.filter(t => t.tags?.includes("calculator") || t.id.includes("calc"));
+  }
+
+  grid.innerHTML = topics.map(t => `
+    <div class="manual-topic-card" onclick="openManualTopic('${t.id}')">
+      <h4>${sanitize(t.title)}</h4>
+      <p>${sanitize(t.tags?.slice(0, 3).join(", ") || "")}</p>
     </div>
   `).join("");
+}
+
+function renderManualSearchResults(items) {
+  const el = $("#manualResults");
+  if (!el) return;
+
+  const icons = { calculator: "🧮", printable: "🖨️", protocol: "🩺", topic: "📖" };
+  
+  el.innerHTML = items.map(item => {
+    let handler = `openManualTopic('${item.id}')`;
+    if (item.format === 'a4') handler = `openManualResource('${item.id}')`;
+    
+    return `
+      <div class="manual-result-item" onclick="${handler}">
+        <div class="manual-result-icon">📖</div>
+        <div class="manual-result-info">
+          <h4>${sanitize(item.title)}</h4>
+          <p>${sanitize(item.tags?.join(", ") || "")}</p>
+        </div>
+      </div>
+    `;
+  }).join("");
   el.classList.remove("hidden");
+}
+
+async function openManualTopic(id, blockId = null) {
+  showTab('manual');
+  const topic = await manualLoader.loadTopic(id);
+  if (!topic) return;
+
+  state.manual.currentTopic = topic;
+  $("#manualHome").classList.add("hidden");
+  $("#manualTopic").classList.remove("hidden");
+
+  const renderEl = $("#topicRender");
+  renderEl.innerHTML = `<h1 style="color:var(--m3-primary); margin-bottom:16px;">${sanitize(topic.title)}</h1>`;
+  
+  topic.blocks.forEach(block => {
+    const bEl = document.createElement("div");
+    bEl.className = `manual-block ${block.type}`;
+    bEl.id = block.id;
+
+    let contentHtml = "";
+    if (block.title) contentHtml += `<h2>${sanitize(block.title)}</h2>`;
+    if (block.content) contentHtml += `<p>${sanitize(block.content)}</p>`;
+    
+    if (block.items) {
+      contentHtml += `<ul>${block.items.map(i => `<li>${sanitize(i)}</li>`).join("")}</ul>`;
+    }
+
+    if (block.sub_blocks) {
+      block.sub_blocks.forEach(sub => {
+        contentHtml += `
+          <div class="card" style="margin-top:12px; border-left: 4px solid var(--m3-primary); padding-left:12px;">
+            <h3 style="font-size:16px; margin-bottom:4px;">${sanitize(sub.title)}</h3>
+            <p style="font-size:14px; margin:0;">${sanitize(sub.content)}</p>
+          </div>
+        `;
+      });
+    }
+
+    bEl.innerHTML = contentHtml;
+    renderEl.appendChild(bEl);
+  });
+
+  if (blockId) {
+    const target = document.getElementById(blockId);
+    if (target) target.scrollIntoView({ behavior: 'smooth' });
+  }
 }
 
 /* ---------- OmniSearch data cache ---------- */
@@ -281,7 +320,9 @@ function runOmniSearch(query) {
 
 function renderOmniResults(results) {
   const el = $('#omniResults');
-  if (!results) { el.classList.add('hidden'); return; }
+  if (!results) { el.classList.add('hidden'); el.removeAttribute('role'); return; }
+  el.setAttribute('role', 'listbox');
+  el.setAttribute('aria-label', 'Resultados de búsqueda');
   const { records, topics, resources } = results;
   const total = records.length + topics.length + resources.length;
   if (total === 0) {
@@ -318,8 +359,8 @@ function renderOmniResults(results) {
 }
 
 function omniItem(r, idx, bucket) {
-  return `<div class="omni-result" data-bucket="${bucket}" data-idx="${idx}">
-    <span class="omni-result-icon">${r.icon}</span>
+  return `<div class="omni-result" data-bucket="${bucket}" data-idx="${idx}" role="option" tabindex="-1">
+    <span class="omni-result-icon" aria-hidden="true">${r.icon}</span>
     <div class="omni-result-text">
       <div class="omni-result-title">${sanitize(r.title)}</div>
       <div class="omni-result-sub">${r.sub}</div>
@@ -333,42 +374,97 @@ function closeOmni() {
   $('#omniInput').value = '';
 }
 
-function openManualTopic(id, blockId = null) {
-  showTab('manual');
-  const iframe = $('#manualIframe');
-  if (iframe) {
-    const navigate = () => {
-      iframe.contentWindow?.postMessage({ action: 'navigate', view: 'topic', id }, location.origin);
-      if (blockId) {
-        // Small delay to allow topic load before scrolling to block
-        setTimeout(() => {
-          iframe.contentWindow?.postMessage({ action: 'scroll', id: blockId }, location.origin);
-        }, 500);
-      }
-    };
-    if (iframe.dataset.loaded) navigate();
-    else { 
-      iframe.onload = () => { 
-        iframe.dataset.loaded = '1'; 
-        setTimeout(navigate, 400); 
-      }; 
-    }
-  }
+function openManualResource(id) {
+  // Map IDs to actual PDF filenames in manual/pdfs/
+  const pdfMap = {
+    'bp_log_a4': 'registro TA.pdf',
+    'clozapine_infographic_pdf': 'Infografia_clozapina.pdf',
+    'medication_log_a4': 'Infografia.pdf', // Placeholder or matching
+    'lifestyle_master_guide': 'Habitos_saludables.pdf'
+  };
+  const filename = pdfMap[id] || 'Infografia.pdf';
+  window.open(`./manual/pdfs/${filename}`, '_blank');
 }
 
-function openManualResource(id) {
-  showTab('manual');
-  const iframe = $('#manualIframe');
-  if (iframe) {
-    const navigate = () => iframe.contentWindow?.postMessage({ action: 'navigate', view: 'print', id }, location.origin);
-    if (iframe.dataset.loaded) navigate();
-    else { iframe.onload = () => { iframe.dataset.loaded = '1'; setTimeout(navigate, 400); }; }
-  }
-}
+window.openCalculator = openCalculator;
+
+window.openCalculator = openCalculator;
 
 function openManualClzProtocol() {
   openManualTopic('psych_clozapine_monitoring');
 }
+
+// Global button listeners
+document.addEventListener("DOMContentLoaded", () => {
+  const btnBack = $("#btnBackFromCalc");
+  if (btnBack) btnBack.onclick = () => $("#viewCalculator").close();
+});
+
+/* ---------- Calculators ---------- */
+function openCalculator(type) {
+  $("#calcFib4").classList.add("hidden");
+  $("#calcQtc").classList.add("hidden");
+  
+  if (type === 'fib4') {
+    $("#calcFib4").classList.remove("hidden");
+    $("#calcTitle").textContent = "FIB-4";
+  } else if (type === 'qtc') {
+    $("#calcQtc").classList.remove("hidden");
+    $("#calcTitle").textContent = "QTc";
+  }
+  
+  show("#viewCalculator");
+}
+
+window.runFib4 = function() {
+  const age = Number($("#fibAge").value);
+  const plt = Number($("#fibPlt").value);
+  const ast = Number($("#fibAst").value);
+  const alt = Number($("#fibAlt").value);
+  
+  import('./clinical.js').then(m => {
+    const res = m.calculateFIB4(age, ast, alt, plt);
+    if (res === null) { alert("Datos incompletos"); return; }
+    
+    $("#fibVal").textContent = res.toFixed(2);
+    let interp = "";
+    if (res < 1.3) interp = "Bajo riesgo de fibrosis avanzada.";
+    else if (res > 2.67) interp = "Alto riesgo. Sugiere fibrosis avanzada (F3-F4).";
+    else interp = "Riesgo indeterminado. Requiere evaluación adicional.";
+    
+    $("#fibInterpretation").textContent = interp;
+    $("#fibResult").classList.remove("hidden");
+  });
+};
+
+window.runQtc = function() {
+  const qt = Number($("#qtVal").value);
+  const hr = Number($("#qtHr").value);
+  
+  import('./clinical.js').then(m => {
+    const res = m.calculateQTc(qt, hr, 'fridericia');
+    if (res === null) { alert("Datos incompletos"); return; }
+    
+    $("#qtcVal").textContent = res.toFixed(0) + " ms";
+    let interp = "";
+    if (res > 500) interp = "CRÍTICO (>500 ms). Riesgo de TdP. Suspender fármacos QT-prolongadores.";
+    else if (res > 450) interp = "Prolongado (>450 ms). Monitoreo frecuente.";
+    else interp = "Rango normal.";
+    
+    $("#qtcInterpretation").textContent = interp;
+    $("#qtcResult").classList.remove("hidden");
+  });
+};
+
+// Global error handler
+window.addEventListener('error', (e) => {
+  console.error("Global error caught:", e.error);
+  // We could add a UI notification here
+});
+
+window.addEventListener('unhandledrejection', (e) => {
+  console.error("Unhandled promise rejection:", e.reason);
+});
 
 /* ---------- init ---------- */
 window.onload = async () => {
@@ -414,18 +510,20 @@ window.onload = async () => {
     console.error("Initialization error:", err);
     alert("Error al iniciar la aplicación: " + err.message);
     // Even if it fails, try to init UI components that don't depend on catalog
-    initTheme();
-    initUI();
+    try {
+      initTheme();
+      initUI();
+    } catch(e) {}
   }
 };
 
 /* ---------- UI ---------- */
 function initUI() {
   // Back buttons
-  $("#btnBackFromNew").onclick     = () => showCurrentTab();
-  $("#btnBackFromDetail").onclick  = () => showCurrentTab();
-  $("#btnBackFromExport").onclick  = () => show("#viewDetail");
-  $("#btnBackFromSettings").onclick = () => showCurrentTab();
+  $("#btnBackFromNew").onclick     = () => hide("#viewNew");
+  $("#btnBackFromDetail").onclick  = () => hide("#viewDetail");
+  $("#btnBackFromExport").onclick  = () => hide("#viewExport");
+  $("#btnBackFromSettings").onclick = () => hide("#viewSettings");
 
   // Step navigation
   $("#btnNext1").onclick = () => goToStep(2);
@@ -468,17 +566,58 @@ function initUI() {
     renderPanelSelection();
   };
 
+  // Navigation
+  $$('.nav-item').forEach(btn => {
+    btn.onclick = () => showTab(btn.dataset.tab);
+  });
+
   // OmniSearch
   const omniInput = $("#omniInput");
   const omniClear = $("#omniClear");
   let omniTimer;
+  let omniFocusIndex = -1;
+
   omniInput.oninput = (e) => {
     clearTimeout(omniTimer);
     const q = e.target.value.trim();
     omniClear.classList.toggle('hidden', !q);
-    if (!q) { $("#omniResults").classList.add('hidden'); return; }
-    omniTimer = setTimeout(() => renderOmniResults(runOmniSearch(q)), 180);
+    if (!q) { $("#omniResults").classList.add('hidden'); omniFocusIndex = -1; return; }
+    omniTimer = setTimeout(() => {
+      renderOmniResults(runOmniSearch(q));
+      omniFocusIndex = -1;
+    }, 180);
   };
+
+  omniInput.onkeydown = (e) => {
+    const items = $$('.omni-result');
+    if (!items.length) return;
+
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      omniFocusIndex = (omniFocusIndex + 1) % items.length;
+      updateOmniFocus(items);
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      omniFocusIndex = (omniFocusIndex - 1 + items.length) % items.length;
+      updateOmniFocus(items);
+    } else if (e.key === 'Enter' && omniFocusIndex > -1) {
+      e.preventDefault();
+      items[omniFocusIndex].click();
+    }
+  };
+
+  function updateOmniFocus(items) {
+    items.forEach((it, i) => {
+      const isFocused = i === omniFocusIndex;
+      it.classList.toggle('focused', isFocused);
+      if (isFocused) {
+        it.id = `omni-opt-${i}`;
+        omniInput.setAttribute('aria-activedescendant', it.id);
+        it.scrollIntoView({ block: 'nearest' });
+      }
+    });
+  }
+
   omniClear.onclick = closeOmni;
   document.addEventListener('click', (e) => {
     if (!$("#omniSearchWrap").contains(e.target)) $("#omniResults").classList.add('hidden');
@@ -513,7 +652,9 @@ function showTab(tab) {
 
   // Update bottom nav active state
   $$('.nav-item').forEach(ni => {
-    ni.classList.toggle('active', ni.dataset.tab === tab);
+    const isActive = ni.dataset.tab === tab;
+    ni.classList.toggle('active', isActive);
+    ni.setAttribute('aria-selected', isActive ? 'true' : 'false');
   });
 
   // Show/hide FAB (not on manual tab)
@@ -523,13 +664,17 @@ function showTab(tab) {
   // Render the correct content
   renderTabContent(tab);
 
-  // Hide any open views when switching tabs
-  $$('.view').forEach(v => v.classList.add('hidden'));
+  // Close any open dialogs when switching tabs
+  $$('dialog.view-dialog').forEach(d => {
+    if (d.open) d.close();
+  });
 }
 
 function showCurrentTab() {
-  // Hide views and return to current tab
-  $$('.view').forEach(v => v.classList.add('hidden'));
+  // Close any open dialogs and return to current tab
+  $$('dialog.view-dialog').forEach(d => {
+    if (d.open) d.close();
+  });
   showTab(state.currentTab || 'lab');
 }
 
@@ -596,10 +741,22 @@ function renderClozapineTab() {
 }
 
 function show(id) {
-  // Show a full-page view (overlays on top of tabs)
-  $$('.view').forEach(v => v.classList.add('hidden'));
+  // Show a dialog view
   const el = $(id);
-  if (el) el.classList.remove('hidden');
+  if (el && typeof el.showModal === 'function') {
+    el.showModal();
+  } else if (el) {
+    el.classList.remove('hidden');
+  }
+}
+
+function hide(id) {
+  const el = $(id);
+  if (el && typeof el.close === 'function') {
+    el.close();
+  } else if (el) {
+    el.classList.add('hidden');
+  }
 }
 
 function renderPanelSelection(filter = "") {
@@ -683,7 +840,7 @@ function createRecordCard(r) {
     <div style="display:flex; justify-content:space-between; align-items:flex-start;">
       <div style="flex:1; min-width:0;">
         <div style="display:flex; align-items:baseline; gap:8px; margin-bottom:4px; flex-wrap:wrap;">
-          <span style="font-weight:600; font-size:15px;">${r.date}</span>
+          <span style="font-weight:600; font-size:15px;">${sanitize(r.date)}</span>
           <span style="font-size:13px; color:var(--m3-on-surface-variant);">${sanitize(r.context || "Sin contexto")}</span>
           ${r.labName ? `<span style="font-size:11px; color:var(--m3-outline);">· ${sanitize(r.labName)}</span>` : ""}
         </div>
@@ -692,7 +849,7 @@ function createRecordCard(r) {
         ${triageAlert}
       </div>
       <button class="btn btn-text" style="min-width:32px; padding:0; height:32px; border-radius:50%; flex-shrink:0;"
-        onclick="event.stopPropagation(); deleteRecord('${r.id}')" title="Eliminar">✕</button>
+        onclick="event.stopPropagation(); deleteRecord('${sanitize(r.id)}')" aria-label="Eliminar registro">✕</button>
     </div>`;
   c.onclick = () => openDetail(r.id);
   return c;
@@ -730,55 +887,89 @@ function renderDashboard() {
 /**
  * Renders a simple line chart on the canvas for the selected metric
  */
+/* ---------- chart caching ---------- */
+const chartCache = new Map();
+
 function drawChart(canvas, dataPoints, metric) {
   if (!canvas || canvas.offsetWidth === 0) return;
-  const ctx = canvas.getContext("2d");
-  canvas.width  = canvas.offsetWidth * 2;
-  canvas.height = 400;
-  ctx.scale(2, 2);
-  const sw = canvas.offsetWidth;
-  const sh = 200;
-  ctx.clearRect(0, 0, sw, sh);
+  
+  // Memoization: Check if data or metric changed
+  const cacheKey = `${canvas.id}_${metric}_${JSON.stringify(dataPoints.map(p => p.id))}`;
+  if (chartCache.get(canvas.id) === cacheKey) return; 
+  chartCache.set(canvas.id, cacheKey);
 
-  const isDark = document.body.dataset.theme !== 'light';
-  const gridColor = isDark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.1)";
-  const textColor = isDark ? "#e4d8eb" : "#1c1f2b";
+  requestAnimationFrame(() => {
+    const ctx = canvas.getContext("2d");
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width  = canvas.offsetWidth * dpr;
+    canvas.height = canvas.offsetHeight * dpr;
+    ctx.scale(dpr, dpr);
+    
+    const sw = canvas.offsetWidth;
+    const sh = canvas.offsetHeight;
+    ctx.clearRect(0, 0, sw, sh);
 
-  const values = dataPoints.map(p => p.data[metric]);
-  const min = Math.min(...values) * 0.9;
-  const max = Math.max(...values) * 1.1;
-  const range = max - min || 1;
+    let theme = document.body.dataset.theme;
+    if (theme === 'auto') {
+      theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
+    const isDark = theme !== 'light';
+    const gridColor = isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.08)";
+    const textColor = isDark ? "#e4d8eb" : "#1c1f2b";
+    const primaryColor = "#d0bcff"; // M3 Dark Primary
 
-  // Grid lines
-  ctx.strokeStyle = gridColor;
-  ctx.lineWidth = 1;
-  for (let i = 1; i < 4; i++) {
-    const y = sh - (sh * (i / 4));
-    ctx.beginPath(); ctx.moveTo(40, y); ctx.lineTo(sw - 10, y); ctx.stroke();
-  }
+    const values = dataPoints.map(p => p.data[metric]);
+    const min = Math.min(...values) * 0.9;
+    const max = Math.max(...values) * 1.1;
+    const range = max - min || 1;
 
-  // Line
-  ctx.beginPath();
-  ctx.strokeStyle = "#7c3aed";
-  ctx.lineWidth = 3;
-  ctx.lineJoin = "round";
-  dataPoints.forEach((p, i) => {
-    const x = 40 + (i * (sw - 60) / (dataPoints.length - 1));
-    const y = sh - 30 - ((p.data[metric] - min) / range) * (sh - 60);
-    if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
-  });
-  ctx.stroke();
+    // Grid lines
+    ctx.strokeStyle = gridColor;
+    ctx.setLineDash([5, 5]);
+    ctx.lineWidth = 1;
+    for (let i = 1; i < 4; i++) {
+      const y = sh - 30 - ( (sh - 60) * (i / 4) );
+      ctx.beginPath(); ctx.moveTo(40, y); ctx.lineTo(sw - 10, y); ctx.stroke();
+    }
+    ctx.setLineDash([]);
 
-  // Points & Labels
-  dataPoints.forEach((p, i) => {
-    const x = 40 + (i * (sw - 60) / (dataPoints.length - 1));
-    const y = sh - 30 - ((p.data[metric] - min) / range) * (sh - 60);
-    ctx.fillStyle = "#7c3aed";
-    ctx.beginPath(); ctx.arc(x, y, 5, 0, Math.PI * 2); ctx.fill();
-    ctx.fillStyle = textColor;
-    ctx.font = "10px Inter";
-    ctx.fillText(p.date.slice(5), x - 12, sh - 5);
-    ctx.fillText(p.data[metric].toString(), x - 10, y - 10);
+    // Gradient Line
+    const gradient = ctx.createLinearGradient(0, 0, 0, sh);
+    gradient.addColorStop(0, primaryColor);
+    gradient.addColorStop(1, "#7c3aed");
+
+    ctx.beginPath();
+    ctx.strokeStyle = gradient;
+    ctx.lineWidth = 4;
+    ctx.lineJoin = "round";
+    ctx.lineCap = "round";
+    
+    dataPoints.forEach((p, i) => {
+      const x = 40 + (i * (sw - 60) / (dataPoints.length - 1));
+      const y = sh - 30 - ((p.data[metric] - min) / range) * (sh - 60);
+      if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    });
+    ctx.stroke();
+
+    // Points & Labels
+    dataPoints.forEach((p, i) => {
+      const x = 40 + (i * (sw - 60) / (dataPoints.length - 1));
+      const y = sh - 30 - ((p.data[metric] - min) / range) * (sh - 60);
+      
+      // Point glow
+      ctx.shadowBlur = 10;
+      ctx.shadowColor = primaryColor;
+      ctx.fillStyle = primaryColor;
+      ctx.beginPath(); ctx.arc(x, y, 6, 0, Math.PI * 2); ctx.fill();
+      ctx.shadowBlur = 0;
+      
+      ctx.fillStyle = textColor;
+      ctx.font = "bold 10px Inter";
+      ctx.fillText(p.date.slice(5), x - 12, sh - 8);
+      
+      ctx.fillStyle = isDark ? "#fff" : "#000";
+      ctx.fillText(p.data[metric].toString(), x - 10, y - 14);
+    });
   });
 }
 
@@ -911,7 +1102,7 @@ function renderCapture() {
                   oninput="updateConversionHint('${inputId}', this.value, '${an.analyte_id}')">
                 ${mod ? `<label class="tinycheck">
                   <input type="checkbox" id="mod_${an.analyte_id}"
-                    onchange="updateModDisplay(this.parentElement.previousElementSibling)">×10³
+                    onchange="updateModDisplay(this.parentElement.previousElementSibling, '${an.analyte_id}')">×10³
                 </label>` : ""}
               </div>
               ${isBHCalc ? `
@@ -993,6 +1184,16 @@ function saveNewRecord() {
         fluvox: $("#nrFluvoxamine").checked
       },
       triage: {
+        constipation: Number($("#nrConstipation").value),
+        somnolence: Number($("#nrSomnolence").value),
+        fever: $("#nrFever").checked,
+        hr: Number($("#nrHR").value) || null,
+        bp: $("#nrBP").value || null,
+        chestPain: $("#nrChestPain").checked,
+        notes: $("#nrClinicalNotes").value
+      }
+    };
+  }
         constipation: Number($("#nrConstipation").value),
         somnolence: Number($("#nrSomnolence").value),
         fever: $("#nrFever").checked,
@@ -1089,7 +1290,16 @@ function evaluate(rec) {
     if (!panelDef.derived_metrics) return;
     panelDef.derived_metrics.forEach(m => {
       let val = null;
-      if (m.metric_id === "anion_gap") { const na = allAnalytes.sodium?.scaled, cl = allAnalytes.chloride?.scaled, hco3 = allAnalytes.bicarb?.scaled; if (na && cl && hco3) val = na - (cl + hco3); }
+      if (m.metric_id === "anion_gap") { 
+        const na = allAnalytes.sodium?.scaled, cl = allAnalytes.chloride?.scaled, hco3 = allAnalytes.bicarb?.scaled; 
+        if (na && cl && hco3) {
+          val = na - (cl + hco3);
+          const alb = allAnalytes.albumin?.scaled; // g/dL
+          if (alb && alb < 4.0) {
+            val = val + 2.5 * (4.0 - alb);
+          }
+        }
+      }
       else if (m.metric_id === "bun_cr_ratio") { const bun = allAnalytes.bun?.scaled, cr = allAnalytes.creatinine?.scaled; if (bun && cr && cr > 0) val = bun / cr; }
       else if (m.metric_id === "ast_alt_ratio") { const ast = allAnalytes.ast?.scaled, alt = allAnalytes.alt?.scaled; if (ast && alt && alt > 0) val = ast / alt; }
 
@@ -1106,7 +1316,10 @@ function evaluate(rec) {
   if (rec.isClozapine && rec.clinical) {
     const sideAlerts = auditSideEffects({
       constipation: rec.clinical.triage?.constipation,
-      fever: rec.clinical.triage?.fever
+      somnolence: rec.clinical.triage?.somnolence,
+      fever: rec.clinical.triage?.fever,
+      hr: rec.clinical.triage?.hr,
+      bp: rec.clinical.triage?.bp
     });
     sideAlerts.forEach(a => {
       alerts.push({
@@ -1130,6 +1343,20 @@ function evaluate(rec) {
           hint: ancAnalysis.action
         });
       }
+    }
+
+    // Permanent Suspension Check (REMS)
+    const history = state.records.filter(r => r.isClozapine && r.id !== rec.id);
+    const criticalHistory = history.filter(h => (h.data?.anc !== undefined && h.data.anc < 500));
+    const currentCritical = (rec.data?.anc !== undefined && rec.data.anc < 500);
+
+    if (currentCritical && criticalHistory.length > 0) {
+      alerts.push({
+        type: "critical",
+        title: "SUSPENSIÓN PERMANENTE",
+        msg: "Segundo registro con ANC < 500 detectado.",
+        hint: "Protocolo FDA REMS exige suspensión definitiva de Clozapina."
+      });
     }
   }
 
@@ -1384,11 +1611,41 @@ async function checkStorageQuota() {
   if (navigator.storage && navigator.storage.estimate) {
     const quota = await navigator.storage.estimate();
     const percent = (quota.usage / quota.quota) * 100;
-    if (percent > 80) {
-      console.warn(`Storage usage is high: ${percent.toFixed(2)}%`);
-      // We could add a UI indicator here later
+    if (percent > 90) {
+      showSnackbar("Almacenamiento casi lleno (90%+). Exporta tus datos pronto.", "Exportar", () => showTab('lab'));
     }
   }
+}
+
+function showSnackbar(text, actionText = null, actionFn = null) {
+  const el = $("#globalSnackbar");
+  const txt = $("#snackbarText");
+  if (!el || !txt) return;
+
+  txt.textContent = text;
+  const btn = el.querySelector(".btn-text");
+  
+  if (actionText && actionFn) {
+    btn.textContent = actionText;
+    btn.onclick = () => {
+      actionFn();
+      hideSnackbar();
+    };
+  } else {
+    btn.textContent = "OK";
+    btn.onclick = hideSnackbar;
+  }
+
+  el.classList.add("show");
+  // Auto-hide after 6 seconds if no action
+  if (!actionText) {
+    setTimeout(hideSnackbar, 6000);
+  }
+}
+
+function hideSnackbar() {
+  const el = $("#globalSnackbar");
+  if (el) el.classList.remove("show");
 }
 
 /* ── Expose to global scope (required because app.js is type=module) ── */
@@ -1401,3 +1658,6 @@ window.toggleClozapineFields = toggleClozapineFields;
 window.openExport          = openExport;
 window.openManualTopic     = openManualTopic;
 window.openManualResource  = openManualResource;
+window.setTheme           = setTheme;
+window.showSnackbar        = showSnackbar;
+window.hideSnackbar        = hideSnackbar;

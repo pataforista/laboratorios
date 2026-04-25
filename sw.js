@@ -1,5 +1,5 @@
-// LabNotes PWA Service Worker v4.0
-const CACHE_NAME = "labnotes-v4.0";
+// LabNotes PWA Service Worker v4.1
+const CACHE_NAME = "labnotes-v4.1";
 
 const STATIC_ASSETS = [
   "./",
@@ -7,27 +7,33 @@ const STATIC_ASSETS = [
   "./styles.css",
   "./app.js",
   "./clinical.js",
+  "./lab_catalog.json",
   "./manifest.json",
   "./icon-192.png",
   "./icon-512.png",
   "./manual/index.html",
-  "./manual/assets/index-DnpFSY7c.js",
-  "./manual/assets/index-C9eFa_mk.css",
   "./manual/dataset/manifest.json",
-  "./manual/dataset/printables/generated_index.json"
+  "./manual/dataset/printables/generated_index.json",
+  "./manual/assets/index-DnpFSY7c.js",
+  "./manual/assets/index-C9eFa_mk.css"
 ];
 
-// Network-First files (always try to get fresh)
-const FRESH_ASSETS = [
-  "./app.js",
-  "./clinical.js",
-  "./index.html",
-  "./lab_catalog.json"
+// Assets that should always try to update
+const NETWORK_FIRST_ASSETS = [
+  "app.js",
+  "clinical.js",
+  "styles.css",
+  "index.html",
+  "lab_catalog.json",
+  "manifest.json"
 ];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(STATIC_ASSETS))
+    caches.open(CACHE_NAME).then((cache) => {
+      console.log("[SW] Pre-caching static assets");
+      return cache.addAll(STATIC_ASSETS);
+    })
   );
   self.skipWaiting();
 });
@@ -35,7 +41,12 @@ self.addEventListener("install", (event) => {
 self.addEventListener("activate", (event) => {
   event.waitUntil(
     caches.keys().then(keys =>
-      Promise.all(keys.map(k => (k !== CACHE_NAME ? caches.delete(k) : null)))
+      Promise.all(keys.map(k => {
+        if (k !== CACHE_NAME) {
+          console.log("[SW] Deleting old cache:", k);
+          return caches.delete(k);
+        }
+      }))
     )
   );
   self.clients.claim();
@@ -43,17 +54,15 @@ self.addEventListener("activate", (event) => {
 
 self.addEventListener("fetch", (event) => {
   const url = new URL(event.request.url);
-  // Ensure that HTML, JS, CSS, JSON always try Network First. 
-  // This explicitly prevents the app from being stuck on old versions or 404ing due to stale Vite chunks.
-  const isFresh = FRESH_ASSETS.some(asset => url.pathname.endsWith(asset.replace('./', ''))) ||
-                  url.pathname.endsWith('.html') ||
-                  url.pathname.endsWith('.js') ||
-                  url.pathname.endsWith('.css') ||
-                  url.pathname.endsWith('.json') ||
-                  url.pathname.endsWith('/');
+  const isInternal = url.origin === location.origin;
+  
+  if (!isInternal) return;
 
-  if (isFresh) {
-    // Network First
+  const fileName = url.pathname.split('/').pop();
+  const isNetworkFirst = NETWORK_FIRST_ASSETS.includes(fileName) || url.pathname.endsWith('/');
+
+  if (isNetworkFirst) {
+    // Network First strategy
     event.respondWith(
       fetch(event.request)
         .then(res => {
@@ -64,12 +73,12 @@ self.addEventListener("fetch", (event) => {
         .catch(() => caches.match(event.request))
     );
   } else {
-    // Stale While Revalidate for images/fonts/other media
+    // Cache First / Stale While Revalidate
     event.respondWith(
       caches.match(event.request).then(cached => {
         const fetchPromise = fetch(event.request).then(res => {
           const copy = res.clone();
-          if (event.request.method === "GET" && url.origin === location.origin) {
+          if (event.request.method === "GET") {
             caches.open(CACHE_NAME).then(cache => cache.put(event.request, copy));
           }
           return res;

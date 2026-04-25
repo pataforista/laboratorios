@@ -600,7 +600,8 @@
             "high": 12
           },
           "interpretation_hints": [
-            ">12: acidosis con gap elevado (lactato, cetoacidosis, uremia, tóxicos)."
+            ">12: acidosis con gap elevado (lactato, cetoacidosis, uremia, tóxicos).",
+            "Hipoalbuminemia infraestima AG: AGc = AG + 0.25 * (40 - Albúmina g/L)"
           ]
         },
         {
@@ -843,6 +844,18 @@
               "high": 100
             }
           ],
+          "flags": [
+            {
+              "op": ">=",
+              "value": 100,
+              "label": "fuera_de_meta_bajo_riesgo"
+            },
+            {
+              "op": ">=",
+              "value": 70,
+              "label": "fuera_de_meta_alto_riesgo_CV"
+            }
+          ],
           "follow_up_checklist": [
             "Interpretar por riesgo CV global.",
             "Descartar causas secundarias (hipotiroidismo, nefrosis, colestasis)."
@@ -970,6 +983,34 @@
           "follow_up_checklist": [
             "Si positivo: cuantificar (ACR en muestra al azar o 24h).",
             "Correlacionar con sedimento y clínica."
+          ]
+        },
+        {
+          "analyte_id": "urine_acr",
+          "name": "Relación Albúmina/Creatinina (ACR)",
+          "units": "mg/g",
+          "ref_ranges": [
+            {
+              "sex": "any",
+              "low": 0,
+              "high": 30
+            }
+          ],
+          "flags": [
+            {
+              "op": ">",
+              "value": 30,
+              "label": "microalbuminuria_moderada"
+            },
+            {
+              "op": ">",
+              "value": 300,
+              "label": "macroalbuminuria_severa"
+            }
+          ],
+          "interpretation_hints": [
+            "<30: Normal | 30-300: Microalbuminuria (A2) | >300: Macroalbuminuria (A3).",
+            "Marcador clave de daño renal precoz (DM, HTA)."
           ]
         },
         {
@@ -1685,6 +1726,7 @@
         "urine_sg",
         "urine_ph",
         "protein_dip",
+        "urine_acr",
         "calcium",
         "phosphorus",
         "magnesium"

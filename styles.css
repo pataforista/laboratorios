@@ -1,76 +1,28 @@
-/* ================================================================
-   LAB NOTES — Design System M3 (Material Design 3)
+﻿/* ================================================================
+   LAB NOTES â€” Design System M3 (Material Design 3)
    ================================================================ */
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
 
-/* ── TOKENS ─────────────────────────────────────────────────────── */
+/* â”€â”€ TOKENS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* --- THEME DEFINITIONS --- */
 :root {
-  /* Primary - Vivid Purple for better pop in dark mode */
-  --m3-primary:             #D0BCFF; 
-  --m3-on-primary:          #381E72;
-  --m3-primary-container:   #4F378B;
-  --m3-on-primary-container:#EADDFF;
-
-  /* Secondary */
-  --m3-secondary:           #CCC2DC;
-  --m3-on-secondary:        #332D41;
-  --m3-secondary-container: #4A4458;
-  --m3-on-secondary-container: #E8DEF8;
-
-  /* Tertiary */
-  --m3-tertiary:            #EFB8C8;
-  --m3-on-tertiary:         #492532;
-  --m3-tertiary-container:  #633B48;
-  --m3-on-tertiary-container:#FFD8E4;
-
-  /* Error */
-  --m3-error:               #F18B82;
-  --m3-on-error:            #601410;
-  --m3-error-container:     #8C1D18;
-  --m3-on-error-container:  #F9DEDC;
-
-  /* Surfaces — Deep Midnight Theme */
-  --m3-surface:             #0B0A0D; /* Slightly darker than default for higher contrast */
-  --m3-surface-dim:         #050505;
-  --m3-surface-bright:      #211F26;
-  --m3-surface-container-lowest: #050505;
-  --m3-surface-container-low:    #121115;
-  --m3-surface-container:        #1A191E;
-  --m3-surface-container-high:   #252329;
-  --m3-surface-container-highest:#302E36;
-  
-  --m3-on-surface:          #F0E7F5; /* Higher contrast than E6E1E5 */
-  --m3-on-surface-variant:  #E0D9E6; /* Significantly brighter for readability */
-  --m3-outline:             #B0A8B9; /* Brighter for definition */
-  --m3-outline-variant:     #787282; /* Brighter than 49454F */
-  --m3-inverse-surface:     #E6E1E5;
-  --m3-inverse-on-surface:  #1A191E;
-
-  /* Typography */
+  /* Common Tokens */
   --font-base:  'Inter', system-ui, sans-serif;
   --font-mono:  'JetBrains Mono', 'IBM Plex Mono', monospace;
-
-  /* Motion */
   --m3-easing:    cubic-bezier(0.2, 0, 0, 1);
   --m3-duration:  300ms;
   --m3-duration-short: 150ms;
-
-  /* Shape */
   --m3-shape-xs:   4px;
   --m3-shape-sm:   8px;
   --m3-shape-md:   12px;
   --m3-shape-lg:   16px;
   --m3-shape-xl:   28px;
   --m3-shape-full: 9999px;
-
-  /* Elevation (Premium glow) */
-  --m3-elevation-1: rgba(208,188,255,0.06);
-  --m3-elevation-2: rgba(208,188,255,0.10);
-  --m3-elevation-3: rgba(208,188,255,0.14);
 }
 
-[data-theme="light"] {
+/* Base Light Theme Tokens */
+:root, [data-theme="light"] {
   --m3-primary:             #594396;
   --m3-on-primary:          #FFFFFF;
   --m3-primary-container:   #EADDFF;
@@ -106,7 +58,84 @@
   --m3-elevation-3: rgba(0,0,0,0.12);
 }
 
-/* ── BASE ───────────────────────────────────────────────────────── */
+/* Base Dark Theme Tokens */
+[data-theme="dark"] {
+  --m3-primary:             #D0BCFF; 
+  --m3-on-primary:          #381E72;
+  --m3-primary-container:   #4F378B;
+  --m3-on-primary-container:#EADDFF;
+  --m3-secondary:           #CCC2DC;
+  --m3-on-secondary:        #332D41;
+  --m3-secondary-container: #4A4458;
+  --m3-on-secondary-container: #E8DEF8;
+  --m3-tertiary:            #EFB8C8;
+  --m3-on-tertiary:         #492532;
+  --m3-tertiary-container:  #633B48;
+  --m3-on-tertiary-container:#FFD8E4;
+  --m3-error:               #F18B82;
+  --m3-on-error:            #601410;
+  --m3-error-container:     #8C1D18;
+  --m3-on-error-container:  #F9DEDC;
+  --m3-surface:             #0B0A0D;
+  --m3-surface-dim:         #050505;
+  --m3-surface-bright:      #211F26;
+  --m3-surface-container-lowest: #050505;
+  --m3-surface-container-low:    #121115;
+  --m3-surface-container:        #1A191E;
+  --m3-surface-container-high:   #252329;
+  --m3-surface-container-highest:#302E36;
+  --m3-on-surface:          #F0E7F5;
+  --m3-on-surface-variant:  #E0D9E6;
+  --m3-outline:             #B0A8B9;
+  --m3-outline-variant:     #787282;
+  --m3-inverse-surface:     #E6E1E5;
+  --m3-inverse-on-surface:  #1A191E;
+  --m3-elevation-1: rgba(208,188,255,0.06);
+  --m3-elevation-2: rgba(208,188,255,0.10);
+  --m3-elevation-3: rgba(208,188,255,0.14);
+}
+
+/* System Theme Logic */
+@media (prefers-color-scheme: dark) {
+  :root[data-theme="auto"] {
+    /* Copy variables from [data-theme="dark"] block */
+    --m3-primary:             #D0BCFF; 
+    --m3-on-primary:          #381E72;
+    --m3-primary-container:   #4F378B;
+    --m3-on-primary-container:#EADDFF;
+    --m3-secondary:           #CCC2DC;
+    --m3-on-secondary:        #332D41;
+    --m3-secondary-container: #4A4458;
+    --m3-on-secondary-container: #E8DEF8;
+    --m3-tertiary:            #EFB8C8;
+    --m3-on-tertiary:         #492532;
+    --m3-tertiary-container:  #633B48;
+    --m3-on-tertiary-container:#FFD8E4;
+    --m3-error:               #F18B82;
+    --m3-on-error:            #601410;
+    --m3-error-container:     #8C1D18;
+    --m3-on-error-container:  #F9DEDC;
+    --m3-surface:             #0B0A0D;
+    --m3-surface-dim:         #050505;
+    --m3-surface-bright:      #211F26;
+    --m3-surface-container-lowest: #050505;
+    --m3-surface-container-low:    #121115;
+    --m3-surface-container:        #1A191E;
+    --m3-surface-container-high:   #252329;
+    --m3-surface-container-highest:#302E36;
+    --m3-on-surface:          #F0E7F5;
+    --m3-on-surface-variant:  #E0D9E6;
+    --m3-outline:             #B0A8B9;
+    --m3-outline-variant:     #787282;
+    --m3-inverse-surface:     #E6E1E5;
+    --m3-inverse-on-surface:  #1A191E;
+    --m3-elevation-1: rgba(208,188,255,0.06);
+    --m3-elevation-2: rgba(208,188,255,0.10);
+    --m3-elevation-3: rgba(208,188,255,0.14);
+  }
+}
+
+/* â”€â”€ BASE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 *, *::before, *::after {
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
@@ -127,19 +156,10 @@ body {
               color var(--m3-duration) var(--m3-easing);
 }
 
-/* ── TYPOGRAPHY ─────────────────────────────────────────────────── */
+/* â”€â”€ TYPOGRAPHY â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 h1 { font-size: 28px; font-weight: 400; line-height: 1.3; }
 h2 { font-size: 24px; font-weight: 400; line-height: 1.3; margin-bottom: 4px; }
 h3 { font-size: 16px; font-weight: 600; color: var(--m3-primary); margin-bottom: 12px; }
-h4 { font-size: 14px; font-weight: 600; color: var(--m3-on-surface-variant); margin-bottom: 8px; }
-
-p { margin-bottom: 8px; }
-p:last-child { margin-bottom: 0; }
-
-.body-sm   { font-size: 13px; line-height: 1.4; }
-.label-md  { font-size: 12px; font-weight: 600; letter-spacing: 0.4px; }
-.label-chip {
-  font-size: 11px;
   font-weight: 500;
   letter-spacing: 0.5px;
   background: var(--m3-surface-container);
@@ -151,7 +171,7 @@ p:last-child { margin-bottom: 0; }
 .small { font-size: 0.8em; }
 .font-mono { font-family: var(--font-mono); }
 
-/* ── LAYOUT ─────────────────────────────────────────────────────── */
+/* â”€â”€ LAYOUT â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .container {
   max-width: 800px;
   margin: 0 auto;
@@ -186,7 +206,7 @@ p:last-child { margin-bottom: 0; }
   .grid2 { grid-template-columns: 1fr; }
 }
 
-/* ── TOP APP BAR (M3) ───────────────────────────────────────────── */
+/* â”€â”€ TOP APP BAR (M3) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .topbar {
   display: flex;
   align-items: center;
@@ -233,7 +253,7 @@ p:last-child { margin-bottom: 0; }
   .brand-title { font-size: 16px; }
 }
 
-/* ── BUTTONS (M3 Hierarchy) ─────────────────────────────────────── */
+/* â”€â”€ BUTTONS (M3 Hierarchy) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -254,7 +274,7 @@ p:last-child { margin-bottom: 0; }
   user-select: none;
 }
 
-/* Filled — highest emphasis */
+/* Filled â€” highest emphasis */
 .btn-filled {
   background-color: var(--m3-primary);
   color: var(--m3-on-primary);
@@ -264,7 +284,7 @@ p:last-child { margin-bottom: 0; }
   filter: brightness(1.08);
 }
 
-/* Tonal — medium emphasis */
+/* Tonal â€” medium emphasis */
 .btn-tonal {
   background-color: var(--m3-secondary-container);
   color: var(--m3-on-secondary-container);
@@ -274,7 +294,7 @@ p:last-child { margin-bottom: 0; }
   filter: brightness(1.08);
 }
 
-/* Outlined — medium emphasis, no fill */
+/* Outlined â€” medium emphasis, no fill */
 .btn-outlined {
   background: transparent;
   color: var(--m3-primary);
@@ -284,7 +304,7 @@ p:last-child { margin-bottom: 0; }
   background: var(--m3-elevation-1);
 }
 
-/* Text — lowest emphasis */
+/* Text â€” lowest emphasis */
 .btn-text {
   background: transparent;
   color: var(--m3-primary);
@@ -317,7 +337,7 @@ p:last-child { margin-bottom: 0; }
 /* label acting as button (for file input) */
 label.btn { cursor: pointer; }
 
-/* ── CARDS (M3 Elevated / Filled) ───────────────────────────────── */
+/* â”€â”€ CARDS (M3 Elevated / Filled) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .card {
   background-color: var(--m3-surface-container);
   border-radius: var(--m3-shape-xl);
@@ -330,7 +350,7 @@ label.btn { cursor: pointer; }
   border-radius: var(--m3-shape-lg);
 }
 
-/* ── FORMS ───────────────────────────────────────────────────────── */
+/* â”€â”€ FORMS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .field {
   display: flex;
   flex-direction: column;
@@ -401,7 +421,7 @@ output {
   cursor: pointer;
 }
 
-/* ── SEARCH BAR ─────────────────────────────────────────────────── */
+/* â”€â”€ SEARCH BAR â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .search-bar {
   display: flex;
   align-items: center;
@@ -422,7 +442,7 @@ output {
 .search-bar input:focus { outline: none; border: none; }
 .search-icon { flex-shrink: 0; opacity: 0.6; }
 
-/* ── STEPPER ─────────────────────────────────────────────────────── */
+/* â”€â”€ STEPPER â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .stepper {
   display: flex;
   align-items: center;
@@ -459,7 +479,7 @@ output {
   background: var(--m3-outline-variant);
 }
 
-/* ── RECORDS LIST ────────────────────────────────────────────────── */
+/* â”€â”€ RECORDS LIST â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .records-list { display: flex; flex-direction: column; gap: 8px; }
 
 .record-card {
@@ -479,7 +499,7 @@ output {
 .record-card.alert-border { border-color: var(--m3-error); }
 .record-card.clz-border  { border-color: var(--m3-primary); }
 
-/* ── ANALYTE ROWS (Step 3 / Detail) ────────────────────────────── */
+/* â”€â”€ ANALYTE ROWS (Step 3 / Detail) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .analyte-row {
   padding: 14px 0;
   border-bottom: 1px solid var(--m3-outline-variant);
@@ -529,7 +549,7 @@ output {
 }
 .pct-input { border-bottom-color: var(--m3-primary) !important; }
 
-/* ── BADGES & CHIPS ─────────────────────────────────────────────── */
+/* â”€â”€ BADGES & CHIPS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .badge {
   display: inline-flex;
   align-items: center;
@@ -570,7 +590,7 @@ output {
   margin-top: 3px;
 }
 
-/* ── PILLS (Panel Selection) ────────────────────────────────────── */
+/* â”€â”€ PILLS (Panel Selection) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .panel-pills {
   display: flex;
   gap: 8px;
@@ -596,7 +616,7 @@ output {
   font-weight: 500;
 }
 
-/* ── ACTIONS BAR ────────────────────────────────────────────────── */
+/* â”€â”€ ACTIONS BAR â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .actions {
   display: flex;
   justify-content: flex-end;
@@ -605,13 +625,13 @@ output {
   padding-top: 16px;
 }
 
-/* ── DIVIDER ─────────────────────────────────────────────────────── */
+/* â”€â”€ DIVIDER â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .divider {
   height: 1px;
   background: var(--m3-outline-variant);
 }
 
-/* ── STEP ANIMATION ─────────────────────────────────────────────── */
+/* â”€â”€ STEP ANIMATION â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .step { animation: fadeUp 250ms var(--m3-easing) both; }
 
 @keyframes fadeUp {
@@ -619,7 +639,7 @@ output {
   to   { opacity: 1; transform: translateY(0); }
 }
 
-/* ── EMPTY STATE ─────────────────────────────────────────────────── */
+/* â”€â”€ EMPTY STATE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .empty-state {
   display: flex;
   flex-direction: column;
@@ -633,7 +653,7 @@ output {
 .empty-icon { font-size: 48px; }
 .empty-state p { font-size: 15px; }
 
-/* ── IFRAME VIEW (Manual) ────────────────────────────────────────── */
+/* â”€â”€ IFRAME VIEW (Manual) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .iframe-view {
   padding: 0 !important;
   height: calc(100vh - 64px);
@@ -654,7 +674,7 @@ output {
   display: block;
 }
 
-/* ── PWA TOAST ───────────────────────────────────────────────────── */
+/* â”€â”€ PWA TOAST â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .toast {
   position: fixed;
   top: 12px;
@@ -673,14 +693,14 @@ output {
 }
 .toast.hidden { display: none !important; }
 
-/* ── CHECKLISTS ──────────────────────────────────────────────────── */
+/* â”€â”€ CHECKLISTS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .checklists { display: flex; flex-direction: column; gap: 6px; }
 
-/* ── LINK ────────────────────────────────────────────────────────── */
+/* â”€â”€ LINK â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .link { color: var(--m3-primary); text-decoration: none; }
 .link:hover { text-decoration: underline; }
 
-/* ── FOOTER ──────────────────────────────────────────────────────── */
+/* â”€â”€ FOOTER â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .footer {
   text-align: center;
   padding: 24px 16px;
@@ -688,18 +708,18 @@ output {
   font-size: 12px;
 }
 
-/* ── EXPORT TEXTAREA ─────────────────────────────────────────────── */
+/* â”€â”€ EXPORT TEXTAREA â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 #exportText {
   font-family: var(--font-mono);
   font-size: 13px;
   min-height: 320px;
 }
 
-/* ════════════════════════════════════════════════════════════════════
-   UX OVERHAUL — Bottom Nav, FAB, OmniSearch, Tabs, Onboarding
-   ════════════════════════════════════════════════════════════════════ */
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   UX OVERHAUL â€” Bottom Nav, FAB, OmniSearch, Tabs, Onboarding
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 
-/* ── BOTTOM NAVIGATION BAR ─────────────────────────────────────────── */
+/* â”€â”€ BOTTOM NAVIGATION BAR â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .bottom-nav {
   position: fixed;
   bottom: 0;
@@ -773,7 +793,7 @@ output {
   width: 32px;
 }
 
-/* ── FAB ──────────────────────────────────────────────────────────── */
+/* â”€â”€ FAB â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .fab {
   position: fixed;
   bottom: 84px;
@@ -810,7 +830,7 @@ output {
   transform: scale(0.7);
 }
 
-/* ── OMNISEARCH ────────────────────────────────────────────────────── */
+/* â”€â”€ OMNISEARCH â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .omnisearch-wrap {
   flex: 1;
   max-width: 480px;
@@ -918,7 +938,7 @@ output {
 .omni-result-sub { font-size: 12px; color: var(--m3-on-surface-variant); margin-top: 1px; }
 .omni-no-results { padding: 20px 16px; text-align: center; color: var(--m3-on-surface-variant); font-size: 14px; }
 
-/* ── TAB SECTIONS ──────────────────────────────────────────────────── */
+/* â”€â”€ TAB SECTIONS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .tab-section {
   animation: tabEnter 250ms var(--m3-easing) both;
 }
@@ -966,7 +986,7 @@ output {
   display: block;
 }
 
-/* ── VIEW TOPBAR (for detail/settings/new overlay views) ─────────────── */
+/* â”€â”€ VIEW TOPBAR (for detail/settings/new overlay views) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .view-topbar {
   display: flex;
   align-items: center;
@@ -975,7 +995,7 @@ output {
   gap: 8px;
 }
 
-/* ── RECORD CARDS ──────────────────────────────────────────────────── */
+/* â”€â”€ RECORD CARDS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .record-card {
   background: var(--m3-surface-container);
   border-radius: var(--m3-shape-md);
@@ -1020,7 +1040,7 @@ output {
   background: linear-gradient(135deg, var(--m3-elevation-2) 0%, var(--m3-surface-container) 100%);
 }
 
-/* ── BADGES ──────────────────────────────────────────────────────────── */
+/* â”€â”€ BADGES â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .badge {
   display: inline-flex;
   align-items: center;
@@ -1038,7 +1058,7 @@ output {
 .badge.ok, .badge.normal { background: transparent; color: var(--m3-on-surface-variant); border: 1px solid var(--m3-outline-variant); }
 .badge.high, .badge.low  { background: var(--m3-error-container); color: var(--m3-on-error-container); }
 
-/* ── CHIPS / CHIPS-ROW ──────────────────────────────────────────────── */
+/* â”€â”€ CHIPS / CHIPS-ROW â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .chips {
   display: flex;
   flex-wrap: wrap;
@@ -1046,7 +1066,7 @@ output {
   margin-bottom: 8px;
 }
 
-/* ── CLZ STATS ROW ──────────────────────────────────────────────────── */
+/* â”€â”€ CLZ STATS ROW â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .clz-stats-row {
   display: flex;
   gap: 10px;
@@ -1087,7 +1107,7 @@ output {
   border-color: var(--m3-primary);
 }
 
-/* ── ONBOARDING CARD ─────────────────────────────────────────────────── */
+/* â”€â”€ ONBOARDING CARD â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .onboarding-card {
   background: var(--m3-surface-container);
   border-radius: var(--m3-shape-xl);
@@ -1144,7 +1164,7 @@ output {
   flex-shrink: 0;
 }
 
-/* ── BTN ICON (compact) ──────────────────────────────────────────────── */
+/* â”€â”€ BTN ICON (compact) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .btn-icon {
   width: 40px;
   height: 40px;
@@ -1153,7 +1173,7 @@ output {
   font-size: 18px;
 }
 
-/* ── CARD HERO (detail header) ───────────────────────────────────────── */
+/* â”€â”€ CARD HERO (detail header) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .card-hero {
   background: linear-gradient(135deg, var(--m3-primary-container) 0%, var(--m3-surface-container-high) 100%);
   border: 1px solid var(--m3-primary);
@@ -1163,7 +1183,7 @@ output {
   margin-bottom: 12px;
 }
 
-/* ── RECORDS LIST ────────────────────────────────────────────────────── */
+/* â”€â”€ RECORDS LIST â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .records-list {
   display: flex;
   flex-direction: column;
@@ -1196,7 +1216,7 @@ output {
 .tinycheck { display: flex; align-items: center; gap: 4px; font-size: 12px; color: var(--m3-on-surface-variant); cursor: pointer; white-space: nowrap; }
 .tinycheck input[type="checkbox"] { width: 16px; height: 16px; accent-color: var(--m3-tertiary); }
 
-/* ── MANUAL DASHBOARD ───────────────────────────────────────────────── */
+/* â”€â”€ MANUAL DASHBOARD â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .manual-header {
   padding: 16px;
   background: var(--m3-surface);
@@ -1314,13 +1334,210 @@ output {
 
 .m-chip.active {
   background: var(--m3-secondary-container);
-  color: var(--m3-on-secondary-container);
-  border-color: var(--m3-secondary);
+ 
+ / *   S p e c i f i c   r u l e   f o r   t h e   \ 
+ 
+ V e r 
+ 
+ p a r a 
+ 
+ p a c i e n t e \   b u t t o n   i d e n t i f i e d   i n   g r e p   * / 
+ i f r a m e   b o d y   [ d a t a - s h a r e = \ 1 \ ] ,   
+ i f r a m e   b o d y   . p a t i e n t - o n l y   { 
+     d i s p l a y :   n o n e   ! i m p o r t a n t ; 
+ } 
+ 
+ 
+ . t h e m e - s e l e c t o r   { 
+     d i s p l a y :   f l e x ; 
+     g a p :   8 p x ; 
+     f l e x - w r a p :   w r a p ; 
+ } 
+h4 { font-size: 14px; font-weight: 600; color: var(--m3-on-surface-variant); margin-bottom: 8px; }
+p { margin-bottom: 8px; }
+p:last-child { margin-bottom: 0; }
+.body-sm   { font-size: 13px; line-height: 1.4; }
+.label-md  { font-size: 12px; font-weight: 600; letter-spacing: 0.4px; }
+
+.theme-selector {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+.theme-selector .btn.active {
+    background: var(--m3-primary-container);
+    color: var(--m3-on-primary-container);
+    border-color: transparent;
 }
 
-/* ── COFFEE BUTTON ───────────────────────────────────────────────────── */
-.btn-coffee {
-  background: #FFDD00;
-  color: #000;
-  font-weight: 700;
+.view-dialog {
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    background: var(--m3-surface);
+    color: var(--m3-on-surface);
+    position: fixed;
+    top: 0;
+    left: 0;
+    margin: 0;
+    z-index: 1000;
+    display: none;
+    flex-direction: column;
+}
+
+.view-dialog[open] {
+    display: flex;
+}
+
+.view-dialog::backdrop {
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+}
+
+.dialog-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+    padding-bottom: 80px;
+}
+
+@keyframes dialog-slide-up {
+    from { transform: translateY(100%); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.view-dialog[open] {
+    animation: dialog-slide-up 300ms cubic-bezier(0.2, 0, 0, 1);
+}
+
+.omni-result.focused {
+    background: var(--m3-surface-container-highest);
+    outline: 2px solid var(--m3-primary);
+    outline-offset: -2px;
+}
+
+/* --- Native Manual View Styles --- */
+.manual-view {
+    background: var(--m3-surface);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.manual-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 12px;
+    margin-top: 8px;
+}
+
+.manual-topic-card {
+    padding: 16px;
+    background: var(--m3-surface-container-low);
+    border-radius: var(--m3-shape-lg);
+    cursor: pointer;
+    transition: all 200ms;
+    border: 1px solid transparent;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.manual-topic-card:hover {
+    background: var(--m3-surface-container-high);
+    transform: translateY(-2px);
+}
+
+.manual-topic-card h4 {
+    margin: 0;
+    font-size: 14px;
+    color: var(--m3-primary);
+}
+
+.manual-topic-card p {
+    margin: 0;
+    font-size: 12px;
+    color: var(--m3-on-surface-variant);
+}
+
+.manual-topic-content {
+    max-width: 800px;
+    margin: 0 auto;
+    line-height: 1.6;
+}
+
+.manual-block {
+    margin-bottom: 24px;
+}
+
+.manual-block h2 {
+    font-size: 22px;
+    color: var(--m3-primary);
+    margin-bottom: 12px;
+    border-bottom: 1px solid var(--m3-outline-variant);
+    padding-bottom: 8px;
+}
+
+.manual-block h3 {
+    font-size: 18px;
+    margin-bottom: 8px;
+    color: var(--m3-secondary);
+}
+
+.manual-block p {
+    margin-bottom: 12px;
+}
+
+.manual-block ul {
+    padding-left: 20px;
+    margin-bottom: 12px;
+}
+
+.manual-block li {
+    margin-bottom: 4px;
+}
+
+/* --- Accessibility Focus States --- */
+:focus-visible {
+    outline: 3px solid var(--m3-primary);
+    outline-offset: 2px;
+    border-radius: 4px;
+}
+
+.btn:focus-visible {
+    box-shadow: 0 0 0 4px var(--m3-primary-container);
+}
+
+/* --- SNACKBAR (M3) --- */
+.snackbar {
+  position: fixed;
+  bottom: 80px; /* Above nav bar */
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background: var(--m3-inverse-surface);
+  color: var(--m3-inverse-on-surface);
+  padding: 12px 16px;
+  border-radius: var(--m3-shape-sm);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: var(--m3-shadow-3);
+  z-index: 2000;
+  transition: transform 0.3s var(--m3-easing), opacity 0.3s var(--m3-easing);
+  opacity: 0;
+  pointer-events: none;
+  min-width: 280px;
+  max-width: 90vw;
+}
+
+.snackbar.show {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.snackbar .btn-text {
+  color: var(--m3-inverse-primary);
+  margin-left: auto;
 }
