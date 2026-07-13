@@ -121,6 +121,34 @@ function initTheme() {
   setTheme(saved, false);
 }
 
+/**
+ * Applies a theme ("light" | "dark" | "auto") to the document.
+ * @param {string} theme
+ * @param {boolean} [persist=true] - Whether to store the choice in localStorage.
+ */
+function setTheme(theme, persist = true) {
+  if (!["light", "dark", "auto"].includes(theme)) theme = "auto";
+  document.body.dataset.theme = theme;
+  if (persist) localStorage.setItem(LS_THEME, theme);
+  // Reflect selection in the settings theme picker, if present.
+  ["light", "dark", "auto"].forEach(t => {
+    const btn = $(`#theme-${t}`);
+    if (btn) btn.classList.toggle("active", t === theme);
+  });
+}
+
+/** Returns the effective theme, resolving "auto" against the OS preference. */
+function effectiveTheme() {
+  const t = document.body.dataset.theme || "auto";
+  if (t === "auto") {
+    return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  }
+  return t;
+}
+
+/** Toggles between light and dark from the current effective theme. */
+function toggleTheme() {
+  setTheme(effectiveTheme() === "light" ? "dark" : "light");
 }
 
 /* ---------- Manual Dashboard (Native) ---------- */
@@ -174,20 +202,37 @@ async function initManualDashboard() {
   });
 }
 
+// Interactive calculators implemented natively in the app.
+const MANUAL_CALCULATORS = [
+  { type: "fib4", title: "🧮 FIB-4", desc: "Fibrosis hepática (MASLD/MASH)" },
+  { type: "qtc",  title: "🧮 QTc (Fridericia)", desc: "Seguridad cardiaca / antipsicóticos" }
+];
+
 function renderManualHome(filter = "all") {
   const grid = $("#manualGrid");
   if (!grid) return;
-  
+
   if (!state.manual.manifest) {
     grid.innerHTML = '<div class="body-sm muted">Cargando manual...</div>';
     return;
   }
 
+  // Calculators are native features, not manifest topics — render launch cards.
+  if (filter === "calculator") {
+    grid.innerHTML = MANUAL_CALCULATORS.map(c => `
+      <div class="manual-topic-card" onclick="openCalculator('${c.type}')">
+        <h4>${sanitize(c.title)}</h4>
+        <p>${sanitize(c.desc)}</p>
+      </div>
+    `).join("");
+    return;
+  }
+
   let topics = state.manual.manifest.topics;
-  if (filter !== "all") {
-    // Basic filter logic
-    if (filter === "protocol") topics = topics.filter(t => t.id.startsWith("psych_"));
-    else if (filter === "calculator") topics = topics.filter(t => t.tags?.includes("calculator") || t.id.includes("calc"));
+  if (filter === "protocol") {
+    topics = topics.filter(t => t.id.startsWith("psych_"));
+  } else if (filter === "printable") {
+    topics = topics.filter(t => t.format === "a4" || t.tags?.includes("printable"));
   }
 
   grid.innerHTML = topics.map(t => `
@@ -388,8 +433,6 @@ function openManualResource(id) {
 
 window.openCalculator = openCalculator;
 
-window.openCalculator = openCalculator;
-
 function openManualClzProtocol() {
   openManualTopic('psych_clozapine_monitoring');
 }
@@ -538,15 +581,6 @@ function initUI() {
   $("#btnTheme").onclick    = toggleTheme;
   $("#btnSettings").onclick = () => show("#viewSettings");
 
-  // Wire up iframe theme sync on load
-  const manualIframe = $('#manualIframe');
-  if (manualIframe) {
-    manualIframe.addEventListener('load', () => {
-      const theme = document.body.dataset.theme || localStorage.getItem(LS_THEME) || 'dark';
-      // Small delay to ensure the iframe's message listener is registered
-      setTimeout(() => sendThemeToManual(theme), 80);
-    });
-  }
   $("#btnSaveRecord").onclick  = saveNewRecord;
   $("#btnExport").onclick      = openExport;
   $("#btnEditRecord").onclick  = () => openNew(state.selected?.id);
@@ -640,9 +674,6 @@ function showTab(tab) {
   const manualEl = $('#tabManual');
   if (tab === 'manual') {
     if (manualEl) manualEl.classList.remove('hidden');
-    // Send theme now — if iframe already loaded this works immediately;
-    // if it's still loading, the onload handler above will catch it.
-    sendThemeToManual(document.body.dataset.theme || localStorage.getItem(LS_THEME) || 'dark');
   } else {
     if (manualEl) manualEl.classList.add('hidden');
     // Show the correct in-container tab
@@ -1194,14 +1225,6 @@ function saveNewRecord() {
       }
     };
   }
-        constipation: Number($("#nrConstipation").value),
-        somnolence: Number($("#nrSomnolence").value),
-        fever: $("#nrFever").checked,
-        chestPain: $("#nrChestPain").checked,
-        notes: $("#nrClinicalNotes").value
-      }
-    };
-  }
 
   record.eval = evaluate(record);
   if (state.editingId) {
@@ -1658,6 +1681,11 @@ window.toggleClozapineFields = toggleClozapineFields;
 window.openExport          = openExport;
 window.openManualTopic     = openManualTopic;
 window.openManualResource  = openManualResource;
-window.setTheme           = setTheme;
+window.setTheme            = setTheme;
+window.toggleTheme         = toggleTheme;
 window.showSnackbar        = showSnackbar;
 window.hideSnackbar        = hideSnackbar;
+// Inline handlers inside dynamically-built capture forms (app.js is type=module).
+window.updateConversionHint = updateConversionHint;
+window.calcAbsolute         = calcAbsolute;
+window.updateModDisplay     = updateModDisplay;

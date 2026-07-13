@@ -1,10 +1,10 @@
-﻿/* ================================================================
-   LAB NOTES â€” Design System M3 (Material Design 3)
+/* ================================================================
+   LAB NOTES — Design System M3 (Material Design 3)
    ================================================================ */
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
 
-/* â”€â”€ TOKENS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* --- TOKENS --- */
 /* --- THEME DEFINITIONS --- */
 :root {
   /* Common Tokens */
@@ -135,7 +135,7 @@
   }
 }
 
-/* â”€â”€ BASE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* --- BASE --- */
 *, *::before, *::after {
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
@@ -156,10 +156,13 @@ body {
               color var(--m3-duration) var(--m3-easing);
 }
 
-/* â”€â”€ TYPOGRAPHY â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* --- TYPOGRAPHY --- */
 h1 { font-size: 28px; font-weight: 400; line-height: 1.3; }
 h2 { font-size: 24px; font-weight: 400; line-height: 1.3; margin-bottom: 4px; }
 h3 { font-size: 16px; font-weight: 600; color: var(--m3-primary); margin-bottom: 12px; }
+.label-chip {
+  display: inline-block;
+  font-size: 12px;
   font-weight: 500;
   letter-spacing: 0.5px;
   background: var(--m3-surface-container);
@@ -171,7 +174,7 @@ h3 { font-size: 16px; font-weight: 600; color: var(--m3-primary); margin-bottom:
 .small { font-size: 0.8em; }
 .font-mono { font-family: var(--font-mono); }
 
-/* â”€â”€ LAYOUT â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* --- LAYOUT --- */
 .container {
   max-width: 800px;
   margin: 0 auto;
@@ -206,7 +209,7 @@ h3 { font-size: 16px; font-weight: 600; color: var(--m3-primary); margin-bottom:
   .grid2 { grid-template-columns: 1fr; }
 }
 
-/* â”€â”€ TOP APP BAR (M3) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* --- TOP APP BAR M3 --- */
 .topbar {
   display: flex;
   align-items: center;
@@ -253,7 +256,7 @@ h3 { font-size: 16px; font-weight: 600; color: var(--m3-primary); margin-bottom:
   .brand-title { font-size: 16px; }
 }
 
-/* â”€â”€ BUTTONS (M3 Hierarchy) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* --- BUTTONS M3 Hierarchy --- */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -274,7 +277,7 @@ h3 { font-size: 16px; font-weight: 600; color: var(--m3-primary); margin-bottom:
   user-select: none;
 }
 
-/* Filled â€” highest emphasis */
+/* Filled — highest emphasis */
 .btn-filled {
   background-color: var(--m3-primary);
   color: var(--m3-on-primary);
@@ -284,7 +287,7 @@ h3 { font-size: 16px; font-weight: 600; color: var(--m3-primary); margin-bottom:
   filter: brightness(1.08);
 }
 
-/* Tonal â€” medium emphasis */
+/* Tonal — medium emphasis */
 .btn-tonal {
   background-color: var(--m3-secondary-container);
   color: var(--m3-on-secondary-container);
@@ -294,7 +297,7 @@ h3 { font-size: 16px; font-weight: 600; color: var(--m3-primary); margin-bottom:
   filter: brightness(1.08);
 }
 
-/* Outlined â€” medium emphasis, no fill */
+/* Outlined — medium emphasis, no fill */
 .btn-outlined {
   background: transparent;
   color: var(--m3-primary);
@@ -304,7 +307,7 @@ h3 { font-size: 16px; font-weight: 600; color: var(--m3-primary); margin-bottom:
   background: var(--m3-elevation-1);
 }
 
-/* Text â€” lowest emphasis */
+/* Text — lowest emphasis */
 .btn-text {
   background: transparent;
   color: var(--m3-primary);
@@ -337,7 +340,7 @@ h3 { font-size: 16px; font-weight: 600; color: var(--m3-primary); margin-bottom:
 /* label acting as button (for file input) */
 label.btn { cursor: pointer; }
 
-/* â”€â”€ CARDS (M3 Elevated / Filled) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* --- CARDS M3 Elevated / Filled --- */
 .card {
   background-color: var(--m3-surface-container);
   border-radius: var(--m3-shape-xl);
@@ -350,7 +353,7 @@ label.btn { cursor: pointer; }
   border-radius: var(--m3-shape-lg);
 }
 
-/* â”€â”€ FORMS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* --- FORMS --- */
 .field {
   display: flex;
   flex-direction: column;
@@ -421,7 +424,7 @@ output {
   cursor: pointer;
 }
 
-/* â”€â”€ SEARCH BAR â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* --- SEARCH BAR --- */
 .search-bar {
   display: flex;
   align-items: center;
@@ -442,7 +445,7 @@ output {
 .search-bar input:focus { outline: none; border: none; }
 .search-icon { flex-shrink: 0; opacity: 0.6; }
 
-/* â”€â”€ STEPPER â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* --- STEPPER --- */
 .stepper {
   display: flex;
   align-items: center;
@@ -479,7 +482,7 @@ output {
   background: var(--m3-outline-variant);
 }
 
-/* â”€â”€ RECORDS LIST â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* --- RECORDS LIST --- */
 .records-list { display: flex; flex-direction: column; gap: 8px; }
 
 .record-card {
@@ -499,7 +502,7 @@ output {
 .record-card.alert-border { border-color: var(--m3-error); }
 .record-card.clz-border  { border-color: var(--m3-primary); }
 
-/* â”€â”€ ANALYTE ROWS (Step 3 / Detail) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* --- ANALYTE ROWS Step 3 / Detail --- */
 .analyte-row {
   padding: 14px 0;
   border-bottom: 1px solid var(--m3-outline-variant);
@@ -549,7 +552,7 @@ output {
 }
 .pct-input { border-bottom-color: var(--m3-primary) !important; }
 
-/* â”€â”€ BADGES & CHIPS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* --- BADGES & CHIPS --- */
 .badge {
   display: inline-flex;
   align-items: center;
@@ -590,7 +593,7 @@ output {
   margin-top: 3px;
 }
 
-/* â”€â”€ PILLS (Panel Selection) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* --- PILLS Panel Selection --- */
 .panel-pills {
   display: flex;
   gap: 8px;
@@ -616,7 +619,7 @@ output {
   font-weight: 500;
 }
 
-/* â”€â”€ ACTIONS BAR â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* --- ACTIONS BAR --- */
 .actions {
   display: flex;
   justify-content: flex-end;
@@ -625,13 +628,13 @@ output {
   padding-top: 16px;
 }
 
-/* â”€â”€ DIVIDER â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* --- DIVIDER --- */
 .divider {
   height: 1px;
   background: var(--m3-outline-variant);
 }
 
-/* â”€â”€ STEP ANIMATION â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* --- STEP ANIMATION --- */
 .step { animation: fadeUp 250ms var(--m3-easing) both; }
 
 @keyframes fadeUp {
@@ -639,7 +642,7 @@ output {
   to   { opacity: 1; transform: translateY(0); }
 }
 
-/* â”€â”€ EMPTY STATE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* --- EMPTY STATE --- */
 .empty-state {
   display: flex;
   flex-direction: column;
@@ -653,7 +656,7 @@ output {
 .empty-icon { font-size: 48px; }
 .empty-state p { font-size: 15px; }
 
-/* â”€â”€ IFRAME VIEW (Manual) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* --- IFRAME VIEW Manual --- */
 .iframe-view {
   padding: 0 !important;
   height: calc(100vh - 64px);
@@ -674,7 +677,7 @@ output {
   display: block;
 }
 
-/* â”€â”€ PWA TOAST â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* --- PWA TOAST --- */
 .toast {
   position: fixed;
   top: 12px;
@@ -693,14 +696,14 @@ output {
 }
 .toast.hidden { display: none !important; }
 
-/* â”€â”€ CHECKLISTS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* --- CHECKLISTS --- */
 .checklists { display: flex; flex-direction: column; gap: 6px; }
 
-/* â”€â”€ LINK â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* --- LINK --- */
 .link { color: var(--m3-primary); text-decoration: none; }
 .link:hover { text-decoration: underline; }
 
-/* â”€â”€ FOOTER â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* --- FOOTER --- */
 .footer {
   text-align: center;
   padding: 24px 16px;
@@ -708,18 +711,18 @@ output {
   font-size: 12px;
 }
 
-/* â”€â”€ EXPORT TEXTAREA â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* --- EXPORT TEXTAREA --- */
 #exportText {
   font-family: var(--font-mono);
   font-size: 13px;
   min-height: 320px;
 }
 
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-   UX OVERHAUL â€” Bottom Nav, FAB, OmniSearch, Tabs, Onboarding
-   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+/* ========================================================
+   UX OVERHAUL - Bottom Nav, FAB, OmniSearch, Tabs, Onboarding
+   ======================================================== */
 
-/* â”€â”€ BOTTOM NAVIGATION BAR â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* --- BOTTOM NAVIGATION BAR --- */
 .bottom-nav {
   position: fixed;
   bottom: 0;
@@ -793,7 +796,7 @@ output {
   width: 32px;
 }
 
-/* â”€â”€ FAB â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* --- FAB --- */
 .fab {
   position: fixed;
   bottom: 84px;
@@ -830,7 +833,7 @@ output {
   transform: scale(0.7);
 }
 
-/* â”€â”€ OMNISEARCH â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* --- OMNISEARCH --- */
 .omnisearch-wrap {
   flex: 1;
   max-width: 480px;
@@ -938,7 +941,7 @@ output {
 .omni-result-sub { font-size: 12px; color: var(--m3-on-surface-variant); margin-top: 1px; }
 .omni-no-results { padding: 20px 16px; text-align: center; color: var(--m3-on-surface-variant); font-size: 14px; }
 
-/* â”€â”€ TAB SECTIONS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* --- TAB SECTIONS --- */
 .tab-section {
   animation: tabEnter 250ms var(--m3-easing) both;
 }
@@ -986,7 +989,7 @@ output {
   display: block;
 }
 
-/* â”€â”€ VIEW TOPBAR (for detail/settings/new overlay views) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* --- VIEW TOPBAR for detail/settings/new overlay views --- */
 .view-topbar {
   display: flex;
   align-items: center;
@@ -995,7 +998,7 @@ output {
   gap: 8px;
 }
 
-/* â”€â”€ RECORD CARDS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* --- RECORD CARDS --- */
 .record-card {
   background: var(--m3-surface-container);
   border-radius: var(--m3-shape-md);
@@ -1040,7 +1043,7 @@ output {
   background: linear-gradient(135deg, var(--m3-elevation-2) 0%, var(--m3-surface-container) 100%);
 }
 
-/* â”€â”€ BADGES â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* --- BADGES --- */
 .badge {
   display: inline-flex;
   align-items: center;
@@ -1058,7 +1061,7 @@ output {
 .badge.ok, .badge.normal { background: transparent; color: var(--m3-on-surface-variant); border: 1px solid var(--m3-outline-variant); }
 .badge.high, .badge.low  { background: var(--m3-error-container); color: var(--m3-on-error-container); }
 
-/* â”€â”€ CHIPS / CHIPS-ROW â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* --- CHIPS / CHIPS-ROW --- */
 .chips {
   display: flex;
   flex-wrap: wrap;
@@ -1066,7 +1069,7 @@ output {
   margin-bottom: 8px;
 }
 
-/* â”€â”€ CLZ STATS ROW â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* --- CLZ STATS ROW --- */
 .clz-stats-row {
   display: flex;
   gap: 10px;
@@ -1107,7 +1110,7 @@ output {
   border-color: var(--m3-primary);
 }
 
-/* â”€â”€ ONBOARDING CARD â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* --- ONBOARDING CARD --- */
 .onboarding-card {
   background: var(--m3-surface-container);
   border-radius: var(--m3-shape-xl);
@@ -1164,7 +1167,7 @@ output {
   flex-shrink: 0;
 }
 
-/* â”€â”€ BTN ICON (compact) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* --- BTN ICON compact --- */
 .btn-icon {
   width: 40px;
   height: 40px;
@@ -1173,7 +1176,7 @@ output {
   font-size: 18px;
 }
 
-/* â”€â”€ CARD HERO (detail header) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* --- CARD HERO detail header --- */
 .card-hero {
   background: linear-gradient(135deg, var(--m3-primary-container) 0%, var(--m3-surface-container-high) 100%);
   border: 1px solid var(--m3-primary);
@@ -1183,7 +1186,7 @@ output {
   margin-bottom: 12px;
 }
 
-/* â”€â”€ RECORDS LIST â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* --- RECORDS LIST --- */
 .records-list {
   display: flex;
   flex-direction: column;
@@ -1216,7 +1219,7 @@ output {
 .tinycheck { display: flex; align-items: center; gap: 4px; font-size: 12px; color: var(--m3-on-surface-variant); cursor: pointer; white-space: nowrap; }
 .tinycheck input[type="checkbox"] { width: 16px; height: 16px; accent-color: var(--m3-tertiary); }
 
-/* â”€â”€ MANUAL DASHBOARD â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* --- MANUAL DASHBOARD --- */
 .manual-header {
   padding: 16px;
   background: var(--m3-surface);
@@ -1334,25 +1337,9 @@ output {
 
 .m-chip.active {
   background: var(--m3-secondary-container);
- 
- / *   S p e c i f i c   r u l e   f o r   t h e   \ 
- 
- V e r 
- 
- p a r a 
- 
- p a c i e n t e \   b u t t o n   i d e n t i f i e d   i n   g r e p   * / 
- i f r a m e   b o d y   [ d a t a - s h a r e = \ 1 \ ] ,   
- i f r a m e   b o d y   . p a t i e n t - o n l y   { 
-     d i s p l a y :   n o n e   ! i m p o r t a n t ; 
- } 
- 
- 
- . t h e m e - s e l e c t o r   { 
-     d i s p l a y :   f l e x ; 
-     g a p :   8 p x ; 
-     f l e x - w r a p :   w r a p ; 
- } 
+  color: var(--m3-on-secondary-container);
+}
+
 h4 { font-size: 14px; font-weight: 600; color: var(--m3-on-surface-variant); margin-bottom: 8px; }
 p { margin-bottom: 8px; }
 p:last-child { margin-bottom: 0; }

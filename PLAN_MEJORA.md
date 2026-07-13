@@ -6,6 +6,34 @@
 
 ---
 
+## Revisión 2026-07 — La app no arrancaba (corregido)
+
+Antes de esta revisión la aplicación **no funcionaba en absoluto**. El último commit introdujo
+regresiones que impedían el arranque. Se identificaron y corrigieron:
+
+| # | Problema | Severidad | Estado |
+|---|----------|-----------|--------|
+| A | **`app.js` no parseaba** — error de sintaxis (`}` suelto en la sección *theme*, tras eliminar `setTheme`/`toggleTheme`/`sendThemeToManual` de forma incompleta) | Bloqueante | ✅ Corregido |
+| B | **Segundo error de sintaxis** en `saveNewRecord()` — bloque `triage` duplicado con propiedades huérfanas | Bloqueante | ✅ Corregido |
+| C | **`styles.css` corrupto** — el archivo mezclaba UTF-8 con doble codificación (mojibake) y una cola en UTF-16 con NULs; comentarios y reglas destruidos desde ~línea 1336. Se reconstruyó el archivo completo (BOM y NULs eliminados, mojibake corregido, `.label-chip`, `.m-chip.active` y cabeceras de sección restauradas) | Bloqueante | ✅ Corregido |
+| D | **Tema roto** — `initTheme` llamaba a `setTheme` (inexistente); `#btnTheme` y los botones de Ajustes apuntaban a funciones eliminadas | Alto | ✅ Reimplementado `setTheme`/`toggleTheme`/`effectiveTheme` con soporte light/dark/auto |
+| E | **Referencias a iframe muerto** — `sendThemeToManual`/`#manualIframe` seguían invocándose aunque el manual ya es nativo | Alto | ✅ Código muerto eliminado |
+| F | **Calculadoras inalcanzables** — FIB-4 y QTc estaban implementadas pero ningún elemento de UI llamaba a `openCalculator`; el chip "Calculadoras" del manual no mostraba nada | Alto | ✅ El chip "Calculadoras" ahora muestra tarjetas que abren cada calculadora |
+| G | **Handlers inline sin exponer** — `updateConversionHint`, `calcAbsolute`, `updateModDisplay` se usaban en `oninput`/`onchange` pero no estaban en `window` (app.js es `type=module`) → ReferenceError al capturar valores | Alto | ✅ Expuestas en `window` |
+| H | **`manualLoader.loadManualIndex`** — `return await response.ok ? …` sin sentido | Bajo | ✅ Simplificado a `response.json()` |
+| I | **Service Worker** no precacheaba `manualLoader.js` ni `export_templates.json` (riesgo offline) | Medio | ✅ Añadidos + bump a v4.2 |
+
+**Verificación:** `npm test` (19/19 ✓) más una prueba de humo en Chromium que confirma arranque
+sin errores de consola, cambio de tema, alta de registro, alerta crítica de ANC (agranulocitosis),
+render de temas del manual, OmniSearch y cálculo de FIB-4/QTc.
+
+### Pendientes recomendados (no bloqueantes)
+- `data/` contiene copias obsoletas de `lab_catalog.json`, `export_templates.json` y `lab_records.json` que **no se usan** (la app lee las de la raíz). Divergen del original → conviene eliminarlas o convertirlas en la única fuente.
+- `node_modules/` está versionado con binarios de Windows (`*.win32-x64-msvc.node`), por lo que `npm test` falla en Linux/CI hasta reinstalar. Recomendado: añadir `.gitignore` para `node_modules` y confiar en `package-lock.json`.
+- `openManualResource` mapea sólo 4 PDFs; el resto cae a un genérico.
+
+---
+
 ## Fallas y Huecos Identificados
 
 ### Críticos
