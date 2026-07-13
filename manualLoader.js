@@ -13,7 +13,7 @@ export async function loadManualIndex() {
   try {
     const response = await fetch(`${BASE_PATH}manifest.json`);
     if (!response.ok) throw new Error('Failed to load manual manifest');
-    return await response.ok ? response.json() : null;
+    return await response.json();
   } catch (error) {
     console.error('Error loading manual index:', error);
     return null;
