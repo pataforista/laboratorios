@@ -18,7 +18,8 @@ const state = {
     selectedPanels: new Set()
   },
   filters: {
-    search: ""
+    search: "",
+    severity: "all"
   },
   manual: {
     manifest: null,
@@ -40,31 +41,51 @@ function sanitize(str) {
   return d.innerHTML;
 }
 
+function levenshtein(s1, s2) {
+  const len1 = s1.length;
+  const len2 = s2.length;
+  const matrix = Array.from({ length: len1 + 1 }, () => new Int32Array(len2 + 1));
+  for (let i = 0; i <= len1; i++) matrix[i][0] = i;
+  for (let j = 0; j <= len2; j++) matrix[0][j] = j;
+  for (let i = 1; i <= len1; i++) {
+    for (let j = 1; j <= len2; j++) {
+      const cost = s1[i - 1] === s2[j - 1] ? 0 : 1;
+      matrix[i][j] = Math.min(
+        matrix[i - 1][j] + 1,      // Deletion
+        matrix[i][j - 1] + 1,      // Insertion
+        matrix[i - 1][j - 1] + cost // Substitution
+      );
+    }
+  }
+  return matrix[len1][len2];
+}
+
 function scoreMatch(text, query) {
   if (!text || !query) return 0;
-  const words = query.toLowerCase().split(/\s+/).filter(Boolean);
-  const target = text.toLowerCase();
-  let score = 0;
-  words.forEach(w => {
-    if (target.includes(w)) {
-      score += w.length * 2;
-    } else {
-      let matches = 0;
-      let idx = 0;
-      for (let i = 0; i < w.length; i++) {
-        const char = w[i];
-        const found = target.indexOf(char, idx);
-        if (found !== -1) {
-          matches++;
-          idx = found + 1;
+  const targetTokens = text.toLowerCase().split(/[\s,·\.\(\)\[\]\/\+\*]+/).filter(Boolean);
+  const queryTokens = query.toLowerCase().split(/\s+/).filter(Boolean);
+  let totalScore = 0;
+
+  queryTokens.forEach(qToken => {
+    let bestTokenScore = 0;
+    targetTokens.forEach(tToken => {
+      // Substring match
+      if (tToken.includes(qToken)) {
+        bestTokenScore = Math.max(bestTokenScore, (qToken.length / tToken.length) * 10);
+      } else {
+        // Levenshtein fuzzy match
+        const distance = levenshtein(qToken, tToken);
+        const maxLen = Math.max(qToken.length, tToken.length);
+        const similarity = 1 - distance / maxLen;
+        if (similarity > 0.65) {
+          bestTokenScore = Math.max(bestTokenScore, similarity * 8);
         }
       }
-      if (matches >= w.length - 1 && w.length > 3) {
-        score += matches;
-      }
-    }
+    });
+    totalScore += bestTokenScore;
   });
-  return score;
+
+  return totalScore;
 }
 
 function validateRecord(r) {
@@ -1235,14 +1256,49 @@ function renderDashboard() {
   const l = $("#recordsList");
   l.innerHTML = "";
 
-  const filtered = state.records
+  // 1. Update Clinical Hero Widget
+  const heroWidget = $("#clinicalHeroWidget");
+  const heroText = $("#clinicalHeroText");
+  if (heroWidget && heroText) {
+    if (state.records.length > 0) {
+      heroWidget.style.display = "block";
+      const total = state.records.length;
+      const criticals = state.records.filter(r => r.eval?.alerts?.some(a => a.type === 'critical' || a.type === 'danger')).length;
+      const clozapines = state.records.filter(r => r.isClozapine).length;
+      
+      let alertAlertInfo = "";
+      if (criticals > 0) {
+        alertAlertInfo = ` · <strong style="color:var(--m3-error); font-weight:700;">${criticals} con alertas críticas 🔴</strong>`;
+      } else {
+        alertAlertInfo = ` · <span style="color:#2e7d32; font-weight:600;">Todos los controles estables ✅</span>`;
+      }
+
+      heroText.innerHTML = `Total de registros: <strong>${total}</strong> · Monitoreos Clozapina: <strong>${clozapines}</strong>${alertAlertInfo}`;
+    } else {
+      heroWidget.style.display = "none";
+    }
+  }
+
+  // 2. Apply search & severity filters
+  let filtered = state.records
     .filter(r => {
       const s = state.filters.search;
       if (!s) return true;
       const textToSearch = `${r.date} ${r.context || ''} ${r.labName || ''} ${Object.keys(r.data || {}).join(' ')}`;
       return scoreMatch(textToSearch, s) > 0;
-    })
-    .sort((a, b) => b.date.localeCompare(a.date));
+    });
+
+  // Severity filter
+  const sev = state.filters.severity || 'all';
+  if (sev === 'critical') {
+    filtered = filtered.filter(r => r.eval?.alerts?.some(a => a.type === 'critical' || a.type === 'danger'));
+  } else if (sev === 'warning') {
+    filtered = filtered.filter(r => r.eval?.alerts?.some(a => a.type === 'warning') && !r.eval?.alerts?.some(a => a.type === 'critical' || a.type === 'danger'));
+  } else if (sev === 'cloz') {
+    filtered = filtered.filter(r => r.isClozapine);
+  }
+
+  filtered.sort((a, b) => b.date.localeCompare(a.date));
 
   const emptyEl = $("#emptyState");
   if (!filtered.length) {
@@ -1257,6 +1313,27 @@ function renderDashboard() {
 
   renderTrends();
 }
+
+window.setDashboardFilter = function(type) {
+  state.filters.severity = type;
+  
+  // Update UI active states on buttons
+  const mapping = {
+    all: '#filterBtnAll',
+    critical: '#filterBtnCritical',
+    warning: '#filterBtnWarn',
+    cloz: '#filterBtnCloz'
+  };
+
+  Object.entries(mapping).forEach(([key, id]) => {
+    const btn = $(id);
+    if (btn) {
+      btn.classList.toggle('active', key === type);
+    }
+  });
+
+  renderDashboard();
+};
 
 /**
  * Renders a simple line chart on the canvas for the selected metric
@@ -1628,6 +1705,7 @@ function saveNewRecord() {
 }
 
 /* ---------- detail ---------- */
+/* ---------- detail ---------- */
 function openDetail(id) {
   const r = state.records.find(x => x.id === id);
   state.selected = r;
@@ -1661,13 +1739,46 @@ function openDetail(id) {
         <p style="font-size:14px; margin:4px 0;"><strong>ANC:</strong> ${(r.data?.anc/1000 || 0).toFixed(2)} k/µL (${r.data?.anc || 0} /µL)</p>
         <p style="font-size:13px; color:var(--m3-on-surface-variant);">${ancAnalysis?.message || 'Sin datos suficientes.'}</p>
         ${ancAnalysis?.action ? `<p style="font-size:13px; font-weight:bold; color:var(--m3-error); margin-top:8px;">Acción: ${ancAnalysis.action}</p>` : ''}
-        
         <div style="margin-top:12px; border-top:1px solid var(--m3-outline-variant); padding-top:8px; font-size:12px; opacity:0.8; display:flex; justify-content:space-between; align-items:center;">
           <p style="margin:2px 0;"><strong>Fuente:</strong> FDA REMS / APA 2024-25</p>
           <button class="btn btn-text btn-sm" onclick="openManualTopic('psych_clozapine_monitoring')" style="padding:0; min-height:0; color:var(--m3-primary);">Ver Protocolo →</button>
         </div>
       </div>
     `;
+  }
+
+  // Suggest shortcuts for calculators if compatible analytes are present
+  let shortcutsHtml = "";
+  const hasFib4Data = r.data?.ast !== undefined && r.data?.alt !== undefined && (r.data?.plt !== undefined || r.data?.plt_abs !== undefined);
+  const hasQtcData = r.data?.qt !== undefined || (r.clinical?.triage?.hr !== undefined && r.clinical?.triage?.hr !== null);
+
+  if (hasFib4Data || hasQtcData) {
+    shortcutsHtml += `
+      <div class="card" style="border: 1.5px solid var(--m3-primary); background: var(--m3-primary-container)12; padding: 16px; margin-bottom: 16px;">
+        <h3 style="margin-top: 0; font-size: 14px; color: var(--m3-primary); display: flex; align-items: center; gap: 6px;">🧮 Herramientas Sugeridas</h3>
+        <p class="muted small" style="margin-bottom: 10px;">Los resultados de este laboratorio coinciden con los campos de las siguientes calculadoras:</p>
+        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+    `;
+    if (hasFib4Data) {
+      const pltVal = r.data?.plt || r.data?.plt_abs || 0;
+      const astVal = r.data?.ast || 0;
+      const altVal = r.data?.alt || 0;
+      shortcutsHtml += `
+        <button class="btn btn-outlined btn-sm" onclick="launchCalculatorWithData('fib4', { plt: ${pltVal}, ast: ${astVal}, alt: ${altVal} })" style="font-size:12px;">
+          Calcular FIB-4
+        </button>
+      `;
+    }
+    if (hasQtcData) {
+      const qtVal = r.data?.qt || 0;
+      const hrVal = r.clinical?.triage?.hr || 0;
+      shortcutsHtml += `
+        <button class="btn btn-outlined btn-sm" onclick="launchCalculatorWithData('qtc', { qt: ${qtVal}, hr: ${hrVal} })" style="font-size:12px;">
+          Calcular QTc
+        </button>
+      `;
+    }
+    shortcutsHtml += `</div></div>`;
   }
 
   const checklists = [];
@@ -1680,7 +1791,7 @@ function openDetail(id) {
   } else { $("#detailChecklists").innerHTML = ""; }
 
   const w = $("#detailPanels");
-  w.innerHTML = clozAnalysisHtml; 
+  w.innerHTML = shortcutsHtml + clozAnalysisHtml; 
   r.panels.forEach(p => {
     const panelDef = state.catalog.panels.find(x => x.panel_id === p.panel_id);
     const c = document.createElement("div");
@@ -1919,6 +2030,25 @@ function hideSnackbar() {
   const el = $("#globalSnackbar");
   if (el) el.classList.remove("show");
 }
+
+window.launchCalculatorWithData = function(type, data) {
+  // Close detail dialog
+  hide("#viewDetail");
+  
+  // Open calculator view
+  openCalculator(type);
+  
+  if (type === 'fib4') {
+    $("#fibPlt").value = data.plt || "";
+    $("#fibAst").value = data.ast || "";
+    $("#fibAlt").value = data.alt || "";
+    $("#fibResult").classList.add("hidden");
+  } else if (type === 'qtc') {
+    $("#qtVal").value = data.qt || "";
+    $("#qtHr").value = data.hr || "";
+    $("#qtcResult").classList.add("hidden");
+  }
+};
 
 /* ── Expose to global scope (required because app.js is type=module) ── */
 window.openNew             = openNew;

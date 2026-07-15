@@ -712,70 +712,92 @@ output {
   box-shadow: 0 4px 12px rgba(90, 75, 120, 0.25);
 }
 
-/* Bottom Nav bar styling */
+/* Bottom Nav Bar - Floating Dock on Mobile, Sidebar on Desktop */
 .bottom-nav {
   position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 64px;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 32px);
+  max-width: 480px;
+  height: 66px;
   background: var(--glass-bg);
-  border-top: 1px solid var(--glass-border);
+  border: 1px solid var(--glass-border);
   backdrop-filter: var(--glass-backdrop);
   -webkit-backdrop-filter: var(--glass-backdrop);
+  border-radius: var(--m3-shape-xl);
   display: flex;
   justify-content: space-around;
   align-items: center;
   z-index: 90;
-  box-shadow: 0 -4px 24px rgba(0,0,0,0.06);
+  box-shadow: var(--m3-shadow-2);
+  transition: all var(--m3-duration) var(--m3-easing);
+  padding: 0 8px;
 }
+
 .nav-item {
   flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100%;
+  height: 50px;
   border: none;
   background: transparent;
   color: var(--m3-on-surface-variant);
   cursor: pointer;
-  gap: 4px;
-  transition: color var(--m3-duration-short) var(--m3-easing);
+  gap: 2px;
+  transition: all var(--m3-duration-short) var(--m3-easing);
   position: relative;
+  border-radius: var(--m3-shape-lg);
 }
+
 .nav-icon {
   font-size: 20px;
   transition: transform var(--m3-duration-short) var(--m3-easing);
+  z-index: 2;
 }
+
 .nav-label {
-  font-size: 0.75rem;
-  font-weight: 600;
+  font-size: 0.72rem;
+  font-weight: 700;
+  z-index: 2;
+  transition: transform var(--m3-duration-short) var(--m3-easing);
 }
+
 .nav-item.active {
   color: var(--m3-primary);
 }
+
 .nav-item.active .nav-icon {
-  transform: translateY(-2px) scale(1.1);
-}
-.nav-indicator {
-  position: absolute;
-  top: 0;
-  width: 36px;
-  height: 3px;
-  background: var(--m3-primary);
-  border-radius: 0 0 var(--m3-shape-full) var(--m3-shape-full);
-  opacity: 0;
-  transition: opacity var(--m3-duration-short) var(--m3-easing);
-}
-.nav-item.active .nav-indicator {
-  opacity: 1;
+  transform: translateY(-2px) scale(1.12);
 }
 
-/* Floating Action Button (FAB) */
+/* Indicator pill shape behind active item */
+.nav-indicator {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.85);
+  width: 64px;
+  height: 32px;
+  background: var(--m3-primary-container);
+  border-radius: var(--m3-shape-full);
+  opacity: 0;
+  z-index: 1;
+  transition: opacity var(--m3-duration-short) var(--m3-easing),
+              transform var(--m3-duration-short) var(--m3-easing);
+}
+
+.nav-item.active .nav-indicator {
+  opacity: 0.85;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+/* Floating Action Button (FAB) relative position adjustment */
 .fab {
   position: fixed;
-  bottom: 80px;
+  bottom: 96px;
   right: 24px;
   width: 56px;
   height: 56px;
@@ -801,6 +823,40 @@ output {
   transform: translateY(-2px) scale(0.98);
 }
 .fab.hidden { display: none; }
+
+/* Large screen optimization - Side Rail Navigation */
+@media (min-width: 960px) {
+  body {
+    padding-left: 112px;
+  }
+  
+  .bottom-nav {
+    position: fixed;
+    top: 16px;
+    bottom: 16px;
+    left: 16px;
+    transform: none;
+    width: 80px;
+    height: auto;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 24px;
+    padding: 24px 0;
+    border-radius: var(--m3-shape-xl);
+  }
+  
+  .nav-item {
+    width: 64px;
+    height: 64px;
+    flex: none;
+  }
+  
+  .fab {
+    bottom: 32px;
+    left: 28px;
+    right: auto;
+  }
+}
 
 /* Dialog dialog overlay styling */
 dialog.view-dialog {
