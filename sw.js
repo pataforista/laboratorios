@@ -1,5 +1,5 @@
-// LabNotes PWA Service Worker v4.2
-const CACHE_NAME = "labnotes-v4.2";
+// LabNotes PWA Service Worker v5.0
+const CACHE_NAME = "labnotes-v5.0";
 
 const STATIC_ASSETS = [
   "./",
@@ -13,14 +13,11 @@ const STATIC_ASSETS = [
   "./manifest.json",
   "./icon-192.png",
   "./icon-512.png",
-  "./manual/index.html",
   "./manual/dataset/manifest.json",
-  "./manual/dataset/printables/generated_index.json",
-  "./manual/assets/index-DnpFSY7c.js",
-  "./manual/assets/index-C9eFa_mk.css"
+  "./manual/dataset/printables/generated_index.json"
 ];
 
-// Assets that should always try to update
+// Assets that should always try to update first
 const NETWORK_FIRST_ASSETS = [
   "app.js",
   "clinical.js",
@@ -62,8 +59,46 @@ self.addEventListener("fetch", (event) => {
   
   if (!isInternal) return;
 
-  const fileName = url.pathname.split('/').pop();
-  const isNetworkFirst = NETWORK_FIRST_ASSETS.includes(fileName) || url.pathname.endsWith('/');
+  const pathName = url.pathname;
+  const fileName = pathName.split('/').pop();
+
+  // Dataset JSON: Stale-While-Revalidate (always try to update in background)
+  if (pathName.includes("/manual/dataset/")) {
+    event.respondWith(
+      caches.open(CACHE_NAME).then(cache =>
+        cache.match(event.request).then(cached => {
+          const fetchPromise = fetch(event.request).then(res => {
+            if (res.ok && event.request.method === "GET") {
+              cache.put(event.request, res.clone());
+            }
+            return res;
+          }).catch(() => cached);
+          return cached || fetchPromise;
+        })
+      )
+    );
+    return;
+  }
+
+  // Media assets (PDFs and infografias): Cache-First
+  if (pathName.includes("/manual/pdfs/") || pathName.includes("/manual/infografias/")) {
+    event.respondWith(
+      caches.open(CACHE_NAME).then(cache =>
+        cache.match(event.request).then(cached => {
+          if (cached) return cached;
+          return fetch(event.request).then(res => {
+            if (res.ok && event.request.method === "GET") {
+              cache.put(event.request, res.clone());
+            }
+            return res;
+          });
+        })
+      )
+    );
+    return;
+  }
+
+  const isNetworkFirst = NETWORK_FIRST_ASSETS.includes(fileName) || pathName.endsWith('/');
 
   if (isNetworkFirst) {
     // Network First strategy

@@ -14,6 +14,7 @@
         {
           "id": "sleep_clozapine_sedation",
           "type": "warning",
+          "level": "info",
           "title": "Sedación por Antipsicóticos",
           "content": "Fármacos como Clozapina, Olanzapina y Quetiapina pueden causar hipersomnia. Diferencie insomnio primario de somnolencia residual diurna por medicación."
         }
@@ -23,7 +24,6 @@
       "id": "sleep_hygiene_measures",
       "type": "section",
       "title": "1. Medidas de Higiene del Sueño",
-      "audience": "both",
       "sub_blocks": [
         {
           "id": "hygiene_a_schedules",
@@ -51,7 +51,6 @@
       "id": "sleep_stimulus_control",
       "type": "section",
       "title": "2. Control de Estímulos (TCC-I)",
-      "audience": "both",
       "content": "La cama es SOLO para dormir y sexo. Si no se duerme en 20 min, salga de la cama.",
       "sub_blocks": [
         {
@@ -60,19 +59,25 @@
           "title": "Calculadora de Eficiencia de Sueño",
           "fn": "sleep_eff",
           "inputs": [
-            { "key": "bed_time", "label": "Tiempo total en cama", "unit": "h" },
-            { "key": "sleep_time", "label": "Tiempo real durmiendo", "unit": "h" }
+            { "key": "bed_time", "label": "Tiempo total en cama", "unit": "h", "required": true },
+            { "key": "sleep_time", "label": "Tiempo real durmiendo", "unit": "h", "required": true }
+          ],
+          "outputs": [
+            { "key": "efficiency", "label": "Eficiencia del sueño", "unit": "%" }
           ]
         }
       ]
+    },
+    {
+      "id": "sleep_cbt_i",
+      "type": "section",
+      "title": "3. TCC-I — Guías y recursos",
+      "content": "La Terapia Cognitivo-Conductual para el Insomnio (TCC-I) es el tratamiento de primera línea según las guías APA y AASM. Tiene efectos duraderos superiores a la farmacoterapia sola."
     }
   ],
   "meta": {
-    "source": "CBT-I + Maudsley Prescribing Guidelines",
-    "version": "2025_psych_refocused"
-  }
-}
- CBT-I Guidelines",
-    "version": "4.0_physician_guide"
+    "source": "CBT-I Guidelines + Maudsley Prescribing Guidelines",
+    "version": "2025_psych_refocused",
+    "last_reviewed": "2026-07-13"
   }
 }

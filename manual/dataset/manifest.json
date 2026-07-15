@@ -1,15 +1,7 @@
 {
   "schema_version": "1.0.0",
   "dataset_id": "manual_psiquiatria_v1",
-  "generated_at": "2026-03-26T12:00:00",
-  "files": {
-    "schema": {
-      "path": "dataset/schema/dataset.schema.json",
-      "bytes": 0
-    },
-    "topics": [],
-    "printables": []
-  },
+  "generated_at": "2026-07-13T12:00:00",
   "topics": [
     {
       "id": "labnotes_guide",
@@ -168,8 +160,8 @@
   ],
   "printables": [
     {
-      "id": "clozapine_infographic_pdf",
-      "title": "Infografía de Seguridad Clozapina",
+      "id": "printables_index",
+      "title": "Índice de Recursos Imprimibles",
       "path": "dataset/printables/generated_index.json",
       "format": "a4"
     }

@@ -111,6 +111,12 @@
       <!-- CLZ summary stats -->
       <div id="clzStats" class="clz-stats-row hidden"></div>
 
+      <!-- Widget: Próximos monitoreos -->
+      <div id="clzNextMonitoring" class="card hidden" style="margin-top: 16px; padding: 16px;">
+        <h3 style="margin:0 0 8px 0; font-size:15px; display:flex; align-items:center; gap:8px;">📅 Próximo Control Sugerido</h3>
+        <div id="clzNextMonitoringContent" style="font-size:14px; line-height:1.4;"></div>
+      </div>
+
       <div id="clzRecordsList" class="records-list"></div>
 
       <div id="clzEmpty" class="onboarding-card hidden">
@@ -159,11 +165,11 @@
           <div class="card">
             <h3>Información Básica</h3>
             <div class="grid2">
-              <label class="field">
+              <label class="field" for="nrDate">
                 <span class="field-label">Fecha</span>
                 <input id="nrDate" type="date" />
               </label>
-              <label class="field">
+              <label class="field" for="nrSex">
                 <span class="field-label">Sexo biológico</span>
                 <select id="nrSex">
                   <option value="any">No especificado</option>
@@ -172,11 +178,11 @@
                 </select>
               </label>
             </div>
-            <label class="field">
+            <label class="field" for="nrContext">
               <span class="field-label">Contexto clínico</span>
               <input id="nrContext" placeholder="Ej. Control mensual, urgencias..." />
             </label>
-            <label class="field">
+            <label class="field" for="nrLabName">
               <span class="field-label">Laboratorio</span>
               <input id="nrLabName" placeholder="Ej. Lab Central, IMSS..." />
             </label>
@@ -233,7 +239,7 @@
           <div class="card">
             <div class="row">
               <h3>Selección de Estudios</h3>
-              <button id="btnClearPanels" class="btn btn-text btn-sm">Limpiar</button>
+              <button id="btnClearPanels" class="btn btn-text btn-sm" aria-label="Limpiar selección de paneles de estudio">Limpiar</button>
             </div>
             <div class="search-bar" style="margin-bottom:12px;">
               <span class="search-icon">🔍</span>
@@ -314,8 +320,8 @@
       <div class="view-topbar">
         <button id="btnBackFromDetail" class="btn btn-text" aria-label="Cerrar y volver">← Registros</button>
         <div class="right">
-          <button id="btnEditRecord" class="btn btn-tonal btn-sm">✏ Editar</button>
-          <button id="btnExport" class="btn btn-tonal btn-sm">📋 Exportar</button>
+          <button id="btnEditRecord" class="btn btn-tonal btn-sm" aria-label="Editar registro">✏ Editar</button>
+          <button id="btnExport" class="btn btn-tonal btn-sm" aria-label="Exportar registro">📋 Exportar</button>
         </div>
       </div>
       <div class="dialog-content">
@@ -345,11 +351,11 @@
       <div class="view-topbar">
         <button id="btnBackFromExport" class="btn btn-text" aria-label="Cerrar y volver">← Detalle</button>
         <div style="flex:1; margin:0 12px;">
-          <select id="exportTemplate" class="btn btn-outlined btn-sm" style="width:100%; border-color:var(--m3-outline-variant);">
+          <select id="exportTemplate" class="btn btn-outlined btn-sm" style="width:100%; border-color:var(--m3-outline-variant);" aria-label="Seleccionar plantilla de exportación">
             <option value="default">Resumen compacto (Default)</option>
           </select>
         </div>
-        <button id="btnCopyExport" class="btn btn-filled btn-sm">📋 Copiar</button>
+        <button id="btnCopyExport" class="btn btn-filled btn-sm" aria-label="Copiar texto de exportación">📋 Copiar</button>
       </div>
       <div class="dialog-content">
         <div class="card">
@@ -386,14 +392,14 @@
           <h3>Gestión de Datos</h3>
           <p class="body-sm muted" style="margin-bottom:16px;">Exporta o importa todos tus registros. Los datos se guardan solo en este dispositivo.</p>
           <div class="grid2">
-            <button id="btnExportAll" class="btn btn-tonal">⬇ Exportar JSON</button>
-            <label class="btn btn-tonal" style="margin:0; text-align:center; cursor:pointer;">
+            <button id="btnExportAll" class="btn btn-tonal" aria-label="Exportar todos los registros como JSON">⬇ Exportar JSON</button>
+            <label class="btn btn-tonal" style="margin:0; text-align:center; cursor:pointer;" for="inputImport">
               ⬆ Importar JSON
-              <input type="file" id="inputImport" accept=".json" style="display:none;">
+              <input type="file" id="inputImport" accept=".json" style="display:none;" aria-label="Importar registros desde archivo JSON">
             </label>
           </div>
           <div class="divider" style="margin:16px 0;"></div>
-          <button id="btnReset" class="btn btn-danger" style="width:100%;">🗑 Borrar todos los datos locales</button>
+          <button id="btnReset" class="btn btn-danger" style="width:100%;" aria-label="Eliminar permanentemente todos los datos locales">🗑 Borrar todos los datos locales</button>
         </div>
 
         <div class="card">
@@ -550,13 +556,22 @@
         navigator.serviceWorker.register('./sw.js').then(reg => {
           reg.addEventListener('updatefound', () => {
             const nw = reg.installing;
-            nw.addEventListener('statechange', () => {
-              if (nw.state === 'installed' && navigator.serviceWorker.controller) {
-                document.getElementById('pwa-toast').classList.remove('hidden');
-              }
-            });
+            if (nw) {
+              nw.addEventListener('statechange', () => {
+                if (nw.state === 'installed' && navigator.serviceWorker.controller) {
+                  if (window.showSnackbar) {
+                    window.showSnackbar("Nueva versión disponible. Haz clic para actualizar.", "Actualizar", () => {
+                      window.location.reload();
+                    });
+                  }
+                }
+              });
+            }
           });
         });
+      });
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+        console.log("[PWA] Service Worker controller changed.");
       });
     }
   </script>

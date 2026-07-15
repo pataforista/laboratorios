@@ -1,4 +1,4 @@
-import { analyzeANC, auditSideEffects } from './clinical.js';
+import { analyzeANC, auditSideEffects, getActualValue, evaluateRecord, CONVERSIONS } from './clinical.js';
 import * as manualLoader from './manualLoader.js';
 
 const $ = s => document.querySelector(s);
@@ -26,18 +26,6 @@ const state = {
   }
 };
 
-const CONVERSIONS = {
-  glucose_fasting: { factor: 1 / 18.01, unit: "mmol/L" },
-  creatinine: { factor: 88.4, unit: "µmol/L" },
-  bun: { factor: 1 / 2.8, unit: "mmol/L" },
-  chol_total: { factor: 1 / 38.67, unit: "mmol/L" },
-  ldl: { factor: 1 / 38.67, unit: "mmol/L" },
-  hdl: { factor: 1 / 38.67, unit: "mmol/L" },
-  triglycerides: { factor: 1 / 88.57, unit: "mmol/L" },
-  bili_total: { factor: 17.1, unit: "µmol/L" },
-  bili_direct: { factor: 17.1, unit: "µmol/L" }
-};
-
 /* ---------- helpers ---------- */
 function localISODate() {
   const d = new Date();
@@ -52,11 +40,53 @@ function sanitize(str) {
   return d.innerHTML;
 }
 
+function scoreMatch(text, query) {
+  if (!text || !query) return 0;
+  const words = query.toLowerCase().split(/\s+/).filter(Boolean);
+  const target = text.toLowerCase();
+  let score = 0;
+  words.forEach(w => {
+    if (target.includes(w)) {
+      score += w.length * 2;
+    } else {
+      let matches = 0;
+      let idx = 0;
+      for (let i = 0; i < w.length; i++) {
+        const char = w[i];
+        const found = target.indexOf(char, idx);
+        if (found !== -1) {
+          matches++;
+          idx = found + 1;
+        }
+      }
+      if (matches >= w.length - 1 && w.length > 3) {
+        score += matches;
+      }
+    }
+  });
+  return score;
+}
+
 function validateRecord(r) {
   if (!r || typeof r !== 'object') return false;
-  if (!r.id || !r.date || !Array.isArray(r.panels)) return false;
-  // Basic check for data structure
+  if (typeof r.id !== 'string' && typeof r.id !== 'number') return false;
+  if (typeof r.date !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(r.date)) return false;
   if (typeof r.isClozapine !== 'boolean') return false;
+  if (r.isBEN !== undefined && typeof r.isBEN !== 'boolean') return false;
+  if (r.sex !== undefined && typeof r.sex !== 'string') return false;
+  if (r.context !== undefined && typeof r.context !== 'string') return false;
+  if (r.labName !== undefined && typeof r.labName !== 'string') return false;
+  if (!Array.isArray(r.panels)) return false;
+
+  for (const p of r.panels) {
+    if (!p || typeof p !== 'object') return false;
+    if (typeof p.panel_id !== 'string' || !Array.isArray(p.results)) return false;
+    for (const res of p.results) {
+      if (!res || typeof res !== 'object') return false;
+      if (typeof res.analyte_id !== 'string') return false;
+      if (res.value === undefined || res.value === null) return false;
+    }
+  }
   return true;
 }
 
@@ -66,21 +96,43 @@ function migrateFromV1() {
     try {
       const parsed = JSON.parse(v1Data);
       if (parsed && Array.isArray(parsed.records)) {
-        // Simple migration: v1 and v2 have similar structures for now
-        // but we ensure all records are valid
-        const validRecords = parsed.records.filter(validateRecord);
-        localStorage.setItem(LS_KEY, JSON.stringify({ records: validRecords }));
-        console.log(`Migrated ${validRecords.length} records from V1 to V2`);
+        const migratedRecords = parsed.records.map(r => {
+          if (!r || typeof r !== 'object') return null;
+          
+          const migrated = {
+            id: r.id || "rec_" + Date.now() + "_" + Math.random().toString(36).substr(2, 5),
+            date: r.date || localISODate(),
+            sex: r.sex || "any",
+            context: r.context || "",
+            labName: r.labName || "",
+            isClozapine: !!r.isClozapine,
+            isBEN: !!r.isBEN,
+            panels: Array.isArray(r.panels) ? r.panels : [],
+            data: r.data || {},
+            clinical: r.clinical || {}
+          };
+          
+          if (Object.keys(migrated.data).length === 0 && migrated.panels.length > 0) {
+            migrated.panels.forEach(p => {
+              if (Array.isArray(p.results)) {
+                p.results.forEach(res => {
+                  const val = getActualValue(res.value, res.modifier);
+                  if (val !== undefined) migrated.data[res.analyte_id] = val;
+                });
+              }
+            });
+          }
+          
+          return migrated;
+        }).filter(r => r !== null && validateRecord(r));
+
+        localStorage.setItem(LS_KEY, JSON.stringify({ records: migratedRecords }));
+        console.log(`Migrated and repaired ${migratedRecords.length} records from V1 to V2`);
       }
     } catch (e) {
       console.error("Migration failed:", e);
     }
   }
-}
-
-function getActualValue(v, mod) {
-  if (v === "" || v === undefined) return undefined;
-  return mod === "x10^3" ? Number(v) * 1000 : Number(v);
 }
 
 function updateModDisplay(el) {
@@ -266,49 +318,224 @@ function renderManualSearchResults(items) {
   el.classList.remove("hidden");
 }
 
+/**
+ * Renders a single manual block into an HTML string.
+ * Handles all block types defined in dataset.schema.json.
+ * @param {Object} block
+ * @returns {string} HTML string
+ */
+function renderManualBlock(block) {
+  const levelColors = {
+    info: "var(--m3-primary)",
+    caution: "#e67e00",
+    danger: "var(--m3-error)"
+  };
+  const levelIcons = { info: "ℹ️", caution: "⚠️", danger: "🚨" };
+
+  let html = "";
+
+  // Title
+  if (block.title && block.type !== "section") {
+    html += `<h3 class="manual-block-title">${sanitize(block.title)}</h3>`;
+  } else if (block.title) {
+    html += `<h2 class="manual-block-title">${sanitize(block.title)}</h2>`;
+  }
+
+  // Content text (supports **bold** markdown)
+  if (block.content) {
+    const md = sanitize(block.content).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+    html += `<p>${md}</p>`;
+  }
+
+  switch (block.type) {
+    case 'list':
+    case 'checklist':{
+      const tag = block.type === 'checklist' ? 'ol' : 'ul';
+      const items = (block.items || []).map(i => {
+        if (typeof i === 'string') {
+          const md = sanitize(i).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+          return `<li>${md}</li>`;
+        }
+        return `<li>${sanitize(i.title || JSON.stringify(i))}</li>`;
+      }).join("");
+      html += `<${tag} class="manual-list">${items}</${tag}>`;
+      break;
+    }
+
+    case 'table':{
+      const headers = (block.headers || []).map(h => `<th>${sanitize(h)}</th>`).join("");
+      const rows = (block.rows || []).map(row =>
+        `<tr>${row.map(cell => `<td>${sanitize(cell)}</td>`).join("")}</tr>`
+      ).join("");
+      html += `
+        <div class="table-wrapper" style="overflow-x:auto; margin-top:8px;">
+          <table class="manual-table">
+            <thead><tr>${headers}</tr></thead>
+            <tbody>${rows}</tbody>
+          </table>
+        </div>`;
+      break;
+    }
+
+    case 'warning':
+    case 'alert':{
+      const lvl = block.level || 'info';
+      const color = levelColors[lvl] || levelColors.info;
+      const icon = levelIcons[lvl] || 'ℹ️';
+      const lvlItems = (block.items || []).map(i => {
+        const md = sanitize(i).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+        return `<li>${md}</li>`;
+      }).join("");
+      html = `
+        <div class="manual-alert" style="border-left:4px solid ${color}; background:${color}18; padding:12px 14px; border-radius:8px;">
+          <div style="font-weight:700; color:${color}; margin-bottom:6px;">${icon} ${sanitize(block.title || '')}</div>
+          ${block.content ? `<p style="margin:0 0 6px;">${sanitize(block.content).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')}</p>` : ''}
+          ${lvlItems ? `<ul class="manual-list">${lvlItems}</ul>` : ''}
+        </div>`;
+      break;
+    }
+
+    case 'accordion':{
+      const accordionItems = (block.items || []).map((item, idx) => {
+        const itemId = `acc_${block.id}_${idx}`;
+        return `
+          <details class="manual-accordion-item">
+            <summary class="manual-accordion-summary">${sanitize(item.title || 'Item')}</summary>
+            <div class="manual-accordion-body">${sanitize(item.content || '').replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')}</div>
+          </details>`;
+      }).join("");
+      html += `<div class="manual-accordion">${accordionItems}</div>`;
+      break;
+    }
+
+    case 'printable_ref':{
+      const pId = block.printable_id;
+      html += `
+        <div class="manual-printable-ref" style="display:flex; align-items:center; gap:12px; padding:12px; border:1px solid var(--m3-outline-variant); border-radius:8px; margin-top:8px; cursor:pointer;"
+          onclick="openManualResource('${pId}')" role="button" tabindex="0"
+          onkeydown="if(event.key==='Enter')openManualResource('${pId}')">
+          <span style="font-size:24px;">🖨️</span>
+          <div>
+            <div style="font-weight:600;">${sanitize(block.title || 'Ver recurso imprimible')}</div>
+            <div class="muted small">Abrir PDF o infografía</div>
+          </div>
+          <span style="margin-left:auto; color:var(--m3-primary);">→</span>
+        </div>`;
+      break;
+    }
+
+    case 'resource_list':{
+      const links = (block.items || []).map(item => {
+        if (typeof item === 'object' && item.link) {
+          return `
+            <li>
+              <a href="${sanitize(item.link)}" target="_blank" rel="noopener noreferrer" class="manual-ext-link">
+                <strong>${sanitize(item.name || item.title || '')}</strong>
+              </a>
+              ${item.description ? `<span class="muted small"> — ${sanitize(item.description)}</span>` : ''}
+            </li>`;
+        }
+        const md = sanitize(typeof item === 'string' ? item : JSON.stringify(item))
+          .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+        return `<li>${md}</li>`;
+      }).join("");
+      html += `<ul class="manual-list resource-list">${links}</ul>`;
+      break;
+    }
+
+    case 'step_list':{
+      const steps = (block.items || []).map((item, i) => {
+        const md = sanitize(typeof item === 'string' ? item : item.title || '')
+          .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+        return `<li><span class="step-num">${i + 1}</span>${md}</li>`;
+      }).join("");
+      html += `<ol class="manual-step-list">${steps}</ol>`;
+      break;
+    }
+
+    case 'calculator':{
+      // Calculator blocks embedded in topics — link to the native calculator dialog
+      html += `
+        <div class="manual-calc-card" style="padding:12px; border:1px solid var(--m3-outline-variant); border-radius:8px; margin-top:8px;">
+          <div class="muted small" style="margin-bottom:8px;">Calculadora integrada</div>
+          <button class="btn btn-tonal btn-sm" onclick="openCalculator('${block.fn}')">
+            🧮 Abrir ${sanitize(block.title || 'Calculadora')}
+          </button>
+        </div>`;
+      break;
+    }
+  }
+
+  // Nested sub_blocks (recursive)
+  if (block.sub_blocks && block.type !== 'warning' && block.type !== 'alert') {
+    html += block.sub_blocks.map(sub => `
+      <div class="manual-sub-block" style="margin-top:10px; padding-left:12px; border-left:2px solid var(--m3-outline-variant);">
+        ${renderManualBlock(sub)}
+      </div>`).join("");
+  }
+
+  // share_variant — collapsible patient-friendly version
+  if (block.share_variant) {
+    const sv = block.share_variant;
+    const svId = `sv_${block.id}`;
+    const svItems = (sv.items || []).map(i => `<li>${sanitize(i).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')}</li>`).join("");
+    html += `
+      <details class="share-variant" style="margin-top:10px;">
+        <summary style="cursor:pointer; color:var(--m3-primary); font-size:0.85em;">👥 ${sanitize(sv.title || 'Ver versión para pacientes')}</summary>
+        <div style="margin-top:8px; padding:10px; background:var(--m3-surface-container); border-radius:6px; font-size:0.9em;">
+          ${sv.content ? `<p>${sanitize(sv.content)}</p>` : ''}
+          ${svItems ? `<ul class="manual-list">${svItems}</ul>` : ''}
+        </div>
+      </details>`;
+  }
+
+  return html;
+}
+
 async function openManualTopic(id, blockId = null) {
   showTab('manual');
-  const topic = await manualLoader.loadTopic(id);
-  if (!topic) return;
-
-  state.manual.currentTopic = topic;
+  
   $("#manualHome").classList.add("hidden");
   $("#manualTopic").classList.remove("hidden");
-
-  const renderEl = $("#topicRender");
-  renderEl.innerHTML = `<h1 style="color:var(--m3-primary); margin-bottom:16px;">${sanitize(topic.title)}</h1>`;
   
-  topic.blocks.forEach(block => {
+  const renderEl = $("#topicRender");
+  renderEl.innerHTML = `
+    <div style="height:32px; background:var(--m3-surface-container-highest); border-radius:4px; margin-bottom:16px; width:70%; animation: skeleton-pulse 1.5s infinite ease-in-out;"></div>
+    <div style="height:100px; background:var(--m3-surface-container-highest); border-radius:8px; margin-bottom:12px; animation: skeleton-pulse 1.5s infinite ease-in-out;"></div>
+    <div style="height:80px; background:var(--m3-surface-container-highest); border-radius:8px; margin-bottom:12px; animation: skeleton-pulse 1.5s infinite ease-in-out;"></div>
+  `;
+
+  const topic = await manualLoader.loadTopic(id);
+  if (!topic) {
+    console.error('[Manual] Topic not found:', id);
+    renderEl.innerHTML = `<div style="color:var(--m3-error); padding:16px;">Error al cargar el tema. Intente de nuevo.</div>`;
+    return;
+  }
+
+  state.manual.currentTopic = topic;
+
+  const metaHtml = topic.meta?.last_reviewed
+    ? `<div class="muted small" style="margin-bottom:16px;">Revisado: ${sanitize(topic.meta.last_reviewed)} · ${sanitize(topic.meta.source || '')}</div>`
+    : '';
+  renderEl.innerHTML = `
+    <h1 style="color:var(--m3-primary); margin-bottom:4px;">${sanitize(topic.title)}</h1>
+    ${metaHtml}
+  `;
+
+  (topic.blocks || []).forEach(block => {
     const bEl = document.createElement("div");
     bEl.className = `manual-block ${block.type}`;
     bEl.id = block.id;
-
-    let contentHtml = "";
-    if (block.title) contentHtml += `<h2>${sanitize(block.title)}</h2>`;
-    if (block.content) contentHtml += `<p>${sanitize(block.content)}</p>`;
-    
-    if (block.items) {
-      contentHtml += `<ul>${block.items.map(i => `<li>${sanitize(i)}</li>`).join("")}</ul>`;
-    }
-
-    if (block.sub_blocks) {
-      block.sub_blocks.forEach(sub => {
-        contentHtml += `
-          <div class="card" style="margin-top:12px; border-left: 4px solid var(--m3-primary); padding-left:12px;">
-            <h3 style="font-size:16px; margin-bottom:4px;">${sanitize(sub.title)}</h3>
-            <p style="font-size:14px; margin:0;">${sanitize(sub.content)}</p>
-          </div>
-        `;
-      });
-    }
-
-    bEl.innerHTML = contentHtml;
+    bEl.innerHTML = renderManualBlock(block);
     renderEl.appendChild(bEl);
   });
 
   if (blockId) {
-    const target = document.getElementById(blockId);
-    if (target) target.scrollIntoView({ behavior: 'smooth' });
+    // Small delay to allow DOM to settle before scrolling
+    setTimeout(() => {
+      const target = document.getElementById(blockId);
+      if (target) target.scrollIntoView({ behavior: 'smooth' });
+    }, 80);
   }
 }
 
@@ -331,33 +558,48 @@ function runOmniSearch(query) {
   if (!q) return null;
 
   const records = state.records
-    .filter(r => r.date.includes(q) || (r.context||'').toLowerCase().includes(q) || (r.labName||'').toLowerCase().includes(q))
-    .slice(0, 5)
     .map(r => ({
-      icon: r.isClozapine ? '🩺' : '🧪',
-      title: `${r.date} · ${r.context || 'Sin contexto'}`,
-      sub: r.isClozapine ? 'Clozapina' : 'Registro',
-      action: () => openDetail(r.id)
+      r,
+      score: scoreMatch(`${r.date} ${r.context || ''} ${r.labName || ''}`, q)
+    }))
+    .filter(x => x.score > 0)
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 5)
+    .map(x => ({
+      icon: x.r.isClozapine ? '🩺' : '🧪',
+      title: `${x.r.date} · ${x.r.context || 'Sin contexto'}`,
+      sub: x.r.isClozapine ? 'Clozapina' : 'Registro',
+      action: () => openDetail(x.r.id)
     }));
 
   const topics = omniCache.topics
-    .filter(t => t.title.toLowerCase().includes(q) || (t.tags||[]).some(tag => tag.toLowerCase().includes(q)))
-    .slice(0, 4)
     .map(t => ({
+      t,
+      score: scoreMatch(`${t.title} ${(t.tags || []).join(' ')}`, q)
+    }))
+    .filter(x => x.score > 0)
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 4)
+    .map(x => ({
       icon: '📖',
-      title: t.title,
+      title: x.t.title,
       sub: 'Protocolo clínico',
-      action: () => openManualTopic(t.id)
+      action: () => openManualTopic(x.t.id)
     }));
 
   const resources = omniCache.resources
-    .filter(p => p.title.toLowerCase().includes(q))
-    .slice(0, 4)
     .map(p => ({
+      p,
+      score: scoreMatch(`${p.title}`, q)
+    }))
+    .filter(x => x.score > 0)
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 4)
+    .map(x => ({
       icon: '🗂️',
-      title: p.title,
-      sub: p.template === 'pdf' ? 'PDF' : 'Infografía',
-      action: () => openManualResource(p.id)
+      title: x.p.title,
+      sub: x.p.template === 'pdf' ? 'PDF' : 'Infografía',
+      action: () => openManualResource(x.p.id)
     }));
 
   return { records, topics, resources };
@@ -420,15 +662,24 @@ function closeOmni() {
 }
 
 function openManualResource(id) {
-  // Map IDs to actual PDF filenames in manual/pdfs/
-  const pdfMap = {
-    'bp_log_a4': 'registro TA.pdf',
-    'clozapine_infographic_pdf': 'Infografia_clozapina.pdf',
-    'medication_log_a4': 'Infografia.pdf', // Placeholder or matching
-    'lifestyle_master_guide': 'Habitos_saludables.pdf'
-  };
-  const filename = pdfMap[id] || 'Infografia.pdf';
-  window.open(`./manual/pdfs/${filename}`, '_blank');
+  // Look up the resource in omniCache (populated from generated_index.json)
+  const resource = omniCache.resources.find(r => r.id === id);
+  if (resource && resource.url) {
+    window.open(resource.url, '_blank', 'noopener,noreferrer');
+    return;
+  }
+  // Fallback: try to load from generated_index.json if cache not ready yet
+  fetch('./manual/dataset/printables/generated_index.json')
+    .then(r => r.json())
+    .then(data => {
+      const found = (data.printables || []).find(r => r.id === id);
+      if (found && found.url) {
+        window.open(found.url, '_blank', 'noopener,noreferrer');
+      } else {
+        alert(`Recurso "${id}" no disponible. Puede que el archivo no esté descargado para uso sin conexión.`);
+      }
+    })
+    .catch(() => alert('No se pudo cargar el índice de recursos. Verifique su conexión.'));
 }
 
 window.openCalculator = openCalculator;
@@ -441,6 +692,13 @@ function openManualClzProtocol() {
 document.addEventListener("DOMContentLoaded", () => {
   const btnBack = $("#btnBackFromCalc");
   if (btnBack) btnBack.onclick = () => $("#viewCalculator").close();
+
+  window.addEventListener("resize", () => {
+    renderTrends();
+    if (state.currentTab === 'cloz') {
+      renderClozapineTab();
+    }
+  });
 });
 
 /* ---------- Calculators ---------- */
@@ -541,7 +799,26 @@ window.onload = async () => {
     state.templates = await fetch("export_templates.json").then(r => r.json()).catch(() => null);
 
     const saved = localStorage.getItem(LS_KEY);
-    state.records = saved ? JSON.parse(saved).records.filter(validateRecord) : [];
+    try {
+      state.records = saved ? JSON.parse(saved).records.filter(validateRecord) : [];
+      if (state.records.length === 0) {
+        const autosave = sessionStorage.getItem("labnotes_autosave");
+        if (autosave) {
+          state.records = JSON.parse(autosave).records.filter(validateRecord);
+          if (state.records.length > 0) {
+            persist();
+            setTimeout(() => {
+              if (window.showSnackbar) {
+                window.showSnackbar("Se restauró una copia de seguridad de la sesión.");
+              }
+            }, 1000);
+          }
+        }
+      }
+    } catch (parseErr) {
+      console.error("Corrupted localStorage JSON, resetting to empty:", parseErr);
+      state.records = [];
+    }
     
     $("#nrDate").value = localISODate();
     initUI();
@@ -769,6 +1046,73 @@ function renderClozapineTab() {
   } else {
     $('#clzTrendCard').classList.add('hidden');
   }
+
+  updateClozapineMonitoringWidget();
+}
+
+function updateClozapineMonitoringWidget() {
+  const widget = $('#clzNextMonitoring');
+  const content = $('#clzNextMonitoringContent');
+  if (!widget || !content) return;
+
+  const clzRecords = state.records
+    .filter(r => r.isClozapine)
+    .sort((a, b) => a.date.localeCompare(b.date)); // Ascending order
+
+  if (clzRecords.length === 0) {
+    widget.classList.add('hidden');
+    return;
+  }
+
+  widget.classList.remove('hidden');
+
+  const latestRecord = clzRecords[clzRecords.length - 1];
+  const firstRecord = clzRecords[0];
+
+  const today = new Date(localISODate());
+  const latestDate = new Date(latestRecord.date);
+  const firstDate = new Date(firstRecord.date);
+
+  const diffTimeSinceFirst = Math.abs(latestDate - firstDate);
+  const diffDaysSinceFirst = Math.ceil(diffTimeSinceFirst / (1000 * 60 * 60 * 24));
+
+  const diffTimeSinceLatest = today - latestDate;
+  const diffDaysSinceLatest = Math.floor(diffTimeSinceLatest / (1000 * 60 * 60 * 24));
+
+  let frequencyDays = 30;
+  let freqLabel = "Mensual (cada 30 días)";
+  if (diffDaysSinceFirst < 182) {
+    frequencyDays = 7;
+    freqLabel = "Semanal (cada 7 días)";
+  } else if (diffDaysSinceFirst < 364) {
+    frequencyDays = 14;
+    freqLabel = "Quincenal (cada 14 días)";
+  }
+
+  const nextDueDate = new Date(latestDate);
+  nextDueDate.setDate(nextDueDate.getDate() + frequencyDays);
+  const formattedNextDue = nextDueDate.toISOString().split('T')[0];
+
+  const daysToNext = Math.ceil((nextDueDate - today) / (1000 * 60 * 60 * 24));
+
+  let statusHtml = "";
+  if (diffDaysSinceLatest > 30) {
+    statusHtml = `<div style="color:var(--m3-error); font-weight:bold; margin-bottom:4px;">🚨 ALERTA: Paciente lleva ${diffDaysSinceLatest} días sin control hematológico (Límite: 30 días).</div>`;
+  } else if (daysToNext < 0) {
+    statusHtml = `<div style="color:var(--m3-error); font-weight:bold; margin-bottom:4px;">⚠️ CONTROL RETRASADO por ${Math.abs(daysToNext)} días (Debió realizarse el ${formattedNextDue}).</div>`;
+  } else if (daysToNext === 0) {
+    statusHtml = `<div style="color:#e67e00; font-weight:bold; margin-bottom:4px;">📅 CONTROL SUGERIDO PARA HOY.</div>`;
+  } else {
+    statusHtml = `<div style="color:var(--m3-primary); font-weight:bold; margin-bottom:4px;">✅ Al día. Próximo control en ${daysToNext} días (${formattedNextDue}).</div>`;
+  }
+
+  content.innerHTML = `
+    ${statusHtml}
+    <div style="margin-top:8px; font-size:13px; color:var(--m3-on-surface-variant);">
+      • Último control: <strong>${latestRecord.date}</strong> (${diffDaysSinceLatest} días transcurridos)<br>
+      • Pauta sugerida: <strong>${freqLabel}</strong> (Semana ${Math.ceil(diffDaysSinceFirst / 7) || 1} de tratamiento)
+    </div>
+  `;
 }
 
 function show(id) {
@@ -895,9 +1239,8 @@ function renderDashboard() {
     .filter(r => {
       const s = state.filters.search;
       if (!s) return true;
-      return r.date.includes(s) ||
-        (r.context && r.context.toLowerCase().includes(s)) ||
-        (r.labName && r.labName.toLowerCase().includes(s));
+      const textToSearch = `${r.date} ${r.context || ''} ${r.labName || ''} ${Object.keys(r.data || {}).join(' ')}`;
+      return scoreMatch(textToSearch, s) > 0;
     })
     .sort((a, b) => b.date.localeCompare(a.date));
 
@@ -924,8 +1267,8 @@ const chartCache = new Map();
 function drawChart(canvas, dataPoints, metric) {
   if (!canvas || canvas.offsetWidth === 0) return;
   
-  // Memoization: Check if data or metric changed
-  const cacheKey = `${canvas.id}_${metric}_${JSON.stringify(dataPoints.map(p => p.id))}`;
+  // Memoization: Check if data, metric, or size changed
+  const cacheKey = `${canvas.id}_${metric}_${canvas.offsetWidth}x${canvas.offsetHeight}_${JSON.stringify(dataPoints.map(p => p.id))}`;
   if (chartCache.get(canvas.id) === cacheKey) return; 
   chartCache.set(canvas.id, cacheKey);
 
@@ -1021,8 +1364,9 @@ function renderTrends() {
 
 function deleteRecord(id) {
   if (confirm("¿Eliminar este registro?")) {
+    const backup = [...state.records];
     state.records = state.records.filter(x => x.id !== id);
-    persist();
+    persist(backup);
     renderDashboard();
   }
 }
@@ -1076,12 +1420,23 @@ function openNew(id = null) {
     }, 100);
   } else {
     $("#nrClozapine").checked = false;
+    $("#nrBEN").checked = false;
+    $("#nrSex").value = "any";
     $("#nrDate").value = localISODate();
     $("#nrContext").value = "";
     $("#nrLabName").value = "";
+    $("#nrSmoking").checked = false;
+    $("#nrQuitSmoking").checked = false;
+    $("#nrCaffeine").value = "normal";
+    $("#nrFluvoxamine").checked = false;
+    $("#nrConstipation").value = 0;
+    $("#nrSomnolence").value = 0;
+    $("#nrHR").value = "";
+    $("#nrBP").value = "";
     $("#nrFever").checked = false;
     $("#nrChestPain").checked = false;
     $("#nrClinicalNotes").value = "";
+    $$("output").forEach(o => o.value = "0");
   }
 
   toggleClozapineFields();
@@ -1117,19 +1472,21 @@ function renderCapture() {
 
         if (an.units === "qual") {
           inputHtml = `
-            <select id="${inputId}">
+            <select id="${inputId}" aria-label="${an.name}">
                <option value="">--</option>
                <option value="negativo">Negativo</option>
                <option value="positivo">Positivo</option>
                <option value="traza">Traza</option>
             </select>`;
         } else if (an.units === "text") {
-          inputHtml = `<input id="${inputId}" type="text" placeholder="Observación">`;
+          inputHtml = `<input id="${inputId}" type="text" placeholder="Observación" aria-label="${an.name}">`;
         } else {
+          const allowNegative = ["urine_ph"].includes(an.analyte_id);
+          const minAttr = allowNegative ? "" : 'min="0"';
           inputHtml = `
             <div style="display:flex; flex-direction:column; gap:4px;">
               <div class="${mod ? 'num-with-mod' : ''}">
-                <input id="${inputId}" class="font-mono" type="number" step="any" 
+                <input id="${inputId}" class="font-mono" type="number" step="any" ${minAttr} aria-label="${an.name}"
                   oninput="updateConversionHint('${inputId}', this.value, '${an.analyte_id}')">
                 ${mod ? `<label class="tinycheck">
                   <input type="checkbox" id="mod_${an.analyte_id}"
@@ -1138,7 +1495,7 @@ function renderCapture() {
               </div>
               ${isBHCalc ? `
               <div class="bh-calc-row" style="display:flex; align-items:center; gap:8px; margin-top:4px;">
-                <input type="number" placeholder="%" class="pct-input" style="width:70px; margin:0;"
+                <input type="number" placeholder="%" class="pct-input" style="width:70px; margin:0;" min="0" aria-label="Porcentaje para ${an.name}"
                   oninput="calcAbsolute('${an.analyte_id}', this.value)">
                 <span class="muted small">Calc. desde %</span>
               </div>` : ""}
@@ -1161,14 +1518,28 @@ function renderCapture() {
  * Validates date and panel selection before persisting.
  */
 function saveNewRecord() {
+  const saveBtn = $("#btnSaveRecord");
+  if (!saveBtn) return;
+  if (saveBtn.disabled) return;
+
   if (!$("#nrDate").value) { alert("Fecha obligatoria"); return; }
   if (!state.new.selectedPanels.size) { alert("Selecciona al menos un panel"); return; }
 
+  saveBtn.disabled = true;
+  saveBtn.innerHTML = `<span class="spinner" style="display:inline-block; width:12px; height:12px; border:2px solid currentColor; border-top-color:transparent; border-radius:50%; animation: spin 0.6s linear infinite; margin-right:6px; vertical-align:middle;"></span>Guardando...`;
+
   const panels = [];
   const data = {}; // Flat map of analyte_id -> scaled value for quick lookup
+  let hasValidationError = false;
+
   state.new.selectedPanels.forEach(pid => {
+    if (hasValidationError) return;
+    const panelDef = state.catalog.panels.find(p => p.panel_id === pid);
+    if (!panelDef) return;
+
     const res = [];
-    state.catalog.panels.find(p => p.panel_id === pid).analytes.forEach(a => {
+    panelDef.analytes.forEach(a => {
+      if (hasValidationError) return;
       const el = $(`#in_${a.analyte_id}`);
       if (!el) return;
       const v = el.value;
@@ -1180,7 +1551,8 @@ function saveNewRecord() {
           const numV = Number(v);
           const allowNegative = ["urine_ph"].includes(a.analyte_id);
           if (numV < 0 && !allowNegative) {
-            console.warn(`Valor negativo detectado y omitido para ${a.analyte_id}`);
+            alert(`El valor para ${a.name} no puede ser negativo.`);
+            hasValidationError = true;
             return;
           }
           const m = $(`#mod_${a.analyte_id}`)?.checked ? "x10^3" : null;
@@ -1192,6 +1564,12 @@ function saveNewRecord() {
     });
     panels.push({ panel_id: pid, results: res });
   });
+
+  if (hasValidationError) {
+    saveBtn.disabled = false;
+    saveBtn.innerHTML = "Guardar";
+    return;
+  }
 
   const record = {
     id: state.editingId || "rec_" + Date.now(),
@@ -1226,164 +1604,27 @@ function saveNewRecord() {
     };
   }
 
-  record.eval = evaluate(record);
+  record.eval = evaluateRecord(record, state.catalog, state.records);
+  
+  const backup = [...state.records];
   if (state.editingId) {
     state.records = state.records.map(r => r.id === state.editingId ? record : r);
   } else {
     state.records.push(record);
   }
-  persist();
+  
+  persist(backup);
   state.editingId = null; // Reset editing state after save
 
   // Feedback visual
-  $("#btnSaveRecord").textContent = "Guardado...";
+  saveBtn.innerHTML = "¡Guardado!";
   setTimeout(() => {
-    $("#btnSaveRecord").textContent = "Guardar";
+    saveBtn.disabled = false;
+    saveBtn.innerHTML = "Guardar";
+    hide("#viewNew");
     openDetail(record.id);
-  }, 400);
-}
-
-/* ---------- evaluation ---------- */
-/**
- * Evaluates a record against catalog rules and clinical thresholds.
- * @param {Object} rec - The record object to evaluate.
- * @returns {Object} Evaluation result containing alerts and panel-specific data.
- */
-function evaluate(rec) {
-  const alerts = [];
-  const panelEvals = {};
-  const allAnalytes = {};
-  const alertedAnalytes = new Set();
-
-  rec.panels.forEach(p => {
-    const panelDef = state.catalog.panels.find(x => x.panel_id === p.panel_id);
-    panelEvals[p.panel_id] = p.results.map(r => {
-      const a = panelDef.analytes.find(x => x.analyte_id === r.analyte_id);
-      const v = (a.units === "qual" || a.units === "text") ? r.value : getActualValue(r.value, r.modifier);
-
-      let status = "normal";
-      let statusLabel = "";
-
-      if (a.critical && typeof v === 'number') {
-        const crit = a.critical.find(c => (c.op === "<" && v < c.value) || (c.op === ">" && v > c.value));
-        if (crit) {
-          status = "critical";
-          statusLabel = crit.label;
-          if (!alertedAnalytes.has(r.analyte_id)) {
-            alerts.push({ type: 'critical', msg: `${a.name}: CRÍTICO (${v} ${a.units})` });
-            alertedAnalytes.add(r.analyte_id);
-          }
-        }
-      }
-
-      if (status !== 'critical' && a.flags && typeof v === 'number') {
-        const flag = a.flags.find(f => (f.op === "<" && v < f.value) || (f.op === "<=" && v <= f.value) || (f.op === ">" && v > f.value) || (f.op === ">=" && v >= f.value));
-        if (flag) {
-          status = "warn";
-          statusLabel = flag.label;
-          if (!alertedAnalytes.has(r.analyte_id)) {
-            alerts.push({ type: 'warn', msg: `${a.name}: ${flag.label.replace(/_/g, ' ')}` });
-            alertedAnalytes.add(r.analyte_id);
-          }
-        }
-      }
-
-      if (status === "normal" && a.ref_ranges) {
-        let ref = a.ref_ranges.find(x => x.sex === rec.sex) || a.ref_ranges.find(x => x.sex === "any") || a.ref_ranges[0];
-        if (a.units === "qual") { if (v !== ref.qualitative_normal) status = "warn"; }
-        else if (typeof v === 'number') {
-          if (ref.low !== undefined && v < ref.low) status = "low";
-          if (ref.high !== undefined && v > ref.high) status = "high";
-        }
-      }
-
-      const evalResult = {
-        ...r, scaled: v, name: a.name, units: a.units, status, statusLabel,
-        hints: a.interpretation_hints || [], checklist: a.follow_up_checklist || [],
-        conv: CONVERSIONS[r.analyte_id] ? { val: (v * CONVERSIONS[r.analyte_id].factor).toFixed(2), unit: CONVERSIONS[r.analyte_id].unit } : null
-      };
-      allAnalytes[r.analyte_id] = evalResult;
-      return evalResult;
-    });
-  });
-
-  // Derived Metrics (Anion Gap, BUN/Cr, AST/ALT)
-  rec.panels.forEach(p => {
-    const panelDef = state.catalog.panels.find(x => x.panel_id === p.panel_id);
-    if (!panelDef.derived_metrics) return;
-    panelDef.derived_metrics.forEach(m => {
-      let val = null;
-      if (m.metric_id === "anion_gap") { 
-        const na = allAnalytes.sodium?.scaled, cl = allAnalytes.chloride?.scaled, hco3 = allAnalytes.bicarb?.scaled; 
-        if (na && cl && hco3) {
-          val = na - (cl + hco3);
-          const alb = allAnalytes.albumin?.scaled; // g/dL
-          if (alb && alb < 4.0) {
-            val = val + 2.5 * (4.0 - alb);
-          }
-        }
-      }
-      else if (m.metric_id === "bun_cr_ratio") { const bun = allAnalytes.bun?.scaled, cr = allAnalytes.creatinine?.scaled; if (bun && cr && cr > 0) val = bun / cr; }
-      else if (m.metric_id === "ast_alt_ratio") { const ast = allAnalytes.ast?.scaled, alt = allAnalytes.alt?.scaled; if (ast && alt && alt > 0) val = ast / alt; }
-
-      if (val !== null) {
-        let status = "normal";
-        if (m.ref_range) { if (val < m.ref_range.low) status = "low"; if (val > m.ref_range.high) status = "high"; }
-        panelEvals[p.panel_id].push({ name: `(Calc) ${m.name}`, value: val.toFixed(1), scaled: val, units: m.units || "", status, isDerived: true, hints: m.interpretation_hints || [] });
-        if (status !== "normal") alerts.push({ type: 'info', msg: `Métrica: ${m.name} fuera de rango (${val.toFixed(1)})` });
-      }
-    });
-  });
-
-  // Clinical alerts (if Clozapine)
-  if (rec.isClozapine && rec.clinical) {
-    const sideAlerts = auditSideEffects({
-      constipation: rec.clinical.triage?.constipation,
-      somnolence: rec.clinical.triage?.somnolence,
-      fever: rec.clinical.triage?.fever,
-      hr: rec.clinical.triage?.hr,
-      bp: rec.clinical.triage?.bp
-    });
-    sideAlerts.forEach(a => {
-      alerts.push({
-        type: "danger",
-        title: a.title,
-        msg: a.message,
-        hint: a.advice
-      });
-    });
-
-    const ancVal = rec.data["anc"]; // stored as /µL (e.g. 1800)
-    if (ancVal !== undefined && !isNaN(ancVal)) {
-      // analyzeANC expects k/µL, so divide by 1000
-      const ancK = ancVal / 1000;
-      const ancAnalysis = analyzeANC(ancK, rec.isBEN);
-      if (ancAnalysis && ancAnalysis.status !== "OK") {
-        alerts.push({
-          type: ancAnalysis.status === "CRITICAL" ? "danger" : "warning",
-          title: "ALERTA ANC (CLZ)",
-          msg: `ANC: ${ancK.toFixed(2)} k/µL — ${ancAnalysis.message}`,
-          hint: ancAnalysis.action
-        });
-      }
-    }
-
-    // Permanent Suspension Check (REMS)
-    const history = state.records.filter(r => r.isClozapine && r.id !== rec.id);
-    const criticalHistory = history.filter(h => (h.data?.anc !== undefined && h.data.anc < 500));
-    const currentCritical = (rec.data?.anc !== undefined && rec.data.anc < 500);
-
-    if (currentCritical && criticalHistory.length > 0) {
-      alerts.push({
-        type: "critical",
-        title: "SUSPENSIÓN PERMANENTE",
-        msg: "Segundo registro con ANC < 500 detectado.",
-        hint: "Protocolo FDA REMS exige suspensión definitiva de Clozapina."
-      });
-    }
-  }
-
-  return { alerts, panelEvals }; // Keep panelEvals in the return object
+    checkStorageQuota();
+  }, 500);
 }
 
 /* ---------- detail ---------- */
@@ -1475,8 +1716,9 @@ function openExport() {
   const selector = $("#exportTemplate");
   
   // Populate templates if not done
-  if (selector && state.templates && selector.options.length === 0) {
+  if (selector && state.templates && selector.options.length <= 1) {
     state.templates.export_templates.forEach(t => {
+      if (t.template_id === "panel_block_v1" || t.template_id === "line_v1") return;
       const opt = document.createElement("option");
       opt.value = t.template_id;
       opt.textContent = t.name;
@@ -1601,15 +1843,16 @@ function importJSON(e) {
       const data = JSON.parse(ev.target.result);
       if (!data || typeof data !== 'object') throw new Error("Formato inválido: no es un objeto JSON");
       if (!Array.isArray(data.records)) throw new Error("Formato inválido: falta el arreglo 'records'");
-      const invalid = data.records.findIndex(r => !r.id || !r.date || !Array.isArray(r.panels));
-      if (invalid !== -1) throw new Error(`Registro inválido en posición ${invalid}: falta id, date o panels`);
+      const invalid = data.records.findIndex(r => !validateRecord(r));
+      if (invalid !== -1) throw new Error(`Registro inválido o corrupto en la posición ${invalid + 1}`);
       if (confirm(`¿Importar ${data.records.length} registros? Los datos existentes se mantendrán.`)) {
+        const backup = [...state.records];
         // Simple merge by ID
         const existingIds = new Set(state.records.map(r => r.id));
         data.records.forEach(r => {
           if (!existingIds.has(r.id)) state.records.push(r);
         });
-        persist();
+        persist(backup);
         renderDashboard();
         alert("Importación exitosa");
       }
@@ -1620,12 +1863,18 @@ function importJSON(e) {
   reader.readAsText(file);
 }
 
-function persist() {
+function persist(backup = null) {
   try {
     localStorage.setItem(LS_KEY, JSON.stringify({ records: state.records }));
+    sessionStorage.setItem("labnotes_autosave", JSON.stringify({ records: state.records }));
   } catch (e) {
+    if (backup) {
+      state.records = backup; // rollback in-memory state on failure
+    }
     if (e.name === 'QuotaExceededError') {
       alert("Error: El almacenamiento local está lleno. Por favor, elimina registros antiguos o exporta tus datos.");
+    } else {
+      alert("Error al persistir datos: " + e.message);
     }
   }
 }

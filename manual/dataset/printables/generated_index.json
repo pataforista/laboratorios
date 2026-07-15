@@ -5,144 +5,144 @@
             "title": "HABILIDADES TIPP",
             "format": "a4",
             "template": "pdf",
-            "url": "./pdfs/HABILIDADES_TIPP.pdf",
+            "url": "./manual/pdfs/HABILIDADES_TIPP.pdf",
             "pdf": {
-                "url": "./pdfs/HABILIDADES_TIPP.pdf"
+                "url": "./manual/pdfs/HABILIDADES_TIPP.pdf"
             }
         },
         {
             "id": "Habitos_saludables_pdf",
-            "title": "Habitos saludables",
+            "title": "Hábitos saludables",
             "format": "a4",
             "template": "pdf",
-            "url": "./pdfs/Habitos_saludables.pdf",
+            "url": "./manual/pdfs/Habitos_saludables.pdf",
             "pdf": {
-                "url": "./pdfs/Habitos_saludables.pdf"
+                "url": "./manual/pdfs/Habitos_saludables.pdf"
             }
         },
         {
             "id": "Tensión_arterial_pdf",
-            "title": "Tensión arterial",
+            "title": "Registro de Tensión Arterial",
             "format": "a4",
             "template": "pdf",
-            "url": "./pdfs/Tensión_arterial.pdf",
+            "url": "./manual/pdfs/Tensión_arterial.pdf",
             "pdf": {
-                "url": "./pdfs/Tensión_arterial.pdf"
+                "url": "./manual/pdfs/Tensión_arterial.pdf"
             }
         },
         {
             "id": "diario_del_sueño_pdf",
-            "title": "diario del sueño",
+            "title": "Diario del Sueño",
             "format": "a4",
             "template": "pdf",
-            "url": "./pdfs/diario del sueño.pdf",
+            "url": "./manual/pdfs/diario del sueño.pdf",
             "pdf": {
-                "url": "./pdfs/diario del sueño.pdf"
+                "url": "./manual/pdfs/diario del sueño.pdf"
             }
         },
         {
             "id": "registro_TA_pdf",
-            "title": "registro TA",
+            "title": "Registro de TA",
             "format": "a4",
             "template": "pdf",
-            "url": "./pdfs/registro TA.pdf",
+            "url": "./manual/pdfs/registro TA.pdf",
             "pdf": {
-                "url": "./pdfs/registro TA.pdf"
+                "url": "./manual/pdfs/registro TA.pdf"
             }
-        },
-        {
-            "id": "alimentacion_image",
-            "title": "alimentacion",
-            "format": "a4",
-            "template": "image",
-            "url": "./infografias/alimentacion.png"
-        },
-        {
-            "id": "bipolar_termometro_image",
-            "title": "bipolar termometro",
-            "format": "a4",
-            "template": "image",
-            "url": "./infografias/bipolar_termometro.png"
-        },
-        {
-            "id": "dieta_milpa_image",
-            "title": "dieta milpa",
-            "format": "a4",
-            "template": "image",
-            "url": "./infografias/dieta_milpa.png"
-        },
-        {
-            "id": "escala_bristol_image",
-            "title": "escala bristol",
-            "format": "a4",
-            "template": "image",
-            "url": "./infografias/escala_bristol.png"
-        },
-        {
-            "id": "evaluacion_premenstrual_image",
-            "title": "evaluacion premenstrual",
-            "format": "a4",
-            "template": "image",
-            "url": "./infografias/evaluacion_premenstrual.png"
-        },
-        {
-            "id": "habilidades_tip_image",
-            "title": "habilidades tip",
-            "format": "a4",
-            "template": "image",
-            "url": "./infografias/habilidades_tip.png"
-        },
-        {
-            "id": "higiene_sueno_image",
-            "title": "higiene sueno",
-            "format": "a4",
-            "template": "image",
-            "url": "./infografias/higiene_sueno.png"
-        },
-        {
-            "id": "prevencion_cancer_image",
-            "title": "prevencion cancer",
-            "format": "a4",
-            "template": "image",
-            "url": "./infografias/prevencion_cancer.png"
-        },
-        {
-            "id": "relajacion_progresiva_image",
-            "title": "relajacion progresiva",
-            "format": "a4",
-            "template": "image",
-            "url": "./infografias/relajacion_progresiva.jpg"
-        },
-        {
-            "id": "tension_arterial_image",
-            "title": "tension arterial",
-            "format": "a4",
-            "template": "image",
-            "url": "./infografias/tension_arterial.png"
         },
         {
             "id": "clozapine_infographic_pdf",
             "title": "Infografía de Seguridad Clozapina",
             "format": "a4",
             "template": "pdf",
-            "url": "./pdfs/Infografia.pdf",
-            "pdf": { "url": "./pdfs/Infografia.pdf" }
+            "url": "./manual/pdfs/Infografia.pdf",
+            "pdf": { "url": "./manual/pdfs/Infografia.pdf" }
         },
         {
             "id": "clozapine_consent_pdf",
             "title": "Consentimiento Informado Clozapina",
             "format": "a4",
             "template": "pdf",
-            "url": "./pdfs/consentimieto_informado_cloza_2026.pdf",
-            "pdf": { "url": "./pdfs/consentimieto_informado_cloza_2026.pdf" }
+            "url": "./manual/pdfs/consentimieto_informado_cloza_2026.pdf",
+            "pdf": { "url": "./manual/pdfs/consentimieto_informado_cloza_2026.pdf" }
         },
         {
             "id": "clozapine_side_effects_scale_pdf",
             "title": "Escala de Efectos Secundarios (Clozapina)",
             "format": "a4",
             "template": "pdf",
-            "url": "./pdfs/escala_efectos_secundarios_clozapina.pdf",
-            "pdf": { "url": "./pdfs/escala_efectos_secundarios_clozapina.pdf" }
+            "url": "./manual/pdfs/escala_efectos_secundarios_clozapina.pdf",
+            "pdf": { "url": "./manual/pdfs/escala_efectos_secundarios_clozapina.pdf" }
+        },
+        {
+            "id": "alimentacion_image",
+            "title": "Infografía: Alimentación saludable",
+            "format": "a4",
+            "template": "image",
+            "url": "./manual/infografias/alimentacion.png"
+        },
+        {
+            "id": "bipolar_termometro_image",
+            "title": "Infografía: Termómetro del estado de ánimo bipolar",
+            "format": "a4",
+            "template": "image",
+            "url": "./manual/infografias/bipolar_termometro.png"
+        },
+        {
+            "id": "dieta_milpa_image",
+            "title": "Infografía: Dieta de la milpa",
+            "format": "a4",
+            "template": "image",
+            "url": "./manual/infografias/dieta_milpa.png"
+        },
+        {
+            "id": "escala_bristol_image",
+            "title": "Infografía: Escala de Bristol (heces)",
+            "format": "a4",
+            "template": "image",
+            "url": "./manual/infografias/escala_bristol.png"
+        },
+        {
+            "id": "evaluacion_premenstrual_image",
+            "title": "Infografía: Evaluación premenstrual",
+            "format": "a4",
+            "template": "image",
+            "url": "./manual/infografias/evaluacion_premenstrual.png"
+        },
+        {
+            "id": "habilidades_tip_image",
+            "title": "Infografía: Habilidades TIP (DBT)",
+            "format": "a4",
+            "template": "image",
+            "url": "./manual/infografias/habilidades_tip.png"
+        },
+        {
+            "id": "higiene_sueno_image",
+            "title": "Infografía: Higiene del sueño",
+            "format": "a4",
+            "template": "image",
+            "url": "./manual/infografias/higiene_sueno.png"
+        },
+        {
+            "id": "prevencion_cancer_image",
+            "title": "Infografía: Prevención de cáncer",
+            "format": "a4",
+            "template": "image",
+            "url": "./manual/infografias/prevencion_cancer.png"
+        },
+        {
+            "id": "relajacion_progresiva_image",
+            "title": "Infografía: Relajación muscular progresiva",
+            "format": "a4",
+            "template": "image",
+            "url": "./manual/infografias/relajacion_progresiva.jpg"
+        },
+        {
+            "id": "tension_arterial_image",
+            "title": "Infografía: Tensión arterial",
+            "format": "a4",
+            "template": "image",
+            "url": "./manual/infografias/tension_arterial.png"
         }
     ]
 }

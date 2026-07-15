@@ -6,7 +6,8 @@ import {
     calculateQTc, 
     calculateAnionGap, 
     calculateBunCrRatio, 
-    calculateAstAltRatio 
+    calculateAstAltRatio,
+    evaluateRecord
 } from '../clinical.js';
 
 describe('Clinical Logic: analyzeANC', () => {
@@ -120,5 +121,174 @@ describe('Clinical Logic: calculateBunCrRatio', () => {
 describe('Clinical Logic: calculateAstAltRatio', () => {
     it('should calculate correctly', () => {
         expect(calculateAstAltRatio(40, 20)).toBe(2);
+    });
+});
+
+describe('Clinical Logic: evaluateRecord', () => {
+    const mockCatalog = {
+        panels: [
+            {
+                panel_id: "hemogram",
+                name: "Hemograma completo",
+                analytes: [
+                    { analyte_id: "wbc", name: "Leucocitos", units: "/µL", ref_ranges: [{ sex: "any", low: 4000, high: 10000 }] },
+                    { analyte_id: "anc", name: "Neutrófilos", units: "/µL", ref_ranges: [{ sex: "any", low: 1500, high: 8000 }] }
+                ]
+            },
+            {
+                panel_id: "renal",
+                name: "Función renal",
+                analytes: [
+                    { analyte_id: "sodium", name: "Sodio", units: "mEq/L", ref_ranges: [{ sex: "any", low: 135, high: 145 }] },
+                    { analyte_id: "chloride", name: "Cloro", units: "mEq/L", ref_ranges: [{ sex: "any", low: 96, high: 106 }] },
+                    { analyte_id: "bicarb", name: "Bicarbonato", units: "mEq/L", ref_ranges: [{ sex: "any", low: 22, high: 29 }] },
+                    { analyte_id: "albumin", name: "Albúmina", units: "g/dL", ref_ranges: [{ sex: "any", low: 3.5, high: 5.0 }] }
+                ],
+                derived_metrics: [
+                    {
+                        metric_id: "anion_gap",
+                        name: "Brecha aniónica (Anion Gap)",
+                        units: "mEq/L",
+                        ref_range: { low: 8, high: 16 }
+                    }
+                ]
+            }
+        ]
+    };
+
+    it('should evaluate normal records with no alerts', () => {
+        const record = {
+            id: "rec_1",
+            date: "2026-07-13",
+            sex: "male",
+            isClozapine: false,
+            isBEN: false,
+            data: { wbc: 5000, anc: 2000 },
+            panels: [
+                {
+                    panel_id: "hemogram",
+                    results: [
+                        { analyte_id: "wbc", value: 5000 },
+                        { analyte_id: "anc", value: 2000 }
+                    ]
+                }
+            ]
+        };
+
+        const result = evaluateRecord(record, mockCatalog);
+        expect(result.alerts).toHaveLength(0);
+        expect(result.panelEvals.hemogram).toHaveLength(2);
+        expect(result.panelEvals.hemogram[0].status).toBe("normal");
+    });
+
+    it('should raise alert for agranulocytosis in Clozapine patients', () => {
+        const record = {
+            id: "rec_2",
+            date: "2026-07-13",
+            sex: "male",
+            isClozapine: true,
+            isBEN: false,
+            data: { anc: 400 },
+            panels: [
+                {
+                    panel_id: "hemogram",
+                    results: [
+                        { analyte_id: "anc", value: 400 }
+                    ]
+                }
+            ]
+        };
+
+        const result = evaluateRecord(record, mockCatalog);
+        expect(result.alerts.some(a => a.title === "ALERTA ANC (CLZ)" && a.type === "danger")).toBe(true);
+    });
+
+    it('should check permanent suspension REMS alert based on history', () => {
+        const record = {
+            id: "rec_current",
+            date: "2026-07-13",
+            sex: "male",
+            isClozapine: true,
+            isBEN: false,
+            data: { anc: 400 },
+            panels: [
+                {
+                    panel_id: "hemogram",
+                    results: [{ analyte_id: "anc", value: 400 }]
+                }
+            ]
+        };
+
+        const history = [
+            {
+                id: "rec_old",
+                date: "2026-06-13",
+                sex: "male",
+                isClozapine: true,
+                isBEN: false,
+                data: { anc: 350 },
+                panels: [
+                    {
+                        panel_id: "hemogram",
+                        results: [{ analyte_id: "anc", value: 350 }]
+                    }
+                ]
+            }
+        ];
+
+        const result = evaluateRecord(record, mockCatalog, history);
+        expect(result.alerts.some(a => a.title === "SUSPENSIÓN PERMANENTE")).toBe(true);
+    });
+
+    it('should detect constipation and fever triage alerts', () => {
+        const record = {
+            id: "rec_triage",
+            date: "2026-07-13",
+            sex: "male",
+            isClozapine: true,
+            isBEN: false,
+            panels: [],
+            clinical: {
+                triage: {
+                    constipation: 4,
+                    somnolence: 1,
+                    fever: true
+                }
+            }
+        };
+
+        const result = evaluateRecord(record, mockCatalog);
+        expect(result.alerts.some(a => a.title === "RIESGO DE ÍLEO")).toBe(true);
+        expect(result.alerts.some(a => a.title === "ALERTA DE FIEBRE")).toBe(true);
+    });
+
+    it('should calculate and evaluate derived metrics like Anion Gap', () => {
+        const record = {
+            id: "rec_derived",
+            date: "2026-07-13",
+            sex: "male",
+            isClozapine: false,
+            isBEN: false,
+            panels: [
+                {
+                    panel_id: "renal",
+                    results: [
+                        { analyte_id: "sodium", value: 140 },
+                        { analyte_id: "chloride", value: 100 },
+                        { analyte_id: "bicarb", value: 20 },
+                        { analyte_id: "albumin", value: 3.0 }
+                    ]
+                }
+            ]
+        };
+
+        const result = evaluateRecord(record, mockCatalog);
+        // AG = 140 - (100 + 20) = 20
+        // albumin correction: 20 + 2.5 * (4.0 - 3.0) = 22.5
+        // normal AG is 8-16, so 22.5 is high/abnormal
+        const agResult = result.panelEvals.renal.find(e => e.isDerived);
+        expect(agResult).toBeDefined();
+        expect(agResult.scaled).toBe(22.5);
+        expect(agResult.status).toBe("high");
     });
 });

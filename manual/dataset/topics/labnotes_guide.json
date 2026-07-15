@@ -55,6 +55,26 @@
             "content": "Una vez guardado el registro, puede usar la función 'Exportar' para generar una nota clínica en texto plano. Esta nota está diseñada para ser copiada y pegada directamente en el expediente clínico electrónico (ECE/EMR)."
         },
         {
+            "id": "guide_calculators",
+            "type": "section",
+            "title": "Calculadoras Integradas",
+            "content": "La aplicación incluye calculadoras clínicas accesibles desde la pestaña Manual:",
+            "items": [
+                "**FIB-4**: Evalúa el riesgo de fibrosis hepática avanzada en pacientes con hígado graso (MASLD/MASH) utilizando edad, plaquetas, AST y ALT.",
+                "**QTc (Fridericia)**: Corrige el intervalo QT en función de la frecuencia cardiaca para evaluar el riesgo de prolongación del intervalo QT por psicofármacos."
+            ]
+        },
+        {
+            "id": "guide_storage_mgmt",
+            "type": "section",
+            "title": "Gestión de Datos y Almacenamiento",
+            "content": "Dado que Lab Notes es offline-first, los datos se almacenan exclusivamente en el almacenamiento local (localStorage) del navegador:",
+            "items": [
+                "**Límite de Almacenamiento**: El navegador restringe la cantidad de datos. El sistema monitorea la cuota y muestra un aviso si se supera el 90%.",
+                "**Respaldos JSON**: En Ajustes, puede exportar un respaldo completo en formato JSON o importar un respaldo guardado previamente para evitar pérdidas de datos."
+            ]
+        },
+        {
             "id": "guide_privacy",
             "type": "warning",
             "level": "danger",
@@ -64,7 +84,7 @@
     ],
     "meta": {
         "source": "Lab Notes Documentation",
-        "version": "1.0",
-        "last_reviewed": "2026-03-26"
+        "version": "1.1",
+        "last_reviewed": "2026-07-13"
     }
 }
