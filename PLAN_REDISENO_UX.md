@@ -50,7 +50,7 @@ innecesaria. La sensación de "anticuada y poco intuitiva" tiene causas concreta
 
 | # | Hallazgo | Impacto |
 |---|----------|---------|
-| F1 | **No existe el concepto de paciente**, pero el hero dice "Estado de Pacientes" y mezcla todos los registros en un solo semáforo y una sola tendencia. Si el profesional lleva más de un paciente, las alertas y la gráfica de tendencia ANC **mezclan datos de personas distintas** (riesgo clínico real, no solo estético) | Alto |
+| F1 | **Textos que prometen lo que la app no es**: el hero dice "Estado de Pacientes" pero la app es la bitácora personal del médico (decisión de producto confirmada: no habrá gestión de pacientes). Los textos deben reflejarlo — "Resumen de controles", "Mis registros" — para no generar expectativas de multi-paciente | Medio |
 | F2 | **Datos crudos sin formato**: `PLT: 210000`, fechas ISO `2026-07-01`, sin unidades en los snippets de tarjeta | Medio |
 | F3 | **Captura de BH interminable**: cada analito ocupa ~180 px de alto (input + checkbox ×10³ + caja "Calc. desde %" + hint); una biometría completa exige un scroll enorme y el botón Guardar queda al final sin ser sticky | Alto |
 | F4 | **El checkbox ×10³ es un concepto técnico** que el usuario debe entender para no guardar valores mil veces menores; la app debería inferir la escala o pedir la unidad de forma explícita | Alto |
@@ -144,15 +144,53 @@ innecesaria. La sensación de "anticuada y poco intuitiva" tiene causas concreta
 - Sustituir `confirm()/alert()` por el snackbar existente + diálogo de confirmación propio con
   "Deshacer" para borrados (F5).
 
-### 3.3 Decisión de producto a tomar (F1 — importante)
+### 3.3 Modelo de producto (decisión tomada)
 
-El modelo actual es ambiguo: o la app es **de un solo paciente** (entonces el texto "Estado de
-Pacientes" y los totales deben decir "Mis registros" y la tendencia es válida), o es
-**multi-paciente** (entonces hace falta una entidad Paciente: selector en la topbar, registros
-asociados, tendencias y alertas por paciente). Recomendación: implementar **perfiles de paciente
-ligeros** (nombre/alias + perfil BEN + flag clozapina a nivel paciente), porque el público
-declarado es el profesional que monitorea varios pacientes con Clozapina, y hoy mezclar
-tendencias de ANC entre pacientes puede inducir a error clínico.
+**La app es la herramienta de trabajo del médico, sin entidad paciente.** Todo el registro,
+seguimiento y exportación lo controla el profesional. Consecuencias para el diseño:
+
+- Renombrar todo texto que sugiera multi-paciente: "Estado de Pacientes" → **"Resumen de
+  controles"**; "Monitoreos Clozapina" → "Controles Clozapina". El campo libre "Contexto
+  clínico" sigue siendo el lugar donde el médico anota a qué caso corresponde cada registro.
+- Reforzar ese campo como eje de organización ligera: **autocompletado con los contextos ya
+  usados** (datalist) y filtro por contexto en el dashboard. Da el 80% del beneficio de separar
+  casos sin añadir gestión de pacientes.
+- Las gráficas de tendencia deben indicar sobre qué subconjunto se calculan (el filtro activo),
+  para que el médico decida qué está comparando.
+
+### 3.4 Referencias de navegación: qué hacen las apps que los médicos ya usan
+
+Para que la navegación resulte familiar desde el primer uso, el rediseño adopta patrones de las
+apps médicas más utilizadas y de las apps de consumo masivo que definen los hábitos de todos:
+
+| Patrón | Referencia | Aplicación en Lab Notes |
+|--------|-----------|--------------------------|
+| **Bottom nav de 3–5 destinos con iconos + etiqueta siempre visible** | WhatsApp, Instagram, Google (Material 3), Epocrates | Mantener las 3 pestañas actuales (Laboratorios · Clozapina · Manual), pero con iconos SVG con estado activo de relleno, no emojis. Es el patrón correcto; solo está mal ejecutado |
+| **Lista → detalle con búsqueda arriba** | Medscape, UpToDate, correo/notas | El dashboard ya lo hace; falta que la búsqueda sea una sola, siempre en el mismo sitio, con resultados en panel opaco (V1) |
+| **Calculadoras como catálogo buscable con favoritos y entradas recientes** | **MDCalc** (estándar de facto entre médicos) | Sacar FIB-4 y QTc del fondo del Manual: una entrada "Calculadoras" visible (chip en el dashboard o cuarta pestaña), lista buscable, resultado con interpretación semaforizada y botón "copiar al portapapeles" como MDCalc |
+| **Captura numérica rápida en una pantalla** | MDCalc, Glucose Buddy, apps bancarias (montos) | Paso 3 del wizard: filas compactas, `inputmode="decimal"` para teclado numérico directo, salto automático al siguiente campo con Enter/Next, unidad visible dentro del campo |
+| **Documentos de referencia con lectura limpia** | UpToDate, Medscape | Vista de tema del Manual sin la cabecera de búsqueda del índice (espacio muerto actual), con tipografía de lectura, índice de secciones colapsable y botón flotante "volver arriba" |
+| **Acción primaria como FAB etiquetado** | Gmail ("Redactar"), Google Keep | FAB con texto "+ Registro" que se contrae a icono al hacer scroll; los médicos identifican la acción sin adivinar |
+| **Deshacer en lugar de confirmar** | Gmail, Google Photos | Borrado de registro → snackbar "Registro eliminado · DESHACER" (5 s), en vez de `confirm()` nativo |
+| **Semáforos y estados glanceables** | Monitores clínicos, Apple Health (anillos), MDCalc (rangos de riesgo) | Chips de severidad con color + icono + texto (no solo color, por accesibilidad), banda verde/ámbar/roja en la gráfica ANC |
+| **Exportar/compartir como hoja de acciones** | iOS/Android share sheet | "Exportar" abre opciones (plantilla, copiar, descargar JSON) en un bottom sheet, patrón que cualquier usuario de móvil ya conoce |
+
+### 3.5 Accesibilidad y ergonomía clínica
+
+Pensada para el contexto real de uso de un médico (consulta con poca luz o guardia nocturna,
+uso a una mano entre pacientes, prisa):
+
+- **Objetivos táctiles ≥ 48×48 px** en toda acción (hoy el ✕ de borrar y los chips quedan cortos).
+- **Contraste WCAG AA en ambos temas**, auditado (el tema claro actual falla en chips y
+  placeholders); modo oscuro real para guardias, sin grises intermedios ilegibles.
+- **Teclado numérico directo** (`inputmode="decimal"`) en todos los campos de captura; en
+  escritorio, navegación completa con Tab/Enter para capturar una biometría sin tocar el ratón.
+- **Texto escalable**: usar `rem` en lugar de los `px` fijos actuales para respetar el ajuste
+  de tamaño de fuente del sistema (médicos +45 suben la fuente del teléfono; hoy la app lo ignora).
+- **Nunca color solo**: toda severidad lleva icono + texto ("⚠ Crítico"), pensando en daltonismo
+  (8% de los hombres).
+- **`aria-live` en alertas clínicas** y foco gestionado al abrir/cerrar diálogos (hoy el foco
+  se pierde y el anillo de foco aparece en sitios aleatorios, como se ve en la vista Detalle).
 
 ---
 
@@ -188,10 +226,13 @@ auditoría rápida de contraste AA en ambos temas.
 **Criterio de aceptación**: capturar una BH completa en < 90 s en móvil; ninguna acción
 destructiva sin confirmación con deshacer; `npm test` verde.
 
-### Fase D — Producto (a decidir contigo)
-12. Perfiles de paciente ligeros (F1) con migración de datos existente ("Paciente 1" por defecto).
-13. Semáforo ANC en gráficas + acción rápida "Registrar control de hoy".
-14. Limpieza de deuda: `.gitignore` para `node_modules`, borrar `data/` muerto, quitar handlers
+### Fase D — Producto (herramienta del médico)
+12. Renombrar textos multi-paciente (F1) y añadir autocompletado + filtro por "Contexto clínico"
+    como organización ligera de casos (§3.3).
+13. **Calculadoras al estilo MDCalc**: sección propia y visible (fuera del fondo del Manual),
+    lista buscable, resultado con interpretación semaforizada y copiar al portapapeles (§3.4).
+14. Semáforo ANC en gráficas + acción rápida "Registrar control de hoy".
+15. Limpieza de deuda: `.gitignore` para `node_modules`, borrar `data/` muerto, quitar handlers
     inline y endurecer la CSP.
 
 ---
@@ -205,7 +246,8 @@ destructiva sin confirmación con deshacer; `npm test` verde.
 | Restaurar bloque CSS perdido | 1–2 h | V1, V2, V3 |
 | `Intl.NumberFormat`/`Intl.DateTimeFormat` en tarjetas | 30 min | F2 |
 | "← " solo icono + botones icónicos en topbar de detalle móvil | 20 min | V4 |
-| Renombrar hero a "Resumen de registros" mientras no exista entidad paciente | 5 min | mitiga F1 |
+| Renombrar hero a "Resumen de controles" (la app es la bitácora del médico) | 5 min | F1 |
+| `inputmode="decimal"` en campos numéricos de captura | 15 min | §3.5 |
 
 ---
 
