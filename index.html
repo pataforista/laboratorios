@@ -11,20 +11,85 @@
   <link rel="shortcut icon" href="icon-192.png">
   <meta name="description" content="Registro clínico de laboratorio y monitoreo de Clozapina" />
   <meta http-equiv="Content-Security-Policy"
-    content="default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; script-src 'self' 'unsafe-inline'; frame-src 'self';">
+    content="default-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; script-src 'self' 'unsafe-inline'; frame-src 'self';">
   <link rel="manifest" href="manifest.json" />
   <link rel="stylesheet" href="styles.css" />
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
-  <noscript>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  </noscript>
   <title>Lab Notes — Registro Clínico</title>
 </head>
 
 <body data-theme="dark">
+
+  <!-- SVG Icon Sprite (Lucide) -->
+  <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+    <symbol id="icon-activity" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+    </symbol>
+    <symbol id="icon-book-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+      <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+    </symbol>
+    <symbol id="icon-clipboard" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+      <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+    </symbol>
+    <symbol id="icon-settings" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="3"></circle>
+      <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+    </symbol>
+    <symbol id="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+    </symbol>
+    <symbol id="icon-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="11" cy="11" r="8"></circle>
+      <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+    </symbol>
+    <symbol id="icon-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="12" y1="5" x2="12" y2="19"></line>
+      <line x1="5" y1="12" x2="19" y2="12"></line>
+    </symbol>
+    <symbol id="icon-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="18" y1="6" x2="6" y2="18"></line>
+      <line x1="6" y1="6" x2="18" y2="18"></line>
+    </symbol>
+    <symbol id="icon-arrow-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="19" y1="12" x2="5" y2="12"></line>
+      <polyline points="12 19 5 12 12 5"></polyline>
+    </symbol>
+    <symbol id="icon-trash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="3 6 5 6 21 6"></polyline>
+      <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+    </symbol>
+    <symbol id="icon-flask" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M10 2v7.31L3.39 19A2 2 0 0 0 5 22h14a2 2 0 0 0 1.61-3L14 9.31V2z"></path>
+      <line x1="8.5" y1="2" x2="15.5" y2="2"></line>
+      <line x1="14" y1="12" x2="10" y2="12"></line>
+    </symbol>
+    <symbol id="icon-download" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+      <polyline points="7 10 12 15 17 10"></polyline>
+      <line x1="12" y1="15" x2="12" y2="3"></line>
+    </symbol>
+    <symbol id="icon-upload" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+      <polyline points="17 8 12 3 7 8"></polyline>
+      <line x1="12" y1="3" x2="12" y2="15"></line>
+    </symbol>
+    <symbol id="icon-edit" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+      <path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+    </symbol>
+    <symbol id="icon-alert" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+      <line x1="12" y1="9" x2="12" y2="13"></line>
+      <line x1="12" y1="17" x2="12.01" y2="17"></line>
+    </symbol>
+    <symbol id="icon-chevron-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="6 9 12 15 18 9"></polyline>
+    </symbol>
+    <symbol id="icon-heart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+    </symbol>
+  </svg>
 
   <!-- PWA Update Toast -->
   <div id="pwa-toast" class="toast hidden">
@@ -35,7 +100,9 @@
   <!-- ── TOP APP BAR ───────────────────────────────────────────────── -->
   <header class="topbar">
     <div class="brand">
-      <span class="brand-icon">🧬</span>
+      <span class="brand-icon" style="display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 50%; background: var(--m3-primary-container); color: var(--m3-on-primary-container);">
+        <svg class="svg-icon"><use href="#icon-flask"></use></svg>
+      </span>
       <div>
         <div class="brand-title">Lab Notes</div>
         <div class="brand-sub">Registro clínico · Offline</div>
@@ -45,16 +112,24 @@
     <!-- OmniSearch -->
     <div class="omnisearch-wrap" id="omniSearchWrap">
       <div class="omnisearch-bar">
-        <span class="omnisearch-icon">🔍</span>
+        <span class="omnisearch-icon" style="color: var(--m3-outline);">
+          <svg class="svg-icon"><use href="#icon-search"></use></svg>
+        </span>
         <input type="search" id="omniInput" placeholder="Buscar registros, protocolos, recursos..." autocomplete="off" />
-        <button class="omnisearch-clear hidden" id="omniClear" aria-label="Limpiar">✕</button>
+        <button class="omnisearch-clear hidden" id="omniClear" aria-label="Limpiar">
+          <svg class="svg-icon" style="width: 12px; height: 12px;"><use href="#icon-x"></use></svg>
+        </button>
       </div>
       <div class="omnisearch-results hidden" id="omniResults"></div>
     </div>
 
     <div class="top-actions">
-      <button id="btnTheme" class="btn btn-text btn-icon" title="Cambiar tema" aria-label="Cambiar tema claro/oscuro">◐</button>
-      <button id="btnSettings" class="btn btn-text btn-icon" title="Ajustes" aria-label="Ajustes de la aplicación">⚙</button>
+      <button id="btnTheme" class="btn btn-text btn-icon" title="Cambiar tema" aria-label="Cambiar tema claro/oscuro">
+        <svg class="svg-icon"><use href="#icon-moon"></use></svg>
+      </button>
+      <button id="btnSettings" class="btn btn-text btn-icon" title="Ajustes" aria-label="Ajustes de la aplicación">
+        <svg class="svg-icon"><use href="#icon-settings"></use></svg>
+      </button>
     </div>
   </header>
 
@@ -66,14 +141,14 @@
     <section id="tabLab" class="tab-section active">
       <div class="tab-header" style="margin-bottom: 12px;">
         <h2>Historial Clínico</h2>
-        <button class="btn btn-text btn-sm" onclick="openManualTopic('labnotes_guide')" style="color:var(--m3-primary); font-weight:bold;">📖 Guía de Uso</button>
+        <button class="btn btn-text btn-sm" onclick="openManualTopic('labnotes_guide')" style="color:var(--m3-primary); font-weight:bold;"><svg class="svg-icon" style="width:14px; height:14px; margin-right:4px;"><use href="#icon-book-open"></use></svg> Guía de Uso</button>
       </div>
 
       <!-- Hero Clinical Summary Widget -->
       <div id="clinicalHeroWidget" class="card" style="background: linear-gradient(135deg, var(--m3-primary-container) 0%, var(--m3-surface-container-high) 100%); border: 1.5px solid var(--m3-primary); padding: 18px; margin-bottom: 20px; display: none;">
         <div style="display:flex; justify-content:space-between; align-items:center; gap: 12px;">
           <div>
-            <h3 style="margin:0; font-size:15px; color:var(--m3-on-primary-container);">🩺 Estado de Pacientes</h3>
+            <h3 style="margin:0; font-size:15px; color:var(--m3-on-primary-container);">Resumen de Controles</h3>
             <div id="clinicalHeroText" style="font-size:13px; margin-top:6px; color:var(--m3-on-primary-container); line-height:1.4;">Cargando resumen clínico...</div>
           </div>
           <button class="btn btn-filled btn-sm" onclick="showTab('cloz')" style="font-size:12px; padding:0 12px; height:32px; flex-shrink:0;">Ver Controles</button>
@@ -83,16 +158,16 @@
       <!-- Actionable Clinical Filters -->
       <div class="chips" style="margin-bottom: 16px; display: flex; gap: 8px; flex-wrap: wrap;">
         <button class="pill active" id="filterBtnAll" onclick="setDashboardFilter('all')">Todos</button>
-        <button class="pill" id="filterBtnCritical" onclick="setDashboardFilter('critical')">Críticos 🔴</button>
-        <button class="pill" id="filterBtnWarn" onclick="setDashboardFilter('warning')">Advertencias 🟡</button>
-        <button class="pill" id="filterBtnCloz" onclick="setDashboardFilter('cloz')">Clozapina 🩺</button>
+        <button class="pill" id="filterBtnCritical" onclick="setDashboardFilter('critical')">Críticos</button>
+        <button class="pill" id="filterBtnWarn" onclick="setDashboardFilter('warning')">Advertencias</button>
+        <button class="pill" id="filterBtnCloz" onclick="setDashboardFilter('cloz')">Clozapina</button>
       </div>
 
       <div id="recordsList" class="records-list"></div>
 
       <!-- Onboarding empty state -->
       <div id="emptyState" class="onboarding-card hidden">
-        <div class="onboarding-icon">🧪</div>
+        <div class="onboarding-icon"><svg class="svg-icon" style="width:48px; height:48px;"><use href="#icon-flask"></use></svg></div>
         <h3>Bienvenido a Lab Notes</h3>
         <p class="muted">Registra estudios de laboratorio y monitorea Clozapina de forma sencilla.</p>
         <div class="onboarding-steps">
@@ -123,7 +198,7 @@
     ══════════════════════════════════════════════════════════════════ -->
     <section id="tabCloz" class="tab-section hidden">
       <div class="tab-header">
-        <h2>🩺 Clozapina</h2>
+        <h2><svg class="svg-icon" style="width:22px; height:22px; margin-right:6px;"><use href="#icon-heart"></use></svg>Clozapina</h2>
         <span class="label-chip clz-chip">Monitoreo activo</span>
       </div>
 
@@ -132,14 +207,14 @@
 
       <!-- Widget: Próximos monitoreos -->
       <div id="clzNextMonitoring" class="card hidden" style="margin-top: 16px; padding: 16px;">
-        <h3 style="margin:0 0 8px 0; font-size:15px; display:flex; align-items:center; gap:8px;">📅 Próximo Control Sugerido</h3>
+        <h3 style="margin:0 0 8px 0; font-size:15px; display:flex; align-items:center; gap:8px;"><svg class="svg-icon" style="width:16px; height:16px;"><use href="#icon-activity"></use></svg> Próximo Control Sugerido</h3>
         <div id="clzNextMonitoringContent" style="font-size:14px; line-height:1.4;"></div>
       </div>
 
       <div id="clzRecordsList" class="records-list"></div>
 
       <div id="clzEmpty" class="onboarding-card hidden">
-        <div class="onboarding-icon">🩺</div>
+        <div class="onboarding-icon"><svg class="svg-icon" style="width:48px; height:48px;"><use href="#icon-heart"></use></svg></div>
         <h3>Sin registros de Clozapina</h3>
         <p class="muted">Crea un registro y activa "Monitorizar Clozapina" para comenzar el seguimiento.</p>
         <button class="btn btn-filled" onclick="openNew()">+ Nuevo registro Clozapina</button>
@@ -267,7 +342,7 @@
               <button id="btnClearPanels" class="btn btn-text btn-sm" aria-label="Limpiar selección de paneles de estudio">Limpiar</button>
             </div>
             <div class="search-bar" style="margin-bottom:12px;">
-              <span class="search-icon">🔍</span>
+              <span class="search-icon"><svg class="svg-icon" style="width:16px; height:16px;"><use href="#icon-search"></use></svg></span>
               <input type="text" id="nrPanelSearch" placeholder="Buscar estudio (ej. renal, biometría)...">
             </div>
             <div id="nrPanels" class="panel-pills"></div>
@@ -284,7 +359,7 @@
 
           <!-- Triage Clozapina -->
           <div id="clozTriage" class="card hidden" style="margin-top:16px; border: 1px solid var(--m3-primary);">
-            <h3>🔬 Triage Clínico (Clozapina)</h3>
+            <h3>Triage Clínico (Clozapina)</h3>
             <div class="grid2">
               <label class="field">
                 <span class="field-label">Estreñimiento (0–5)</span>
@@ -329,7 +404,7 @@
 
           <div class="actions">
             <button id="btnPrev3" class="btn btn-outlined">← Volver</button>
-            <button id="btnSaveRecord" class="btn btn-filled">💾 Guardar Registro</button>
+            <button id="btnSaveRecord" class="btn btn-filled"><svg class="svg-icon" style="width:16px; height:16px; margin-right:4px;"><use href="#icon-download"></use></svg> Guardar Registro</button>
           </div>
         </div>
       </div>
@@ -343,10 +418,23 @@
     ══════════════════════════════════════════════════════════════════ -->
     <dialog id="viewDetail" class="view-dialog">
       <div class="view-topbar">
-        <button id="btnBackFromDetail" class="btn btn-text" aria-label="Cerrar y volver">← Registros</button>
-        <div class="right">
-          <button id="btnEditRecord" class="btn btn-tonal btn-sm" aria-label="Editar registro">✏ Editar</button>
-          <button id="btnExport" class="btn btn-tonal btn-sm" aria-label="Exportar registro">📋 Exportar</button>
+        <button id="btnBackFromDetail" class="btn btn-text" aria-label="Cerrar y volver">
+          <svg class="svg-icon" style="margin-right: 4px;"><use href="#icon-arrow-left"></use></svg>
+          Atrás
+        </button>
+        <div class="right" style="display: flex; gap: 8px;">
+          <button id="btnEditRecord" class="btn btn-tonal btn-sm" aria-label="Editar registro">
+            <svg class="svg-icon" style="margin-right: 4px; width: 14px; height: 14px;"><use href="#icon-edit"></use></svg>
+            Editar
+          </button>
+          <button id="btnExport" class="btn btn-tonal btn-sm" aria-label="Exportar registro">
+            <svg class="svg-icon" style="margin-right: 4px; width: 14px; height: 14px;"><use href="#icon-clipboard"></use></svg>
+            Exportar
+          </button>
+          <button id="btnDeleteRecordDetail" class="btn btn-outlined btn-sm" style="color: var(--m3-error); border-color: var(--m3-error);" aria-label="Eliminar registro">
+            <svg class="svg-icon" style="margin-right: 4px; width: 14px; height: 14px;"><use href="#icon-trash"></use></svg>
+            Eliminar
+          </button>
         </div>
       </div>
       <div class="dialog-content">
@@ -359,7 +447,7 @@
         <!-- Manual bridge button (shown only for CLZ records) -->
         <div id="clzManualBridge" class="hidden" style="margin-bottom:12px;">
           <button class="btn btn-outlined clz-btn" onclick="openManualClzProtocol()">
-            📖 Ver Protocolo Clozapina en Manual →
+            <svg class="svg-icon" style="width:14px; height:14px; margin-right:4px;"><use href="#icon-book-open"></use></svg> Ver Protocolo Clozapina en Manual →
           </button>
         </div>
         <div id="detailPanels"></div>
@@ -380,7 +468,7 @@
             <option value="default">Resumen compacto (Default)</option>
           </select>
         </div>
-        <button id="btnCopyExport" class="btn btn-filled btn-sm" aria-label="Copiar texto de exportación">📋 Copiar</button>
+        <button id="btnCopyExport" class="btn btn-filled btn-sm" aria-label="Copiar texto de exportación"><svg class="svg-icon" style="width:14px; height:14px; margin-right:4px;"><use href="#icon-clipboard"></use></svg> Copiar</button>
       </div>
       <div class="dialog-content">
         <div class="card">
@@ -407,9 +495,9 @@
           <h3>Tema y Apariencia</h3>
           <p class="body-sm muted" style="margin-bottom:12px;">Selecciona el modo visual de la aplicación.</p>
           <div class="theme-selector">
-            <button class="btn btn-outlined btn-sm" onclick="setTheme('light')" id="theme-light">☀️ Luz</button>
-            <button class="btn btn-outlined btn-sm" onclick="setTheme('dark')" id="theme-dark">🌙 Noche</button>
-            <button class="btn btn-outlined btn-sm" onclick="setTheme('auto')" id="theme-auto">💻 Sistema</button>
+            <button class="btn btn-outlined btn-sm" onclick="setTheme('light')" id="theme-light">Luz</button>
+            <button class="btn btn-outlined btn-sm" onclick="setTheme('dark')" id="theme-dark">Noche</button>
+            <button class="btn btn-outlined btn-sm" onclick="setTheme('auto')" id="theme-auto">Sistema</button>
           </div>
         </div>
 
@@ -417,14 +505,14 @@
           <h3>Gestión de Datos</h3>
           <p class="body-sm muted" style="margin-bottom:16px;">Exporta o importa todos tus registros. Los datos se guardan solo en este dispositivo.</p>
           <div class="grid2">
-            <button id="btnExportAll" class="btn btn-tonal" aria-label="Exportar todos los registros como JSON">⬇ Exportar JSON</button>
+            <button id="btnExportAll" class="btn btn-tonal" aria-label="Exportar todos los registros como JSON"><svg class="svg-icon" style="width:14px; height:14px; margin-right:4px;"><use href="#icon-download"></use></svg> Exportar JSON</button>
             <label class="btn btn-tonal" style="margin:0; text-align:center; cursor:pointer;" for="inputImport">
-              ⬆ Importar JSON
+              <svg class="svg-icon" style="width:14px; height:14px; margin-right:4px;"><use href="#icon-upload"></use></svg> Importar JSON
               <input type="file" id="inputImport" accept=".json" style="display:none;" aria-label="Importar registros desde archivo JSON">
             </label>
           </div>
           <div class="divider" style="margin:16px 0;"></div>
-          <button id="btnReset" class="btn btn-danger" style="width:100%;" aria-label="Eliminar permanentemente todos los datos locales">🗑 Borrar todos los datos locales</button>
+          <button id="btnReset" class="btn btn-danger" style="width:100%;" aria-label="Eliminar permanentemente todos los datos locales"><svg class="svg-icon" style="width:14px; height:14px; margin-right:4px;"><use href="#icon-trash"></use></svg> Borrar todos los datos locales</button>
         </div>
 
         <div class="card">
@@ -515,14 +603,14 @@
     <!-- ── Manual Dashboard Overlay ─────────────────────────────────── -->
     <div class="manual-header">
       <div class="manual-search-box">
-        <input type="text" id="manualSearch" placeholder="🔍 Buscar tema, calculadora o guía..." autocomplete="off">
+        <input type="text" id="manualSearch" placeholder="Buscar tema, calculadora o guía..." autocomplete="off">
         <div id="manualResults" class="manual-results hidden"></div>
       </div>
       <div class="manual-chips-scroll">
         <button class="m-chip active" data-filter="all">Todos</button>
-        <button class="m-chip" data-filter="calculator">🧮 Calculadoras</button>
-        <button class="m-chip" data-filter="printable">🖨️ Imprimibles</button>
-        <button class="m-chip" data-filter="protocol">🩺 Protocolos</button>
+        <button class="m-chip" data-filter="calculator">Calculadoras</button>
+        <button class="m-chip" data-filter="printable">Imprimibles</button>
+        <button class="m-chip" data-filter="protocol">Protocolos</button>
       </div>
     </div>
 
@@ -545,24 +633,32 @@
   <!-- ── BOTTOM NAVIGATION BAR ─────────────────────────────────────── -->
   <nav class="bottom-nav" id="bottomNav" role="tablist" aria-label="Navegación principal">
     <button class="nav-item active" data-tab="lab" role="tab" aria-selected="true" aria-controls="tabLab" aria-label="Ver registros de laboratorios">
-      <span class="nav-icon" aria-hidden="true">🧪</span>
-      <span class="nav-label">Laboratorios</span>
+      <span class="nav-icon" aria-hidden="true">
+        <svg class="svg-icon"><use href="#icon-flask"></use></svg>
+      </span>
+      <span class="nav-label">Controles</span>
       <span class="nav-indicator"></span>
     </button>
     <button class="nav-item" data-tab="cloz" role="tab" aria-selected="false" aria-controls="tabCloz" aria-label="Ver monitoreo de Clozapina">
-      <span class="nav-icon" aria-hidden="true">🩺</span>
+      <span class="nav-icon" aria-hidden="true">
+        <svg class="svg-icon"><use href="#icon-heart"></use></svg>
+      </span>
       <span class="nav-label">Clozapina</span>
       <span class="nav-indicator"></span>
     </button>
     <button class="nav-item" data-tab="manual" role="tab" aria-selected="false" aria-controls="tabManual" aria-label="Ver manual de consulta">
-      <span class="nav-icon" aria-hidden="true">📖</span>
+      <span class="nav-icon" aria-hidden="true">
+        <svg class="svg-icon"><use href="#icon-book-open"></use></svg>
+      </span>
       <span class="nav-label">Manual</span>
       <span class="nav-indicator"></span>
     </button>
   </nav>
 
   <!-- ── FAB ──────────────────────────────────────────────────────── -->
-  <button class="fab" id="fabNew" onclick="openNew()" aria-label="Nuevo registro">+</button>
+  <button class="fab" id="fabNew" onclick="openNew()" aria-label="Nuevo registro">
+    <svg class="svg-icon" style="width: 24px; height: 24px;"><use href="#icon-plus"></use></svg>
+  </button>
 
   <footer class="footer">
     Dr. César Celada · Lab Notes 2026

@@ -1,5 +1,5 @@
 // LabNotes PWA Service Worker v5.0
-const CACHE_NAME = "labnotes-v5.0";
+const CACHE_NAME = "labnotes-v5.1";
 
 const STATIC_ASSETS = [
   "./",
@@ -7,6 +7,7 @@ const STATIC_ASSETS = [
   "./styles.css",
   "./app.js",
   "./clinical.js",
+  "./format.js",
   "./manualLoader.js",
   "./lab_catalog.json",
   "./export_templates.json",
@@ -21,6 +22,7 @@ const STATIC_ASSETS = [
 const NETWORK_FIRST_ASSETS = [
   "app.js",
   "clinical.js",
+  "format.js",
   "manualLoader.js",
   "styles.css",
   "index.html",

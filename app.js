@@ -1,4 +1,5 @@
 import { analyzeANC, auditSideEffects, getActualValue, evaluateRecord, CONVERSIONS } from './clinical.js';
+import { formatDate, formatValue } from './format.js';
 import * as manualLoader from './manualLoader.js';
 
 const $ = s => document.querySelector(s);
@@ -26,6 +27,9 @@ const state = {
     currentTopic: null
   }
 };
+
+let deleteUndoTimeout = null;
+let lastDeletedRecord = null;
 
 /* ---------- helpers ---------- */
 function localISODate() {
@@ -277,8 +281,8 @@ async function initManualDashboard() {
 
 // Interactive calculators implemented natively in the app.
 const MANUAL_CALCULATORS = [
-  { type: "fib4", title: "🧮 FIB-4", desc: "Fibrosis hepática (MASLD/MASH)" },
-  { type: "qtc",  title: "🧮 QTc (Fridericia)", desc: "Seguridad cardiaca / antipsicóticos" }
+  { type: "fib4", title: "FIB-4", desc: "Fibrosis hepática (MASLD/MASH)" },
+  { type: "qtc",  title: "QTc (Fridericia)", desc: "Seguridad cardiaca / antipsicóticos" }
 ];
 
 function renderManualHome(filter = "all") {
@@ -320,7 +324,7 @@ function renderManualSearchResults(items) {
   const el = $("#manualResults");
   if (!el) return;
 
-  const icons = { calculator: "🧮", printable: "🖨️", protocol: "🩺", topic: "📖" };
+  const icons = { calculator: "⌨", printable: "⎙", protocol: "⚕", topic: "◎" };
   
   el.innerHTML = items.map(item => {
     let handler = `openManualTopic('${item.id}')`;
@@ -328,7 +332,7 @@ function renderManualSearchResults(items) {
     
     return `
       <div class="manual-result-item" onclick="${handler}">
-        <div class="manual-result-icon">📖</div>
+        <div class="manual-result-icon">◎</div>
         <div class="manual-result-info">
           <h4>${sanitize(item.title)}</h4>
           <p>${sanitize(item.tags?.join(", ") || "")}</p>
@@ -351,7 +355,7 @@ function renderManualBlock(block) {
     caution: "#e67e00",
     danger: "var(--m3-error)"
   };
-  const levelIcons = { info: "ℹ️", caution: "⚠️", danger: "🚨" };
+  const levelIcons = { info: "ⓘ", caution: "⚠", danger: "⚠" };
 
   let html = "";
 
@@ -435,7 +439,7 @@ function renderManualBlock(block) {
         <div class="manual-printable-ref" style="display:flex; align-items:center; gap:12px; padding:12px; border:1px solid var(--m3-outline-variant); border-radius:8px; margin-top:8px; cursor:pointer;"
           onclick="openManualResource('${pId}')" role="button" tabindex="0"
           onkeydown="if(event.key==='Enter')openManualResource('${pId}')">
-          <span style="font-size:24px;">🖨️</span>
+          <span style="font-size:24px;">⎙</span>
           <div>
             <div style="font-weight:600;">${sanitize(block.title || 'Ver recurso imprimible')}</div>
             <div class="muted small">Abrir PDF o infografía</div>
@@ -480,7 +484,7 @@ function renderManualBlock(block) {
         <div class="manual-calc-card" style="padding:12px; border:1px solid var(--m3-outline-variant); border-radius:8px; margin-top:8px;">
           <div class="muted small" style="margin-bottom:8px;">Calculadora integrada</div>
           <button class="btn btn-tonal btn-sm" onclick="openCalculator('${block.fn}')">
-            🧮 Abrir ${sanitize(block.title || 'Calculadora')}
+            Abrir ${sanitize(block.title || 'Calculadora')}
           </button>
         </div>`;
       break;
@@ -502,7 +506,7 @@ function renderManualBlock(block) {
     const svItems = (sv.items || []).map(i => `<li>${sanitize(i).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')}</li>`).join("");
     html += `
       <details class="share-variant" style="margin-top:10px;">
-        <summary style="cursor:pointer; color:var(--m3-primary); font-size:0.85em;">👥 ${sanitize(sv.title || 'Ver versión para pacientes')}</summary>
+        <summary style="cursor:pointer; color:var(--m3-primary); font-size:0.85em;">Ver versión para pacientes: ${sanitize(sv.title || '')}</summary>
         <div style="margin-top:8px; padding:10px; background:var(--m3-surface-container); border-radius:6px; font-size:0.9em;">
           ${sv.content ? `<p>${sanitize(sv.content)}</p>` : ''}
           ${svItems ? `<ul class="manual-list">${svItems}</ul>` : ''}
@@ -587,7 +591,7 @@ function runOmniSearch(query) {
     .sort((a, b) => b.score - a.score)
     .slice(0, 5)
     .map(x => ({
-      icon: x.r.isClozapine ? '🩺' : '🧪',
+      icon: x.r.isClozapine ? '⚕' : '◎',
       title: `${x.r.date} · ${x.r.context || 'Sin contexto'}`,
       sub: x.r.isClozapine ? 'Clozapina' : 'Registro',
       action: () => openDetail(x.r.id)
@@ -602,7 +606,7 @@ function runOmniSearch(query) {
     .sort((a, b) => b.score - a.score)
     .slice(0, 4)
     .map(x => ({
-      icon: '📖',
+      icon: '◎',
       title: x.t.title,
       sub: 'Protocolo clínico',
       action: () => openManualTopic(x.t.id)
@@ -617,7 +621,7 @@ function runOmniSearch(query) {
     .sort((a, b) => b.score - a.score)
     .slice(0, 4)
     .map(x => ({
-      icon: '🗂️',
+      icon: '⎙',
       title: x.p.title,
       sub: x.p.template === 'pdf' ? 'PDF' : 'Infografía',
       action: () => openManualResource(x.p.id)
@@ -641,15 +645,15 @@ function renderOmniResults(results) {
 
   let html = '';
   if (records.length) {
-    html += '<div class="omni-section-header">🧪 Registros</div>';
+    html += '<div class="omni-section-header">Registros</div>';
     records.forEach((r, i) => { html += omniItem(r, i, 'rec'); });
   }
   if (topics.length) {
-    html += '<div class="omni-section-header">📖 Protocolos</div>';
+    html += '<div class="omni-section-header">Protocolos</div>';
     topics.forEach((r, i) => { html += omniItem(r, i, 'top'); });
   }
   if (resources.length) {
-    html += '<div class="omni-section-header">🗂️ Recursos</div>';
+    html += '<div class="omni-section-header">Recursos</div>';
     resources.forEach((r, i) => { html += omniItem(r, i, 'res'); });
   }
   el.innerHTML = html;
@@ -738,7 +742,7 @@ function openCalculator(type) {
   show("#viewCalculator");
 }
 
-window.runFib4 = function() {
+window.runFib4 = function(isManualTrigger = true) {
   const age = Number($("#fibAge").value);
   const plt = Number($("#fibPlt").value);
   const ast = Number($("#fibAst").value);
@@ -746,7 +750,11 @@ window.runFib4 = function() {
   
   import('./clinical.js').then(m => {
     const res = m.calculateFIB4(age, ast, alt, plt);
-    if (res === null) { alert("Datos incompletos"); return; }
+    if (res === null) {
+      if (isManualTrigger) alert("Datos incompletos");
+      $("#fibResult").classList.add("hidden");
+      return;
+    }
     
     $("#fibVal").textContent = res.toFixed(2);
     let interp = "";
@@ -759,13 +767,17 @@ window.runFib4 = function() {
   });
 };
 
-window.runQtc = function() {
+window.runQtc = function(isManualTrigger = true) {
   const qt = Number($("#qtVal").value);
   const hr = Number($("#qtHr").value);
   
   import('./clinical.js').then(m => {
     const res = m.calculateQTc(qt, hr, 'fridericia');
-    if (res === null) { alert("Datos incompletos"); return; }
+    if (res === null) {
+      if (isManualTrigger) alert("Datos incompletos");
+      $("#qtcResult").classList.add("hidden");
+      return;
+    }
     
     $("#qtcVal").textContent = res.toFixed(0) + " ms";
     let interp = "";
@@ -882,6 +894,7 @@ function initUI() {
   $("#btnSaveRecord").onclick  = saveNewRecord;
   $("#btnExport").onclick      = openExport;
   $("#btnEditRecord").onclick  = () => openNew(state.selected?.id);
+  $("#btnDeleteRecordDetail").onclick = () => { if (state.selected) deleteRecord(state.selected.id); };
   $("#btnCopyExport").onclick  = () => navigator.clipboard.writeText($("#exportText").value);
   $("#btnReset").onclick       = () => { if (confirm("¿Borrar todo?")) { state.records = []; persist(); renderTabContent(state.currentTab || 'lab'); } };
   $("#btnExportAll").onclick   = exportAll;
@@ -890,6 +903,19 @@ function initUI() {
   $("#nrPanelSearch").oninput = (e) => renderPanelSelection(e.target.value.toLowerCase());
   $("#trendMetric").onchange  = renderTrends;
   $("#inputImport").onchange  = importJSON;
+
+  // Real-time calculator inputs
+  const fibInputs = ["#fibAge", "#fibPlt", "#fibAst", "#fibAlt"];
+  fibInputs.forEach(selector => {
+    const el = $(selector);
+    if (el) el.oninput = () => runFib4(false);
+  });
+
+  const qtcInputs = ["#qtVal", "#qtHr"];
+  qtcInputs.forEach(selector => {
+    const el = $(selector);
+    if (el) el.oninput = () => runQtc(false);
+  });
 
   $("#btnClearPanels").onclick = () => {
     state.new.selectedPanels.clear();
@@ -1027,12 +1053,12 @@ function renderClozapineTab() {
     statsEl.innerHTML = [
       latestWithData.data?.anc !== undefined ? `
         <div class="clz-stat-chip ${analyzeANC(latestWithData.data.anc/1000, latestWithData.isBEN)?.status.toLowerCase() || ''}">
-          <span class="clz-stat-value">${(latestWithData.data.anc/1000).toFixed(2)} <small>k/µL</small></span>
+          <span class="clz-stat-value">${formatValue('anc', latestWithData.data.anc)}</span>
           <div class="clz-stat-label">ANC (${latestWithData.data.anc})</div>
         </div>` : '',
       latestWithData.data?.wbc !== undefined ? `
         <div class="clz-stat-chip">
-          <span class="clz-stat-value">${(latestWithData.data.wbc/1000).toFixed(2)} <small>k/µL</small></span>
+          <span class="clz-stat-value">${formatValue('wbc', latestWithData.data.wbc)}</span>
           <div class="clz-stat-label">WBC (${latestWithData.data.wbc})</div>
         </div>` : '',
       `<div class="clz-stat-chip"><span class="clz-stat-value">${clzRecords.length}</span><div class="clz-stat-label">Registros CLZ</div></div>`
@@ -1130,7 +1156,7 @@ function updateClozapineMonitoringWidget() {
   content.innerHTML = `
     ${statusHtml}
     <div style="margin-top:8px; font-size:13px; color:var(--m3-on-surface-variant);">
-      • Último control: <strong>${latestRecord.date}</strong> (${diffDaysSinceLatest} días transcurridos)<br>
+      • Último control: <strong>${formatDate(latestRecord.date)}</strong> (${diffDaysSinceLatest} días transcurridos)<br>
       • Pauta sugerida: <strong>${freqLabel}</strong> (Semana ${Math.ceil(diffDaysSinceFirst / 7) || 1} de tratamiento)
     </div>
   `;
@@ -1218,9 +1244,9 @@ function createRecordCard(r) {
   if (r.data && (r.data.anc !== undefined || r.data.wbc !== undefined)) {
     clinicalSnippets = `
       <div style="display:flex; gap:12px; margin-top:8px; font-family:var(--font-mono); font-size:12px; color:var(--m3-on-surface-variant);">
-        ${r.data.anc !== undefined ? `<span>ANC: <b style="color:var(--m3-on-surface)">${r.data.anc}</b></span>` : ""}
-        ${r.data.wbc !== undefined ? `<span>WBC: <b style="color:var(--m3-on-surface)">${r.data.wbc}</b></span>` : ""}
-        ${r.data.plt !== undefined ? `<span>PLT: <b style="color:var(--m3-on-surface)">${r.data.plt}</b></span>` : ""}
+        ${r.data.anc !== undefined ? `<span>ANC: <b style="color:var(--m3-on-surface)">${formatValue('anc', r.data.anc)}</b></span>` : ""}
+        ${r.data.wbc !== undefined ? `<span>WBC: <b style="color:var(--m3-on-surface)">${formatValue('wbc', r.data.wbc)}</b></span>` : ""}
+        ${r.data.plt !== undefined ? `<span>PLT: <b style="color:var(--m3-on-surface)">${formatValue('plt', r.data.plt)}</b></span>` : ""}
       </div>`;
   }
 
@@ -1236,7 +1262,7 @@ function createRecordCard(r) {
     <div style="display:flex; justify-content:space-between; align-items:flex-start;">
       <div style="flex:1; min-width:0;">
         <div style="display:flex; align-items:baseline; gap:8px; margin-bottom:4px; flex-wrap:wrap;">
-          <span style="font-weight:600; font-size:15px;">${sanitize(r.date)}</span>
+          <span style="font-weight:600; font-size:15px;">${sanitize(formatDate(r.date))}</span>
           <span style="font-size:13px; color:var(--m3-on-surface-variant);">${sanitize(r.context || "Sin contexto")}</span>
           ${r.labName ? `<span style="font-size:11px; color:var(--m3-outline);">· ${sanitize(r.labName)}</span>` : ""}
         </div>
@@ -1244,8 +1270,6 @@ function createRecordCard(r) {
         ${clinicalSnippets}
         ${triageAlert}
       </div>
-      <button class="btn btn-text" style="min-width:32px; padding:0; height:32px; border-radius:50%; flex-shrink:0;"
-        onclick="event.stopPropagation(); deleteRecord('${sanitize(r.id)}')" aria-label="Eliminar registro">✕</button>
     </div>`;
   c.onclick = () => openDetail(r.id);
   return c;
@@ -1268,9 +1292,9 @@ function renderDashboard() {
       
       let alertAlertInfo = "";
       if (criticals > 0) {
-        alertAlertInfo = ` · <strong style="color:var(--m3-error); font-weight:700;">${criticals} con alertas críticas 🔴</strong>`;
+        alertAlertInfo = ` · <strong style="color:var(--m3-error); font-weight:700;">${criticals} con alertas críticas</strong>`;
       } else {
-        alertAlertInfo = ` · <span style="color:#2e7d32; font-weight:600;">Todos los controles estables ✅</span>`;
+        alertAlertInfo = ` · <span style="color:#2e7d32; font-weight:600;">Todos los controles estables</span>`;
       }
 
       heroText.innerHTML = `Total de registros: <strong>${total}</strong> · Monitoreos Clozapina: <strong>${clozapines}</strong>${alertAlertInfo}`;
@@ -1440,12 +1464,46 @@ function renderTrends() {
 }
 
 function deleteRecord(id) {
-  if (confirm("¿Eliminar este registro?")) {
-    const backup = [...state.records];
-    state.records = state.records.filter(x => x.id !== id);
-    persist(backup);
-    renderDashboard();
+  // If there's a pending delete, commit it immediately
+  if (deleteUndoTimeout) {
+    clearTimeout(deleteUndoTimeout);
+    persist();
   }
+
+  const recordIndex = state.records.findIndex(x => x.id === id);
+  if (recordIndex === -1) return;
+
+  // Save for undo
+  lastDeletedRecord = { index: recordIndex, data: state.records[recordIndex] };
+
+  // Remove from state (optimistic update)
+  state.records = state.records.filter(x => x.id !== id);
+  
+  // Close detail view dialog
+  hide("#viewDetail");
+  renderDashboard();
+
+  // Show undo snackbar
+  showSnackbar("Control clínico eliminado.", "DESHACER", () => {
+    if (lastDeletedRecord) {
+      // Restore record
+      state.records.splice(lastDeletedRecord.index, 0, lastDeletedRecord.data);
+      lastDeletedRecord = null;
+      if (deleteUndoTimeout) {
+        clearTimeout(deleteUndoTimeout);
+        deleteUndoTimeout = null;
+      }
+      persist();
+      renderDashboard();
+    }
+  });
+
+  // Commit permanently after 5 seconds
+  deleteUndoTimeout = setTimeout(() => {
+    deleteUndoTimeout = null;
+    lastDeletedRecord = null;
+    persist();
+  }, 5000);
 }
 
 /* ---------- new ---------- */
@@ -1709,7 +1767,7 @@ function saveNewRecord() {
 function openDetail(id) {
   const r = state.records.find(x => x.id === id);
   state.selected = r;
-  $("#detailHeader").innerHTML = `<strong>${r.date}</strong> · ${sanitize(r.context || '')}${r.isClozapine ? ' 🔵 CLZ' : ''}${r.isBEN ? ' · BEN' : ''}`;
+  $("#detailHeader").innerHTML = `<strong>${formatDate(r.date)}</strong> · ${sanitize(r.context || '')}${r.isClozapine ? ' 🔵 CLZ' : ''}${r.isBEN ? ' · BEN' : ''}`;
 
   // Show/hide CLZ manual bridge button
   const bridge = $("#clzManualBridge");
@@ -1798,9 +1856,9 @@ function openDetail(id) {
     c.className = "card";
     c.innerHTML = `<h3>${sanitize(panelDef.name)}</h3>`;
     r.eval.panelEvals[p.panel_id].forEach(e => {
-      let v = e.value;
-      if (e.modifier) v = `${e.value} ${e.modifier} (= ${e.scaled})`;
-
+      const vText = formatValue(e.analyte_id, e.value, e.modifier);
+      const hasPreformattedUnit = ["anc", "wbc", "alc", "mono_abs", "baso_abs", "eos_abs", "plt", "plt_abs"].includes(e.analyte_id);
+      const unitLabel = hasPreformattedUnit ? "" : ` <small>${sanitize(e.units || "")}</small>`;
       const convHtml = e.conv ? `<div class="conv-val font-mono">SI: ${sanitize(e.conv.val)} ${sanitize(e.conv.unit)}</div>` : "";
 
       c.innerHTML += `
@@ -1808,7 +1866,7 @@ function openDetail(id) {
           <div class="analyte-grid">
             <div style="${e.isDerived ? 'font-style:italic' : ''}">${sanitize(e.name)}</div>
             <div class="font-mono">
-              <div>${sanitize(v.toString())} <small>${sanitize(e.units || "")}</small></div>
+              <div>${sanitize(vText)}${unitLabel}</div>
               ${convHtml}
             </div>
             <div><span class="badge ${e.status}">${e.statusLabel || e.status}</span></div>
