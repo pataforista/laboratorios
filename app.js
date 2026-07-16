@@ -1680,6 +1680,7 @@ function renderCapture() {
         
         const r = document.createElement("div");
         r.className = "analyte-grid";
+        r.id = `capture_row_${an.analyte_id}`;
 
         let inputHtml = "";
         const inputId = `in_${an.analyte_id}`;
@@ -1717,8 +1718,15 @@ function renderCapture() {
             </div>`;
         }
 
+        // Interruptor / Toggle para omitir/incluir analito
         r.innerHTML = `
-          <div>${an.name}</div>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <label class="switch-small" title="Excluir o incluir este estudio en el reporte">
+              <input type="checkbox" checked onchange="toggleAnalyteCapture(this, '${an.analyte_id}')">
+              <span class="slider-small"></span>
+            </label>
+            <span class="analyte-label" style="font-weight: 500;">${an.name}</span>
+          </div>
           <div>${inputHtml}</div>
           <div class="muted small">${an.units || ""}</div>`;
         c.appendChild(r);
@@ -1726,6 +1734,28 @@ function renderCapture() {
     a.appendChild(c);
   });
 }
+
+// Global helper para excluir o incluir analitos
+window.toggleAnalyteCapture = function(cb, id) {
+  const row = $(`#capture_row_${id}`);
+  if (!row) return;
+  const isIncluded = cb.checked;
+  row.classList.toggle("analyte-excluded", !isIncluded);
+  
+  // Deshabilitar o habilitar inputs internos
+  const inputs = row.querySelectorAll("input[type='number'], input[type='text'], select, input[type='checkbox']:not([onchange*='toggleAnalyteCapture'])");
+  inputs.forEach(input => {
+    input.disabled = !isIncluded;
+    if (!isIncluded) {
+      input.value = "";
+      if (input.type === "checkbox") input.checked = false;
+    }
+  });
+
+  // Limpiar hints de conversión
+  const hint = $(`#hint_in_${id}`);
+  if (hint && !isIncluded) hint.innerHTML = "";
+};
 
 /**
  * Saves the current record from the form state to localStorage.
@@ -1755,7 +1785,7 @@ function saveNewRecord() {
     panelDef.analytes.forEach(a => {
       if (hasValidationError) return;
       const el = $(`#in_${a.analyte_id}`);
-      if (!el) return;
+      if (!el || el.disabled) return; // Omitir si no existe o está deshabilitado/excluido
       const v = el.value;
       if (v !== "") {
         if (a.units === "qual" || a.units === "text") {
@@ -1848,6 +1878,46 @@ function openDetail(id) {
   state.selected = r;
   $("#detailHeader").innerHTML = `<strong>${formatDate(r.date)}</strong> · ${sanitize(r.context || '')}${r.isClozapine ? ' 🔵 CLZ' : ''}${r.isBEN ? ' · BEN' : ''}`;
 
+  // Generador de Nota Clínica Compacta
+  const rawDate = formatDate(r.date);
+  let noteText = `Lab (${rawDate}): `;
+  const parts = [];
+  
+  if (r.data?.wbc !== undefined) parts.push(`Leucos ${(r.data.wbc / 1000).toFixed(1)}k`);
+  if (r.data?.anc !== undefined) parts.push(`Neutróf ${(r.data.anc / 1000).toFixed(1)}k`);
+  if (r.data?.plt !== undefined) parts.push(`Plaq ${(r.data.plt / 1000).toFixed(0)}k`);
+  if (r.data?.hb !== undefined) parts.push(`Hb ${r.data.hb} g/dL`);
+  if (r.data?.creatinine !== undefined) parts.push(`Cr ${r.data.creatinine} mg/dL`);
+  if (r.data?.tsh !== undefined) parts.push(`TSH ${r.data.tsh} mIU/L`);
+  if (r.data?.fgfr !== undefined) parts.push(`eGFR ${r.data.fgfr}`);
+
+  // Otras métricas no hematológicas rápidas
+  const otherAnalytes = {
+    ast: "AST", alt: "ALT", chol: "Colest", tg: "Trigl", glucose: "Gluc"
+  };
+  Object.entries(otherAnalytes).forEach(([key, label]) => {
+    if (r.data?.[key] !== undefined) parts.push(`${label} ${r.data[key]}`);
+  });
+
+  if (r.clinical?.triage?.hr) parts.push(`FC ${r.clinical.triage.hr} lpm`);
+  if (r.clinical?.triage?.bp) parts.push(`PA ${r.clinical.triage.bp}`);
+
+  noteText += parts.length ? parts.join(", ") : "Sin resultados numéricos.";
+  noteText += ".";
+
+  // Renderizar la tarjeta de nota rápida copiable
+  let noteCopyHtml = `
+    <div class="card note-quick-copy-card" style="border: 1px solid var(--m3-primary); background: var(--m3-primary-container)15; padding:12px; margin-bottom:16px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+        <span style="font-size:12px; font-weight:700; color:var(--m3-primary); text-transform:uppercase; letter-spacing:0.5px;">📋 Copiar para Nota Clínica</span>
+        <button class="btn btn-filled btn-sm" onclick="copyTextToClipboard('${btoa(unescape(encodeURIComponent(noteText)))}', this)" style="font-size:11px; padding:2px 10px; height:24px;">Copiar Nota</button>
+      </div>
+      <div class="font-mono" style="font-size:12px; background:var(--m3-surface-container-low); padding:8px; border-radius:6px; border:1px solid var(--m3-outline-variant); line-height:1.4; color:var(--m3-on-surface); word-break:break-word;">
+        ${sanitize(noteText)}
+      </div>
+    </div>
+  `;
+
   // Show/hide CLZ manual bridge button
   const bridge = $("#clzManualBridge");
   if (bridge) bridge.classList.toggle("hidden", !r.isClozapine);
@@ -1928,7 +1998,7 @@ function openDetail(id) {
   } else { $("#detailChecklists").innerHTML = ""; }
 
   const w = $("#detailPanels");
-  w.innerHTML = shortcutsHtml + clozAnalysisHtml; 
+  w.innerHTML = noteCopyHtml + shortcutsHtml + clozAnalysisHtml; 
   r.panels.forEach(p => {
     const panelDef = state.catalog.panels.find(x => x.panel_id === p.panel_id);
     const c = document.createElement("div");
@@ -2187,6 +2257,53 @@ window.launchCalculatorWithData = function(type, data) {
   }
 };
 
+window.copyTextToClipboard = function(base64Text, btn) {
+  try {
+    const decodedText = decodeURIComponent(escape(atob(base64Text)));
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(decodedText).then(() => {
+        showCopyFeedback(btn);
+      }).catch(err => {
+        fallbackCopyText(decodedText, btn);
+      });
+    } else {
+      fallbackCopyText(decodedText, btn);
+    }
+  } catch (e) {
+    console.error("Fallo al copiar texto", e);
+  }
+};
+
+function fallbackCopyText(text, btn) {
+  const textArea = document.createElement("textarea");
+  textArea.value = text;
+  textArea.style.position = "fixed"; // evitar scrolling
+  document.body.appendChild(textArea);
+  textArea.focus();
+  textArea.select();
+  try {
+    document.execCommand('copy');
+    showCopyFeedback(btn);
+  } catch (err) {
+    console.error('Fallback falló', err);
+  }
+  document.body.removeChild(textArea);
+}
+
+function showCopyFeedback(btn) {
+  if (!btn) return;
+  const oldText = btn.textContent;
+  btn.textContent = "Copiado ✔";
+  btn.style.background = "#2e7d32";
+  btn.style.color = "#ffffff";
+  setTimeout(() => {
+    btn.textContent = oldText;
+    btn.style.background = "";
+    btn.style.color = "";
+  }, 2000);
+  if (window.showSnackbar) window.showSnackbar("Nota copiada al portapapeles.");
+}
+
 /* ── Expose to global scope (required because app.js is type=module) ── */
 window.openNew             = openNew;
 window.openDetail          = openDetail;
@@ -2205,3 +2322,4 @@ window.hideSnackbar        = hideSnackbar;
 window.updateConversionHint = updateConversionHint;
 window.calcAbsolute         = calcAbsolute;
 window.updateModDisplay     = updateModDisplay;
+

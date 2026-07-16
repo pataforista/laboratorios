@@ -472,24 +472,77 @@ output {
 }
 
 .checkrow {
+  --_chk-text: var(--m3-on-surface);
+  --_chk-border: var(--m3-outline);
+  --_chk-bg: var(--m3-surface-container-low);
+
   display: flex;
   align-items: center;
   gap: 12px;
   cursor: pointer;
-  padding: 10px 14px;
-  border-radius: var(--m3-shape-sm);
-  background: var(--m3-surface-container-low);
-  transition: background var(--m3-duration-short) var(--m3-easing);
+  padding: 12px 16px;
+  border-radius: var(--m3-shape-md);
+  background: var(--_chk-bg);
+  border: 1.5px solid var(--glass-border);
+  color: var(--_chk-text);
+  font-weight: 600;
+  transition: all var(--m3-duration-short) var(--m3-easing);
+  user-select: none;
 }
+
+/* Hover general de la fila */
 .checkrow:hover {
   background: var(--m3-surface-container-high);
+  border-color: var(--m3-primary);
 }
+
 .checkrow input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  outline: none;
   width: 22px;
   height: 22px;
-  accent-color: var(--m3-primary);
-  flex-shrink: 0;
+  border-radius: var(--m3-shape-xs);
+  border: 2px solid var(--_chk-border);
+  background: transparent;
+  display: grid;
+  place-content: center;
   cursor: pointer;
+  flex-shrink: 0;
+  transition: all var(--m3-duration-short) var(--m3-easing);
+}
+
+/* El check (tick) interno */
+.checkrow input[type="checkbox"]::after {
+  content: "\2714";
+  font-size: 14px;
+  color: var(--m3-on-primary);
+  opacity: 0;
+  transform: scale(0.6);
+  transition: all var(--m3-duration-short) var(--m3-easing);
+}
+
+/* Cuando está seleccionado (Active / Checked) */
+.checkrow:has(input[type="checkbox"]:checked) {
+  background: var(--m3-primary-container);
+  border-color: var(--m3-primary);
+  color: var(--m3-on-primary-container);
+}
+
+.checkrow input[type="checkbox"]:checked {
+  background: var(--m3-primary);
+  border-color: var(--m3-primary);
+}
+
+.checkrow input[type="checkbox"]:checked::after {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Soporte para teclado */
+.checkrow input[type="checkbox"]:focus-visible {
+  outline: 2.5px solid var(--m3-primary);
+  outline-offset: 2px;
 }
 
 /* OmniSearch Bar style */
@@ -579,6 +632,7 @@ output {
   box-shadow: var(--m3-shadow-1);
   transition: all var(--m3-duration-short) var(--m3-easing);
   position: relative;
+  will-change: transform, filter, opacity;
 }
 
 /* Visual tap-affordance arrow on every record card */
@@ -598,9 +652,17 @@ output {
 
 .record-card:hover {
   background: var(--m3-surface-container-high);
-  transform: translateY(-2px);
+  transform: translateY(-2px) scale(1.015);
   box-shadow: var(--m3-shadow-2);
   border-color: var(--m3-primary);
+  z-index: 10;
+}
+
+/* Efecto de desenfoque y opacidad para registros adyacentes */
+.records-list:hover > .record-card:not(:hover) {
+  filter: blur(2px);
+  opacity: 0.7;
+  transform: scale(0.98);
 }
 
 .record-card:hover::after {
@@ -643,16 +705,56 @@ output {
 .tinycheck {
   display: flex;
   align-items: center;
-  gap: 6px;
-  font-size: 0.8rem;
+  gap: 8px;
+  font-size: 0.84rem;
   font-weight: 600;
-  color: var(--m3-on-surface-variant);
+  color: var(--m3-on-surface); /* Alto contraste por defecto */
   cursor: pointer;
   white-space: nowrap;
+  user-select: none;
+  transition: color var(--m3-duration-short) var(--m3-easing);
 }
+
+.tinycheck:hover {
+  color: var(--m3-primary);
+}
+
 .tinycheck input[type="checkbox"] {
-  width: 18px; height: 18px;
-  accent-color: var(--m3-primary);
+  appearance: none;
+  -webkit-appearance: none;
+  outline: none;
+  width: 18px;
+  height: 18px;
+  border-radius: var(--m3-shape-xs);
+  border: 1.8px solid var(--m3-outline);
+  background: transparent;
+  display: grid;
+  place-content: center;
+  cursor: pointer;
+  transition: all var(--m3-duration-short) var(--m3-easing);
+}
+
+.tinycheck input[type="checkbox"]::after {
+  content: "\2714";
+  font-size: 11px;
+  color: var(--m3-on-primary);
+  opacity: 0;
+  transform: scale(0.6);
+  transition: all var(--m3-duration-short) var(--m3-easing);
+}
+
+.tinycheck input[type="checkbox"]:checked {
+  background: var(--m3-primary);
+  border-color: var(--m3-primary);
+}
+
+.tinycheck input[type="checkbox"]:checked::after {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.tinycheck:has(input[type="checkbox"]:checked) {
+  color: var(--m3-primary);
 }
 
 .bh-calc-row {
@@ -1223,11 +1325,10 @@ details[open] .manual-accordion-summary::after { transform: rotate(90deg); }
 
 .manual-header {
   position: sticky;
-  top: 72px; /* below topbar */
+  top: 0;
   z-index: 50;
   background: var(--m3-surface);
-  padding: 12px 16px;
-  margin: 0 -16px;
+  padding: 10px 16px 8px;
   border-bottom: 1px solid var(--m3-outline-variant);
   margin-bottom: 4px;
 }
@@ -1332,14 +1433,23 @@ summary:focus-visible {
   min-height: 175px;
   position: relative;
   overflow: hidden;
+  will-change: transform, filter, opacity;
 }
 
-/* Hover and active micro-animations */
+/* Hover Focus Effect: Enfoca la tarjeta activa */
 .manual-topic-card:hover {
   background: var(--m3-surface-container-high);
-  transform: translateY(-4px);
-  box-shadow: var(--m3-shadow-2);
+  transform: translateY(-4px) scale(1.03);
+  box-shadow: var(--m3-shadow-3);
   border-color: var(--m3-primary);
+  z-index: 10;
+}
+
+/* Desenfoca y reduce la opacidad de las tarjetas no seleccionadas */
+.manual-grid:hover > .manual-topic-card:not(:hover) {
+  filter: blur(3px);
+  opacity: 0.6;
+  transform: scale(0.97);
 }
 
 .manual-topic-card:active {
@@ -1566,43 +1676,106 @@ summary:focus-visible {
   justify-content: center;
 }
 
-/* Manual Search and Navigation */
-.manual-search-box {
+/* AI-Style Search Container & Input Box */
+.ai-search-container {
   position: relative;
   width: 100%;
+  margin-bottom: 8px;
+}
+
+.ai-search-box {
   display: flex;
-  align-items: center;
-}
-/* Search icon using ::before pseudo on a wrapper */
-.manual-search-box::before {
-  content: '\1F50D'; /* magnifying glass emoji fallback */
-  position: absolute;
-  left: 14px;
-  font-size: 16px;
-  pointer-events: none;
-  opacity: 0.5;
-  z-index: 2;
-}
-.manual-search-box input {
-  width: 100%;
-  padding: 12px 16px 12px 40px; /* indent for search icon */
-  border-radius: var(--m3-shape-lg);
+  flex-direction: column;
+  background: var(--m3-surface-container-high);
   border: 1.5px solid var(--m3-outline-variant);
-  background: var(--m3-surface-container);
+  border-radius: var(--m3-shape-lg);
+  overflow: hidden;
+  transition: border-color var(--m3-duration-short), background var(--m3-duration-short), box-shadow var(--m3-duration-short);
+}
+
+.ai-search-box:focus-within {
+  border-color: var(--m3-primary);
+  background: var(--m3-surface-bright);
+  box-shadow: 0 4px 18px rgba(90, 75, 120, 0.08);
+}
+
+.ai-search-box input {
+  width: 100%;
+  min-height: 48px;
+  border: none;
+  background: transparent;
+  padding: 12px 16px 4px;
+  font-size: 0.96rem;
   color: var(--m3-on-surface);
   outline: none;
-  font-size: 15px;
   font-family: inherit;
-  transition: border-color var(--m3-duration-short), background var(--m3-duration-short);
 }
-.manual-search-box input::placeholder {
+
+.ai-search-box input::placeholder {
   color: var(--m3-on-surface-variant);
   opacity: 0.7;
 }
-.manual-search-box input:focus {
-  border-color: var(--m3-primary);
-  background: var(--m3-surface-bright);
-  box-shadow: 0 0 0 4px rgba(90, 75, 120, 0.1);
+
+/* Toolbar inferior dentro del buscador */
+.ai-search-toolbar {
+  height: 38px;
+  background: rgba(0, 0, 0, 0.04);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 12px 6px;
+}
+
+[data-theme="dark"] .ai-search-toolbar {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.ai-search-actions-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Badge simulado de búsqueda */
+.ai-search-badge {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--m3-primary);
+  background: var(--m3-primary-container);
+  padding: 3px 8px;
+  border-radius: var(--m3-shape-sm);
+  letter-spacing: 0.5px;
+}
+
+/* Botón de envío */
+.ai-search-send-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: none;
+  background: var(--m3-primary);
+  color: var(--m3-on-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform var(--m3-duration-short) var(--m3-easing), background var(--m3-duration-short);
+}
+
+.ai-search-send-btn svg {
+  transform: rotate(90deg); /* rota el chevron hacia la derecha */
+}
+
+.ai-search-send-btn:hover {
+  background: hsl(var(--p-h), var(--p-s), calc(var(--p-l) - 8%));
+  transform: scale(1.08);
+}
+
+.ai-search-send-btn:active {
+  transform: scale(0.95);
 }
 
 .manual-results {
@@ -1632,3 +1805,72 @@ summary:focus-visible {
 }
 
 /* (manual-chips-scroll is defined above in its canonical location) */
+
+/* Small Toggle Switch for Analyte Exclusion */
+.switch-small {
+  position: relative;
+  display: inline-block;
+  width: 32px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+.switch-small input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider-small {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--m3-outline-variant);
+  transition: .2s;
+  border-radius: 9px;
+}
+
+.slider-small:before {
+  position: absolute;
+  content: "";
+  height: 14px;
+  width: 14px;
+  left: 2px;
+  bottom: 2px;
+  background-color: white;
+  transition: .2s;
+  border-radius: 50%;
+}
+
+.switch-small input:checked + .slider-small {
+  background-color: var(--m3-primary);
+}
+
+.switch-small input:checked + .slider-small:before {
+  transform: translateX(14px);
+}
+
+/* Analyte Row Exclusion State */
+.analyte-excluded {
+  opacity: 0.35;
+  filter: grayscale(1);
+  background: var(--m3-surface-container-lowest);
+  border-color: transparent !important;
+}
+
+.analyte-excluded .analyte-label {
+  text-decoration: line-through;
+}
+
+/* Quick Copy Clinical Note Styling */
+.note-quick-copy-card {
+  animation: borderGlow 3s infinite ease-in-out;
+}
+
+@keyframes borderGlow {
+  0%, 100% { border-color: var(--m3-primary); }
+  50% { border-color: var(--m3-outline-variant); }
+}

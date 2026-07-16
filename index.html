@@ -602,8 +602,22 @@
   <section id="tabManual" class="tab-section hidden" style="padding:0; overflow:hidden; display: flex; flex-direction: column;">
     <!-- ── Manual Dashboard Overlay ─────────────────────────────────── -->
     <div class="manual-header">
-      <div class="manual-search-box">
-        <input type="text" id="manualSearch" placeholder="Buscar tema, calculadora o guía..." autocomplete="off">
+      <div class="ai-search-container">
+        <div class="ai-search-box">
+          <input type="text" id="manualSearch" placeholder="Buscar tema, calculadora o guía..." autocomplete="off">
+          <div class="ai-search-toolbar">
+            <div class="ai-search-actions-left">
+              <!-- Botón simulador de filtro rápido / indicador -->
+              <span class="ai-search-badge">
+                <svg class="svg-icon" style="width:12px; height:12px; margin-right:4px;"><use href="#icon-search"></use></svg>
+                Manual
+              </span>
+            </div>
+            <button class="ai-search-send-btn" type="button" aria-label="Buscar ahora">
+              <svg class="svg-icon" style="width: 14px; height: 14px;"><use href="#icon-chevron-down"></use></svg>
+            </button>
+          </div>
+        </div>
         <div id="manualResults" class="manual-results hidden"></div>
       </div>
       <div class="manual-chips-scroll">
