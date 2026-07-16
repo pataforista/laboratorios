@@ -624,7 +624,7 @@
 
       <!-- Manual Topic View: Renders a single topic -->
       <div id="manualTopic" class="manual-topic-content hidden container" style="padding: 16px;">
-        <button id="btnBackToManual" class="btn btn-text" style="margin-bottom: 16px;">← Volver al Índice</button>
+        <button id="btnBackToManual" class="btn btn-outlined" style="margin-bottom: 16px;">← Volver al Índice</button>
         <div id="topicRender"></div>
       </div>
     </div>
@@ -656,8 +656,9 @@
   </nav>
 
   <!-- ── FAB ──────────────────────────────────────────────────────── -->
-  <button class="fab" id="fabNew" onclick="openNew()" aria-label="Nuevo registro">
+  <button class="fab" id="fabNew" onclick="openNew()" aria-label="Nuevo registro" title="Nuevo registro de laboratorio">
     <svg class="svg-icon" style="width: 24px; height: 24px;"><use href="#icon-plus"></use></svg>
+    <span class="fab-label">Nuevo</span>
   </button>
 
   <footer class="footer">

@@ -239,19 +239,36 @@ async function initManualDashboard() {
 
   // Initial load
   state.manual.manifest = await manualLoader.loadManualIndex();
+  try {
+    const response = await fetch('./manual/dataset/printables/generated_index.json');
+    if (response.ok) {
+      const data = await response.json();
+      state.manual.printables = data.printables || [];
+    }
+  } catch (e) {
+    console.error("Failed to load printables for dashboard:", e);
+  }
   renderManualHome();
 
   input.oninput = (e) => {
     const q = e.target.value.toLowerCase().trim();
     if (!q) { results.classList.add("hidden"); return; }
     
-    // Combine hardcoded MANUAL_INDEX with manifest topics if needed
-    // For now, search manifest topics
-    const filtered = state.manual.manifest?.topics.filter(item => 
+    const matchedTopics = (state.manual.manifest?.topics || []).filter(item => 
       item.title.toLowerCase().includes(q) || 
       (item.tags && item.tags.some(t => t.toLowerCase().includes(q)))
-    ) || [];
-    
+    ).map(t => ({ ...t, type: 'topic' }));
+
+    const matchedCalcs = MANUAL_CALCULATORS.filter(item =>
+      item.title.toLowerCase().includes(q) ||
+      item.desc.toLowerCase().includes(q)
+    ).map(c => ({ id: c.type, title: c.title, tags: [c.desc], type: 'calculator' }));
+
+    const matchedPrintables = (state.manual.printables || []).filter(item =>
+      item.title.toLowerCase().includes(q)
+    ).map(p => ({ ...p, type: 'printable' }));
+
+    const filtered = [...matchedCalcs, ...matchedTopics, ...matchedPrintables];
     renderManualSearchResults(filtered);
   };
 
@@ -294,49 +311,111 @@ function renderManualHome(filter = "all") {
     return;
   }
 
-  // Calculators are native features, not manifest topics — render launch cards.
-  if (filter === "calculator") {
-    grid.innerHTML = MANUAL_CALCULATORS.map(c => `
-      <div class="manual-topic-card" onclick="openCalculator('${c.type}')">
+  // Helper: section divider label — spans all grid columns
+  const sectionLabel = (icon, title) =>
+    `<div class="manual-section-label"><span>${icon} ${title}</span></div>`;
+
+  let html = "";
+
+  // 1. Calculators
+  if (filter === "all" || filter === "calculator") {
+    if (filter === "all") html += sectionLabel("🧮", "Calculadoras");
+    html += MANUAL_CALCULATORS.map(c => `
+      <div class="manual-topic-card calculator-card" onclick="openCalculator('${c.type}')">
+        <div class="card-icon-header">
+          <span class="card-icon">🧮</span>
+          <span class="badge normal">Calculadora</span>
+        </div>
         <h4>${sanitize(c.title)}</h4>
         <p>${sanitize(c.desc)}</p>
+        <span class="card-action-indicator">Calcular →</span>
       </div>
     `).join("");
-    return;
   }
 
-  let topics = state.manual.manifest.topics;
-  if (filter === "protocol") {
-    topics = topics.filter(t => t.id.startsWith("psych_"));
-  } else if (filter === "printable") {
-    topics = topics.filter(t => t.format === "a4" || t.tags?.includes("printable"));
+  // 2. Protocols (Topics)
+  if (filter === "all" || filter === "protocol") {
+    let topics = state.manual.manifest.topics;
+    if (filter === "protocol") {
+      topics = topics.filter(t => t.id.startsWith("psych_") || t.id.startsWith("comorb_") || t.id === "womens_health" || t.id === "prevent_cancer");
+    }
+    if (filter === "all") html += sectionLabel("⚕", "Protocolos y Guías");
+    html += topics.map(t => {
+      let typeLabel = "Protocolo";
+      let icon = "⚕";
+      if (t.id === "labnotes_guide") {
+        typeLabel = "Guía";
+        icon = "📖";
+      } else if (t.id.startsWith("lifestyle_")) {
+        typeLabel = "Estilo de Vida";
+        icon = "🥗";
+      }
+      return `
+        <div class="manual-topic-card protocol-card" onclick="openManualTopic('${t.id}')">
+          <div class="card-icon-header">
+            <span class="card-icon">${icon}</span>
+            <span class="badge clz">${typeLabel}</span>
+          </div>
+          <h4>${sanitize(t.title)}</h4>
+          <p>${sanitize(t.tags?.slice(0, 3).join(", ") || "")}</p>
+          <span class="card-action-indicator">Leer →</span>
+        </div>
+      `;
+    }).join("");
   }
 
-  grid.innerHTML = topics.map(t => `
-    <div class="manual-topic-card" onclick="openManualTopic('${t.id}')">
-      <h4>${sanitize(t.title)}</h4>
-      <p>${sanitize(t.tags?.slice(0, 3).join(", ") || "")}</p>
-    </div>
-  `).join("");
+  // 3. Printables (PDFs & Infographies)
+  if (filter === "all" || filter === "printable") {
+    const printables = state.manual.printables || [];
+    if (filter === "all" && printables.length > 0) html += sectionLabel("📄", "Recursos Imprimibles");
+    html += printables.map(p => {
+      const isPdf = p.template === 'pdf';
+      const icon = isPdf ? "📄" : "🖼️";
+      const typeLabel = isPdf ? "PDF Imprimible" : "Infografía";
+      return `
+        <div class="manual-topic-card printable-card" onclick="openManualResource('${p.id}')">
+          <div class="card-icon-header">
+            <span class="card-icon">${icon}</span>
+            <span class="badge warn">${typeLabel}</span>
+          </div>
+          <h4>${sanitize(p.title)}</h4>
+          <p>${p.format ? p.format.toUpperCase() : "A4"} · Listo para imprimir/ver</p>
+          <span class="card-action-indicator">Abrir →</span>
+        </div>
+      `;
+    }).join("");
+  }
+
+  grid.innerHTML = html || `<div class="body-sm muted">No se encontraron recursos.</div>`;
 }
 
 function renderManualSearchResults(items) {
   const el = $("#manualResults");
   if (!el) return;
 
-  const icons = { calculator: "⌨", printable: "⎙", protocol: "⚕", topic: "◎" };
+  const icons = { calculator: "🧮", printable: "📄", topic: "⚕" };
+  const badges = { calculator: "clz", printable: "warn", topic: "normal" };
+  const labels = { calculator: "Calculadora", printable: "Imprimible", topic: "Protocolo" };
   
   el.innerHTML = items.map(item => {
     let handler = `openManualTopic('${item.id}')`;
-    if (item.format === 'a4') handler = `openManualResource('${item.id}')`;
+    if (item.type === 'calculator') handler = `openCalculator('${item.id}')`;
+    else if (item.type === 'printable') handler = `openManualResource('${item.id}')`;
+    
+    const icon = icons[item.type] || "◎";
+    const badgeClass = badges[item.type] || "normal";
+    const typeLabel = labels[item.type] || "Tema";
     
     return `
-      <div class="manual-result-item" onclick="${handler}">
-        <div class="manual-result-icon">◎</div>
-        <div class="manual-result-info">
-          <h4>${sanitize(item.title)}</h4>
-          <p>${sanitize(item.tags?.join(", ") || "")}</p>
+      <div class="manual-result-item" onclick="${handler}" style="display:flex; justify-content:space-between; align-items:center;">
+        <div style="display:flex; align-items:center; gap:12px;">
+          <div class="manual-result-icon" style="font-size:18px;">${icon}</div>
+          <div class="manual-result-info">
+            <h4 style="margin:0; font-size:14px; font-weight:600;">${sanitize(item.title)}</h4>
+            <p style="margin:2px 0 0 0; font-size:12px; color:var(--m3-on-surface-variant); opacity:0.85;">${sanitize(item.tags?.slice(0, 2).join(", ") || "")}</p>
+          </div>
         </div>
+        <span class="badge ${badgeClass}" style="font-size:10px; padding:2px 8px;">${typeLabel}</span>
       </div>
     `;
   }).join("");
@@ -687,8 +766,8 @@ function closeOmni() {
 }
 
 function openManualResource(id) {
-  // Look up the resource in omniCache (populated from generated_index.json)
-  const resource = omniCache.resources.find(r => r.id === id);
+  // Look up the resource in omniCache (populated from generated_index.json) or state.manual.printables
+  const resource = omniCache.resources.find(r => r.id === id) || (state.manual.printables || []).find(r => r.id === id);
   if (resource && resource.url) {
     window.open(resource.url, '_blank', 'noopener,noreferrer');
     return;

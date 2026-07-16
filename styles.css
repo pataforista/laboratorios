@@ -574,15 +574,40 @@ output {
   border: 1.5px solid var(--glass-border);
   border-radius: var(--m3-shape-md);
   padding: 20px;
+  padding-right: 48px; /* space for tap indicator */
   cursor: pointer;
   box-shadow: var(--m3-shadow-1);
   transition: all var(--m3-duration-short) var(--m3-easing);
+  position: relative;
 }
+
+/* Visual tap-affordance arrow on every record card */
+.record-card::after {
+  content: '›';
+  position: absolute;
+  right: 18px;
+  top: 50%;
+  transform: translateY(-50%) translateX(0);
+  font-size: 1.5rem;
+  font-weight: 300;
+  color: var(--m3-outline);
+  transition: transform var(--m3-duration-short) var(--m3-easing),
+              color var(--m3-duration-short);
+  line-height: 1;
+}
+
 .record-card:hover {
   background: var(--m3-surface-container-high);
   transform: translateY(-2px);
   box-shadow: var(--m3-shadow-2);
+  border-color: var(--m3-primary);
 }
+
+.record-card:hover::after {
+  transform: translateY(-50%) translateX(4px);
+  color: var(--m3-primary);
+}
+
 .record-card:active {
   transform: translateY(0) scale(0.99);
 }
@@ -650,9 +675,13 @@ output {
   text-transform: uppercase;
 }
 .badge.normal   { background: var(--m3-secondary-container); color: var(--m3-on-secondary-container); }
+/* badge.warn/low/high: use an amber tone since tertiary is not defined in this theme */
 .badge.low,
 .badge.high,
-.badge.warn     { background: var(--m3-tertiary-container);  color: var(--m3-on-tertiary-container); }
+.badge.warn     { background: rgba(245, 158, 11, 0.18); color: #92400e; border: 1px solid rgba(245, 158, 11, 0.45); }
+[data-theme="dark"] .badge.low,
+[data-theme="dark"] .badge.high,
+[data-theme="dark"] .badge.warn { background: rgba(245, 158, 11, 0.2); color: #fcd34d; border-color: rgba(245, 158, 11, 0.35); }
 .badge.ok       { background: rgba(74, 222, 128, 0.15); color: #2e7d32; border: 1px solid rgba(74, 222, 128, 0.4); }
 [data-theme="dark"] .badge.ok { color: #81c784; background: rgba(74, 222, 128, 0.1); }
 .badge.warning  { background: rgba(250, 204, 21, 0.15); color: #b78103; border: 1px solid rgba(250, 204, 21, 0.4); }
@@ -692,22 +721,26 @@ output {
   padding: 10px 18px;
   border-radius: var(--m3-shape-full);
   background: var(--m3-surface-container-high);
-  color: var(--m3-on-surface);
+  color: var(--m3-on-surface-variant);
   cursor: pointer;
   user-select: none;
   font-size: 0.85rem;
   font-weight: 600;
   transition: all var(--m3-duration-short) var(--m3-easing);
-  border: 1px solid var(--glass-border);
+  /* Explicit visible border so inactive pills read as distinct from text */
+  border: 1.5px solid var(--m3-outline-variant);
 }
 .pill:hover {
   background: var(--m3-surface-container-highest);
+  border-color: var(--m3-primary);
+  color: var(--m3-primary);
   transform: translateY(-1px);
 }
 .pill.active {
   background: var(--m3-primary);
   color: var(--m3-on-primary);
-  box-shadow: 0 4px 12px rgba(90, 75, 120, 0.25);
+  border-color: var(--m3-primary);
+  box-shadow: 0 4px 12px rgba(90, 75, 120, 0.3);
 }
 
 /* Bottom Nav Bar - Floating Dock on Mobile, Sidebar on Desktop */
@@ -760,8 +793,9 @@ output {
 }
 
 .nav-label {
-  font-size: 0.72rem;
+  font-size: 0.75rem;
   font-weight: 700;
+  letter-spacing: 0.2px;
   z-index: 2;
   transition: transform var(--m3-duration-short) var(--m3-easing);
 }
@@ -800,7 +834,8 @@ output {
   position: fixed;
   bottom: 96px;
   right: 24px;
-  width: 56px;
+  width: auto;
+  min-width: 56px;
   height: 56px;
   border-radius: var(--m3-shape-lg);
   background: var(--m3-primary);
@@ -812,9 +847,16 @@ output {
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 8px;
+  padding: 0 20px;
   box-shadow: var(--m3-shadow-3);
   z-index: 85;
   transition: all var(--m3-duration-short) var(--m3-easing);
+}
+.fab-label {
+  font-size: 0.92rem;
+  font-weight: 700;
+  letter-spacing: 0.3px;
 }
 .fab:hover {
   transform: translateY(-4px) scale(1.05);
@@ -1169,21 +1211,66 @@ details[open] .manual-accordion-summary::after { transform: rotate(90deg); }
 
 /* Headers */
 .tab-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
   margin-bottom: 20px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--m3-outline-variant);
 }
+
 .manual-header {
-  margin-bottom: 16px;
+  position: sticky;
+  top: 72px; /* below topbar */
+  z-index: 50;
+  background: var(--m3-surface);
+  padding: 12px 16px;
+  margin: 0 -16px;
+  border-bottom: 1px solid var(--m3-outline-variant);
+  margin-bottom: 4px;
 }
 
 /* Manual Grid */
 .manual-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 16px;
-  margin-top: 16px;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 14px;
+  margin-top: 4px;
+  padding: 0 0 24px;
 }
 
-/* Manual Chips */
+/* Section header/divider inside the manual grid — spans all columns */
+.manual-section-label {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 4px 6px;
+  margin-top: 8px;
+  border-bottom: 1.5px solid var(--m3-outline-variant);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--m3-on-surface-variant);
+}
+.manual-section-label:first-child {
+  padding-top: 4px;
+  margin-top: 0;
+}
+
+.manual-chips-scroll {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 8px 0;
+  scrollbar-width: none;
+}
+.manual-chips-scroll::-webkit-scrollbar {
+  display: none;
+}
 .m-chip {
   display: inline-flex;
   align-items: center;
@@ -1201,6 +1288,123 @@ details[open] .manual-accordion-summary::after { transform: rotate(90deg); }
   color: var(--m3-on-primary-container);
   border-color: var(--m3-primary);
 }
+
+/* ================================================================
+   CLICKABLE / INTERACTIVE UX IMPROVEMENTS & HOVER STATES
+   ================================================================ */
+
+/* Explicitly enforce interactive pointer across all clickable assets */
+button, 
+[role="button"], 
+[role="tab"], 
+.record-card, 
+.manual-topic-card, 
+.manual-printable-ref, 
+.pill, 
+.m-chip, 
+summary {
+  cursor: pointer !important;
+}
+
+/* Focus indicator for visual accessibility */
+button:focus-visible,
+[role="button"]:focus-visible,
+[role="tab"]:focus-visible,
+.record-card:focus-visible,
+.manual-topic-card:focus-visible,
+summary:focus-visible {
+  outline: 3px solid var(--m3-primary);
+  outline-offset: 3px;
+}
+
+/* Premium Styling for Manual Topic Cards */
+.manual-topic-card {
+  background-color: var(--glass-bg);
+  border: 1.5px solid var(--glass-border);
+  backdrop-filter: var(--glass-backdrop);
+  -webkit-backdrop-filter: var(--glass-backdrop);
+  border-radius: var(--m3-shape-lg);
+  padding: 24px;
+  box-shadow: var(--m3-shadow-1);
+  transition: all var(--m3-duration-short) var(--m3-easing);
+  display: flex;
+  flex-direction: column;
+  min-height: 175px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Hover and active micro-animations */
+.manual-topic-card:hover {
+  background: var(--m3-surface-container-high);
+  transform: translateY(-4px);
+  box-shadow: var(--m3-shadow-2);
+  border-color: var(--m3-primary);
+}
+
+.manual-topic-card:active {
+  transform: translateY(-1px) scale(0.99);
+}
+
+.manual-topic-card h4 {
+  font-size: 1.08rem;
+  font-weight: 600;
+  color: var(--m3-on-surface);
+  margin-top: 14px;
+  margin-bottom: 6px;
+  line-height: 1.4;
+}
+
+.manual-topic-card p {
+  font-size: 0.86rem;
+  color: var(--m3-on-surface-variant);
+  margin-bottom: 30px;
+  line-height: 1.5;
+  opacity: 0.85;
+}
+
+.card-icon-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.card-icon {
+  font-size: 26px;
+  line-height: 1;
+}
+
+.card-action-indicator {
+  position: absolute;
+  bottom: 18px;
+  right: 22px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--m3-primary);
+  opacity: 0.75;
+  transition: opacity var(--m3-duration-short), transform var(--m3-duration-short);
+}
+
+.manual-topic-card:hover .card-action-indicator {
+  opacity: 1;
+  transform: translateX(2px);
+}
+
+/* Feedback for other clickable elements */
+.pill:hover, .m-chip:hover {
+  border-color: var(--m3-primary);
+  transform: translateY(-1px);
+}
+
+.pill:active, .m-chip:active {
+  transform: translateY(0);
+}
+
+.record-card:hover {
+  border-color: var(--m3-primary);
+}
+
 
 /* Clozapina Stats Row & Chips */
 .clz-stats-row {
@@ -1237,6 +1441,37 @@ details[open] .manual-accordion-summary::after { transform: rotate(90deg); }
   border: 1.5px dashed var(--m3-outline);
   color: var(--m3-on-surface-variant);
   margin: 16px 0;
+}
+
+.onboarding-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 20px auto;
+  max-width: 320px;
+  text-align: left;
+}
+
+.onb-step {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 0.94rem;
+  color: var(--m3-on-surface);
+}
+
+.onb-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--m3-primary);
+  color: var(--m3-on-primary);
+  font-size: 0.82rem;
+  font-weight: 700;
+  flex-shrink: 0;
 }
 
 /* Card Hero */
@@ -1335,20 +1570,39 @@ details[open] .manual-accordion-summary::after { transform: rotate(90deg); }
 .manual-search-box {
   position: relative;
   width: 100%;
+  display: flex;
+  align-items: center;
+}
+/* Search icon using ::before pseudo on a wrapper */
+.manual-search-box::before {
+  content: '\1F50D'; /* magnifying glass emoji fallback */
+  position: absolute;
+  left: 14px;
+  font-size: 16px;
+  pointer-events: none;
+  opacity: 0.5;
+  z-index: 2;
 }
 .manual-search-box input {
   width: 100%;
-  padding: 12px 16px;
+  padding: 12px 16px 12px 40px; /* indent for search icon */
   border-radius: var(--m3-shape-lg);
-  border: 1px solid var(--m3-outline);
+  border: 1.5px solid var(--m3-outline-variant);
   background: var(--m3-surface-container);
   color: var(--m3-on-surface);
   outline: none;
   font-size: 15px;
+  font-family: inherit;
+  transition: border-color var(--m3-duration-short), background var(--m3-duration-short);
+}
+.manual-search-box input::placeholder {
+  color: var(--m3-on-surface-variant);
+  opacity: 0.7;
 }
 .manual-search-box input:focus {
   border-color: var(--m3-primary);
   background: var(--m3-surface-bright);
+  box-shadow: 0 0 0 4px rgba(90, 75, 120, 0.1);
 }
 
 .manual-results {
@@ -1377,14 +1631,4 @@ details[open] .manual-accordion-summary::after { transform: rotate(90deg); }
   background: var(--m3-surface-container-low);
 }
 
-.manual-chips-scroll {
-  display: flex;
-  gap: 8px;
-  overflow-x: auto;
-  padding: 8px 0;
-  scrollbar-width: none;
-}
-.manual-chips-scroll::-webkit-scrollbar {
-  display: none;
-}
-
+/* (manual-chips-scroll is defined above in its canonical location) */
