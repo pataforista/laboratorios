@@ -823,7 +823,8 @@ output {
   padding: 10px 18px;
   border-radius: var(--m3-shape-full);
   background: var(--m3-surface-container-high);
-  color: var(--m3-on-surface-variant);
+  color: var(--m3-on-surface); /* Alto contraste */
+  opacity: 0.8; /* Suave pero legible */
   cursor: pointer;
   user-select: none;
   font-size: 0.85rem;
@@ -1331,6 +1332,7 @@ details[open] .manual-accordion-summary::after { transform: rotate(90deg); }
   padding: 10px 16px 8px;
   border-bottom: 1px solid var(--m3-outline-variant);
   margin-bottom: 4px;
+  margin-top: -12px; /* Reducir el espacio muerto superior de la pestaña */
 }
 
 /* Manual Grid */
@@ -1381,6 +1383,8 @@ details[open] .manual-accordion-summary::after { transform: rotate(90deg); }
   border-radius: var(--m3-shape-full);
   font-size: 14px;
   font-weight: 500;
+  color: var(--m3-on-surface); /* Alto contraste */
+  opacity: 0.8; /* Suave pero legible */
   cursor: pointer;
   transition: all var(--m3-duration-short);
 }
@@ -1388,6 +1392,17 @@ details[open] .manual-accordion-summary::after { transform: rotate(90deg); }
   background: var(--m3-primary-container);
   color: var(--m3-on-primary-container);
   border-color: var(--m3-primary);
+  opacity: 1;
+}
+
+/* Etiquetas de analitos en edición */
+.analyte-label {
+  color: var(--m3-on-surface) !important;
+  font-weight: 600 !important;
+}
+.analyte-grid > div:first-child {
+  color: var(--m3-on-surface);
+  font-weight: 600;
 }
 
 /* ================================================================
@@ -1712,8 +1727,8 @@ summary:focus-visible {
 }
 
 .ai-search-box input::placeholder {
-  color: var(--m3-on-surface-variant);
-  opacity: 0.7;
+  color: var(--m3-on-surface);
+  opacity: 0.6; /* 60% de opacidad sobre blanco/texto garantiza excelente visibilidad */
 }
 
 /* Toolbar inferior dentro del buscador */
