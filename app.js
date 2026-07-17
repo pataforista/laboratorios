@@ -1280,6 +1280,13 @@ function renderPanelSelection(filter = "") {
 }
 
 function goToStep(s) {
+  // Save typed values when leaving Step 3
+  const activeStepEl = $$(".step").find(el => !el.classList.contains("hidden"));
+  const prevStep = activeStepEl ? parseInt(activeStepEl.id.replace("nrStep", "")) : null;
+  if (prevStep === 3) {
+    state.new.tempCaptureData = saveTemporaryValues();
+  }
+
   $$(".step").forEach(el => el.classList.add("hidden"));
   $(`#nrStep${s}`).classList.remove("hidden");
   const titles = ["", "Información", "Estudios", "Captura"];
@@ -1293,7 +1300,12 @@ function goToStep(s) {
   if (s === 3) {
     if ($("#nrClozapine").checked) $("#clozTriage").classList.remove("hidden");
     else $("#clozTriage").classList.add("hidden");
+    renderCapturePanelSelection();
     renderCapture();
+    if (state.new.tempCaptureData) {
+      restoreTemporaryValues(state.new.tempCaptureData);
+      state.new.tempCaptureData = null;
+    }
   }
 }
 
@@ -1595,6 +1607,7 @@ function openNew(id = null) {
   state.editingId = id;
   state.new.selectedPanels.clear();
   $("#nrPanelSearch").value = "";
+  state.new.tempCaptureData = null;
   
   if (id) {
     const r = state.records.find(x => x.id === id);
@@ -1608,6 +1621,27 @@ function openNew(id = null) {
     // Select panels
     r.panels.forEach(p => state.new.selectedPanels.add(p.panel_id));
     
+    // Set initial values for step 3 rendering
+    state.new.initialValues = {};
+    state.new.initialModifiers = {};
+    state.new.initialExcluded = new Set();
+    
+    state.new.selectedPanels.forEach(pid => {
+      const panelDef = state.catalog.panels.find(pd => pd.panel_id === pid);
+      if (!panelDef) return;
+      const recordPanel = r.panels.find(rp => rp.panel_id === pid);
+      
+      panelDef.analytes.forEach(a => {
+        const res = recordPanel ? recordPanel.results.find(res => res.analyte_id === a.analyte_id) : null;
+        if (res) {
+          state.new.initialValues[a.analyte_id] = res.value;
+          state.new.initialModifiers[a.analyte_id] = !!res.modifier;
+        } else {
+          state.new.initialExcluded.add(a.analyte_id);
+        }
+      });
+    });
+    
     // Wait for step change to populate triage (DOM needs to be visible)
     setTimeout(() => {
       if (r.clinical?.triage) {
@@ -1616,23 +1650,26 @@ function openNew(id = null) {
         $("#nrFever").checked = r.clinical.triage.fever;
         $("#nrChestPain").checked = r.clinical.triage.chestPain;
         $("#nrClinicalNotes").value = r.clinical.triage.notes;
+        if (r.clinical.triage.hr) $("#nrHR").value = r.clinical.triage.hr;
+        else $("#nrHR").value = "";
+        if (r.clinical.triage.bp) $("#nrBP").value = r.clinical.triage.bp;
+        else $("#nrBP").value = "";
+        
         // Update range outputs
         $$("output").forEach(o => o.value = o.previousElementSibling.value);
       }
-      // Fill analyte inputs
-      r.panels.forEach(p => {
-        p.results.forEach(res => {
-          const el = $(`#in_${res.analyte_id}`);
-          if (el) el.value = res.value;
-          const modEl = $(`#mod_${res.analyte_id}`);
-          if (modEl) {
-            modEl.checked = !!res.modifier;
-            updateModDisplay(modEl);
-          }
-        });
-      });
+      if (r.clinical?.habits) {
+        $("#nrSmoking").checked = r.clinical.habits.smoking;
+        $("#nrQuitSmoking").checked = r.clinical.habits.quit;
+        $("#nrCaffeine").value = r.clinical.habits.caffeine || "normal";
+        $("#nrFluvoxamine").checked = r.clinical.habits.fluvox;
+      }
     }, 100);
   } else {
+    state.new.initialValues = null;
+    state.new.initialModifiers = null;
+    state.new.initialExcluded = null;
+    
     $("#nrClozapine").checked = false;
     $("#nrBEN").checked = false;
     $("#nrSex").value = "any";
@@ -1671,46 +1708,65 @@ function renderCapture() {
 
     const c = document.createElement("div");
     c.className = "card";
-    c.innerHTML = `<h3>${p.name}</h3>`;
+    c.innerHTML = `
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; border-bottom: 1px solid var(--m3-outline-variant); padding-bottom:8px;">
+        <h3 style="margin:0; font-size:15px; color:var(--m3-primary);">${sanitize(p.name)}</h3>
+        <button type="button" class="btn btn-outlined btn-sm" style="color:var(--m3-error); border-color:transparent; height:28px; padding:0 8px; font-size:11px; display:inline-flex; align-items:center;" onclick="removePanelFromCapture('${p.panel_id}')">
+          Quitar Panel
+        </button>
+      </div>
+    `;
 
       analytesToRender.forEach(an => {
         rendered.add(an.analyte_id);
         const mod = ["wbc", "anc", "alc", "plt", "mono_abs", "baso_abs", "eos_abs"].includes(an.analyte_id);
         const isBHCalc = ["anc", "alc", "mono_abs", "baso_abs", "eos_abs"].includes(an.analyte_id);
         
+        let isChecked = true;
+        let val = "";
+        let isModified = false;
+
+        if (state.new.initialValues) {
+          isChecked = !state.new.initialExcluded.has(an.analyte_id);
+          val = state.new.initialValues[an.analyte_id] !== undefined ? state.new.initialValues[an.analyte_id] : "";
+          isModified = !!state.new.initialModifiers[an.analyte_id];
+        }
+
         const r = document.createElement("div");
-        r.className = "analyte-grid";
+        r.className = "analyte-grid" + (!isChecked ? " analyte-excluded" : "");
         r.id = `capture_row_${an.analyte_id}`;
 
         let inputHtml = "";
         const inputId = `in_${an.analyte_id}`;
+        const disAttr = !isChecked ? 'disabled' : '';
 
         if (an.units === "qual") {
           inputHtml = `
-            <select id="${inputId}" aria-label="${an.name}">
-               <option value="">--</option>
-               <option value="negativo">Negativo</option>
-               <option value="positivo">Positivo</option>
-               <option value="traza">Traza</option>
+            <select id="${inputId}" aria-label="${an.name}" ${disAttr}>
+               <option value="" ${val === "" ? "selected" : ""}>--</option>
+               <option value="negativo" ${val === "negativo" ? "selected" : ""}>Negativo</option>
+               <option value="positivo" ${val === "positivo" ? "selected" : ""}>Positivo</option>
+               <option value="traza" ${val === "traza" ? "selected" : ""}>Traza</option>
             </select>`;
         } else if (an.units === "text") {
-          inputHtml = `<input id="${inputId}" type="text" placeholder="Observación" aria-label="${an.name}">`;
+          inputHtml = `<input id="${inputId}" type="text" placeholder="Observación" aria-label="${an.name}" value="${sanitize(val)}" ${disAttr}>`;
         } else {
           const allowNegative = ["urine_ph"].includes(an.analyte_id);
           const minAttr = allowNegative ? "" : 'min="0"';
           inputHtml = `
             <div style="display:flex; flex-direction:column; gap:4px;">
-              <div class="${mod ? 'num-with-mod' : ''}">
+              <div class="${mod ? 'num-with-mod' : ''}${isModified ? ' active-mod' : ''}">
                 <input id="${inputId}" class="font-mono" type="number" step="any" ${minAttr} aria-label="${an.name}"
+                  value="${val}" ${disAttr}
                   oninput="updateConversionHint('${inputId}', this.value, '${an.analyte_id}')">
                 ${mod ? `<label class="tinycheck">
-                  <input type="checkbox" id="mod_${an.analyte_id}"
+                  <input type="checkbox" id="mod_${an.analyte_id}" ${isModified ? 'checked' : ''} ${disAttr}
                     onchange="updateModDisplay(this.parentElement.previousElementSibling, '${an.analyte_id}')">×10³
                 </label>` : ""}
               </div>
               ${isBHCalc ? `
               <div class="bh-calc-row" style="display:flex; align-items:center; gap:8px; margin-top:4px;">
-                <input type="number" placeholder="%" class="pct-input" style="width:70px; margin:0;" min="0" aria-label="Porcentaje para ${an.name}"
+                <input type="number" placeholder="%" class="pct-input" style="width:70px; margin:0;" min="0" aria-label="Porcentaje para ${an.name}" ${disAttr}
                   oninput="calcAbsolute('${an.analyte_id}', this.value)">
                 <span class="muted small">Calc. desde %</span>
               </div>` : ""}
@@ -1722,7 +1778,7 @@ function renderCapture() {
         r.innerHTML = `
           <div style="display:flex; align-items:center; gap:8px;">
             <label class="switch-small" title="Excluir o incluir este estudio en el reporte">
-              <input type="checkbox" checked onchange="toggleAnalyteCapture(this, '${an.analyte_id}')">
+              <input type="checkbox" ${isChecked ? 'checked' : ''} onchange="toggleAnalyteCapture(this, '${an.analyte_id}')">
               <span class="slider-small"></span>
             </label>
             <span class="analyte-label" style="font-weight: 500;">${an.name}</span>
@@ -1733,6 +1789,11 @@ function renderCapture() {
       });
     a.appendChild(c);
   });
+
+  // Limpiar valores iniciales para que futuros renders respeten el estado dinámico del usuario
+  state.new.initialValues = null;
+  state.new.initialModifiers = null;
+  state.new.initialExcluded = null;
 }
 
 // Global helper para excluir o incluir analitos
@@ -1755,6 +1816,95 @@ window.toggleAnalyteCapture = function(cb, id) {
   // Limpiar hints de conversión
   const hint = $(`#hint_in_${id}`);
   if (hint && !isIncluded) hint.innerHTML = "";
+};
+
+function saveTemporaryValues() {
+  const tempValues = {};
+  const tempModifiers = {};
+  const tempDisabled = {};
+  state.catalog.panels.forEach(p => {
+    p.analytes.forEach(a => {
+      const el = $(`#in_${a.analyte_id}`);
+      if (el) {
+        tempValues[a.analyte_id] = el.value;
+        tempDisabled[a.analyte_id] = el.disabled;
+      }
+      const modEl = $(`#mod_${a.analyte_id}`);
+      if (modEl) {
+        tempModifiers[a.analyte_id] = modEl.checked;
+      }
+    });
+  });
+  return { tempValues, tempModifiers, tempDisabled };
+}
+
+function restoreTemporaryValues(temp) {
+  if (!temp) return;
+  const { tempValues, tempModifiers, tempDisabled } = temp;
+  Object.entries(tempValues).forEach(([id, val]) => {
+    const el = $(`#in_${id}`);
+    if (el) {
+      el.value = val;
+    }
+  });
+  Object.entries(tempModifiers).forEach(([id, checked]) => {
+    const modEl = $(`#mod_${id}`);
+    if (modEl) {
+      modEl.checked = checked;
+      updateModDisplay(modEl);
+    }
+  });
+  Object.entries(tempDisabled).forEach(([id, disabled]) => {
+    const row = $(`#capture_row_${id}`);
+    const input = $(`#in_${id}`);
+    if (row && input && disabled) {
+      const cb = row.querySelector("input[type='checkbox'][onchange*='toggleAnalyteCapture']");
+      if (cb) {
+        cb.checked = false;
+        toggleAnalyteCapture(cb, id);
+      }
+    }
+  });
+}
+
+function renderCapturePanelSelection() {
+  const container = $("#nrCapturePanelsSelection");
+  if (!container) return;
+  container.innerHTML = "";
+  
+  state.catalog.panels.forEach(panel => {
+    const isActive = state.new.selectedPanels.has(panel.panel_id);
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "pill" + (isActive ? " active" : "");
+    b.textContent = panel.name;
+    b.onclick = () => {
+      const temp = saveTemporaryValues();
+      if (isActive) {
+        state.new.selectedPanels.delete(panel.panel_id);
+      } else {
+        state.new.selectedPanels.add(panel.panel_id);
+      }
+      renderCapturePanelSelection();
+      renderCapture();
+      restoreTemporaryValues(temp);
+      
+      // Keep panel selectors in step 2 in sync
+      renderPanelSelection();
+    };
+    container.appendChild(b);
+  });
+}
+
+window.removePanelFromCapture = function(panelId) {
+  const temp = saveTemporaryValues();
+  state.new.selectedPanels.delete(panelId);
+  renderCapturePanelSelection();
+  renderCapture();
+  restoreTemporaryValues(temp);
+  
+  // Keep panel selectors in step 2 in sync
+  renderPanelSelection();
 };
 
 /**
@@ -1872,6 +2022,135 @@ function saveNewRecord() {
 }
 
 /* ---------- detail ---------- */
+function getAnalyteAbbreviation(id, fullName) {
+  const mapping = {
+    hb: "Hb",
+    hct: "Hto",
+    mcv: "VCM",
+    rdw: "RDW",
+    retic: "Retic",
+    wbc: "Leucos",
+    anc: "Neutróf",
+    alc: "Linfoc",
+    plt: "Plaq",
+    creatinine: "Cr",
+    tsh: "TSH",
+    fgfr: "eGFR",
+    ast: "AST",
+    alt: "ALT",
+    chol: "Colest",
+    tg: "Trigl",
+    glucose: "Gluc",
+    bun: "BUN",
+    urea: "Urea",
+    potassium: "K+",
+    sodium: "Na+",
+    chlorine: "Cl-",
+    calcium: "Ca",
+    phosphorus: "P",
+    magnesium: "Mg",
+    uric_acid: "Ác. Úrico",
+    bilirubin_total: "Bil. Total",
+    bilirubin_direct: "Bil. Dir",
+    bilirubin_indirect: "Bil. Ind",
+    ldh: "LDH",
+    alkaline_phosphatase: "FA",
+    ggt: "GGT",
+    hb1ac: "HbA1c",
+    t3: "T3",
+    t4: "T4",
+    t4_free: "T4 libre",
+    urine_ph: "pH urinario",
+    urine_density: "Dens. urinaria",
+    urine_protein: "Prot. urinaria",
+    urine_glucose: "Gluc. urinaria",
+    urine_nitrite: "Nitritos"
+  };
+  return mapping[id] || fullName;
+}
+
+function generateCompactClinicalNote(r) {
+  const rawDate = formatDate(r.date);
+  let noteText = `Lab (${rawDate})`;
+  if (r.labName) noteText += ` [${r.labName}]`;
+  noteText += ": ";
+  
+  const parts = [];
+  
+  // 1. Clozapina monitoring analytes (WBC, ANC, PLT) prioritized
+  if (r.data?.wbc !== undefined) {
+    parts.push(`Leucos ${(r.data.wbc / 1000).toFixed(2)}k/µL`);
+  }
+  if (r.data?.anc !== undefined) {
+    parts.push(`Neutróf ${(r.data.anc / 1000).toFixed(2)}k/µL`);
+  }
+  if (r.data?.plt !== undefined) {
+    parts.push(`Plaq ${(r.data.plt / 1000).toFixed(0)}k/µL`);
+  }
+
+  const clozKeys = ["wbc", "anc", "plt"];
+  
+  // 2. Loop through other panel analytes dynamically
+  r.panels.forEach(p => {
+    const panelDef = state.catalog.panels.find(pd => pd.panel_id === p.panel_id);
+    if (!panelDef) return;
+    
+    p.results.forEach(res => {
+      if (clozKeys.includes(res.analyte_id)) return; // already prioritized
+      const analyteDef = panelDef.analytes.find(an => an.analyte_id === res.analyte_id);
+      if (!analyteDef) return;
+      
+      let valStr = "";
+      if (analyteDef.units === "qual" || analyteDef.units === "text") {
+        valStr = res.value;
+      } else {
+        const valNum = Number(res.value);
+        if (["alc", "mono_abs", "baso_abs", "eos_abs"].includes(res.analyte_id)) {
+          valStr = `${(valNum / 1000).toFixed(2)}k/µL`;
+        } else {
+          // format float cleanly
+          const fmtVal = valNum.toFixed(2).replace(/\.?0+$/, "");
+          valStr = `${fmtVal} ${analyteDef.units || ""}`.trim();
+        }
+      }
+      const abbr = getAnalyteAbbreviation(res.analyte_id, analyteDef.name);
+      parts.push(`${abbr} ${valStr}`);
+    });
+  });
+  
+  // 3. Clozapina triage and CYP1A2 clinical notes
+  if (r.isClozapine && r.clinical?.triage) {
+    const t = r.clinical.triage;
+    const h = r.clinical.habits || {};
+    
+    const triageParts = [];
+    if (t.constipation > 0) triageParts.push(`Estreñim. ${t.constipation}/5`);
+    if (t.somnolence > 0) triageParts.push(`Somnol. ${t.somnolence}/5`);
+    if (t.hr) triageParts.push(`FC ${t.hr} lpm`);
+    if (t.bp) triageParts.push(`PA ${t.bp}`);
+    if (t.fever) triageParts.push("Fiebre");
+    if (t.chestPain) triageParts.push("Dolor torácico");
+    
+    const habitParts = [];
+    if (h.smoking) habitParts.push(h.quit ? "Cese tabaco" : "Fumador");
+    if (h.fluvox) habitParts.push("Fluvoxamina");
+    if (h.caffeine === "high") habitParts.push("Cafeína alta");
+
+    if (triageParts.length) {
+      parts.push(`Triage CLZ: ${triageParts.join(", ")}`);
+    }
+    if (habitParts.length) {
+      parts.push(`CYP1A2: ${habitParts.join(", ")}`);
+    }
+    if (t.notes) {
+      parts.push(`Notas: ${t.notes}`);
+    }
+  }
+  
+  noteText += parts.length ? parts.join(" | ") : "Sin resultados clínicos registrados.";
+  return noteText;
+}
+
 /* ---------- detail ---------- */
 function openDetail(id) {
   const r = state.records.find(x => x.id === id);
@@ -1879,31 +2158,7 @@ function openDetail(id) {
   $("#detailHeader").innerHTML = `<strong>${formatDate(r.date)}</strong> · ${sanitize(r.context || '')}${r.isClozapine ? ' 🔵 CLZ' : ''}${r.isBEN ? ' · BEN' : ''}`;
 
   // Generador de Nota Clínica Compacta
-  const rawDate = formatDate(r.date);
-  let noteText = `Lab (${rawDate}): `;
-  const parts = [];
-  
-  if (r.data?.wbc !== undefined) parts.push(`Leucos ${(r.data.wbc / 1000).toFixed(1)}k`);
-  if (r.data?.anc !== undefined) parts.push(`Neutróf ${(r.data.anc / 1000).toFixed(1)}k`);
-  if (r.data?.plt !== undefined) parts.push(`Plaq ${(r.data.plt / 1000).toFixed(0)}k`);
-  if (r.data?.hb !== undefined) parts.push(`Hb ${r.data.hb} g/dL`);
-  if (r.data?.creatinine !== undefined) parts.push(`Cr ${r.data.creatinine} mg/dL`);
-  if (r.data?.tsh !== undefined) parts.push(`TSH ${r.data.tsh} mIU/L`);
-  if (r.data?.fgfr !== undefined) parts.push(`eGFR ${r.data.fgfr}`);
-
-  // Otras métricas no hematológicas rápidas
-  const otherAnalytes = {
-    ast: "AST", alt: "ALT", chol: "Colest", tg: "Trigl", glucose: "Gluc"
-  };
-  Object.entries(otherAnalytes).forEach(([key, label]) => {
-    if (r.data?.[key] !== undefined) parts.push(`${label} ${r.data[key]}`);
-  });
-
-  if (r.clinical?.triage?.hr) parts.push(`FC ${r.clinical.triage.hr} lpm`);
-  if (r.clinical?.triage?.bp) parts.push(`PA ${r.clinical.triage.bp}`);
-
-  noteText += parts.length ? parts.join(", ") : "Sin resultados numéricos.";
-  noteText += ".";
+  const noteText = generateCompactClinicalNote(r);
 
   // Renderizar la tarjeta de nota rápida copiable
   let noteCopyHtml = `
