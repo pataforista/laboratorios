@@ -22,32 +22,32 @@
         {
           "type": "resource_link",
           "link_id": "lifestyle_nutrition",
-          "label": "🍎 Alimentación e Hidratación"
+          "label": "Alimentación e Hidratación"
         },
         {
           "type": "resource_link",
           "link_id": "lifestyle_activity",
-          "label": "🏃 Actividad Física"
+          "label": "Actividad Física"
         },
         {
           "type": "resource_link",
           "link_id": "lifestyle_sleep",
-          "label": "💤 Higiene del Sueño"
+          "label": "Higiene del Sueño"
         },
         {
           "type": "resource_link",
           "link_id": "lifestyle_anxiety",
-          "label": "🧘 Salud Mental y Ansiedad"
+          "label": "Salud Mental y Ansiedad"
         },
         {
           "type": "resource_link",
           "link_id": "lifestyle_oral",
-          "label": "🦷 Higiene Bucal"
+          "label": "Higiene Bucal"
         },
         {
           "type": "resource_link",
           "link_id": "lifestyle_master_guide",
-          "label": "🖨️ IMPRIMIR TODO (Resumen General)"
+          "label": "IMPRIMIR TODO (Resumen General)"
         }
       ]
     },

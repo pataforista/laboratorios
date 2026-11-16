@@ -19,7 +19,7 @@
       "id": "htn_psych_interact",
       "type": "warning",
       "level": "danger",
-      "title": "🚨 Interacciones Críticas para el Psiquiatra",
+      "title": "Atención: Interacciones Críticas para el Psiquiatra",
       "content": "Ciertos antihipertensivos alteran niveles de psicofármacos:",
       "items": [
         "**IECAs (Enalapril, Lisinopril) y ARA-II (Losartán):** Pueden ELEVAR niveles de Litio significativamente (riesgo de toxicidad renal).",

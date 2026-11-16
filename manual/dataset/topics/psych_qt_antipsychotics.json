@@ -116,17 +116,17 @@
             ],
             "rows": [
                 [
-                    "🟢 Normal",
+                    "Normal",
                     "< 440 ms (hombres) / < 450 ms (mujeres)",
                     "Continuar vigilancia habitual."
                 ],
                 [
-                    "🟡 Alerta",
+                    "Alerta",
                     "470-500 ms",
                     "No subir dosis; corregir K+/Mg++; revisar interacciones."
                 ],
                 [
-                    "🔴 Peligro",
+                    "Peligro",
                     "> 500 ms o aumento > 60 ms sobre basal",
                     "Suspender o cambiar antipsicótico; riesgo de TdP aumenta exponencialmente."
                 ]

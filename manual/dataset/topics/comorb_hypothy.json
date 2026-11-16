@@ -8,7 +8,7 @@
       "id": "hypo_psych_context",
       "type": "warning",
       "level": "danger",
-      "title": "🚨 El Psiquiatra y la Tiroides",
+      "title": "Atención: El Psiquiatra y la Tiroides",
       "content": "La función tiroidea es crítica en salud mental por dos razones principales:",
       "items": [
         "**Litio**: El litio se concentra en la tiroides e inhibe la liberación de hormonas. Causa bocio o hipotiroidismo en 10-20% de los usuarios. Monitorear TSH cada 6-12 meses.",

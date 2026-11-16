@@ -8,7 +8,7 @@
       "id": "wh_valproate_warning",
       "type": "warning",
       "level": "critical",
-      "title": "⚠️ Alerta Roja: Ácido Valproato",
+      "title": "Alerta Roja: Ácido Valproato",
       "content": "El uso de Valproato en mujeres en edad fértil debe evitarse siempre que sea posible.",
       "items": [
         "**Teratogenicidad**: Riesgo de malformaciones (10%) y retraso neurodesarrollo (40%).",

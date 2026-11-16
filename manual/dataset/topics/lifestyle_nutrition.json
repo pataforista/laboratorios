@@ -83,9 +83,9 @@
           "type": "list",
           "title": "Instrucciones para el Paciente",
           "items": [
-            "🟢 **Verduras y Frutas:** \"Llene la mitad de su plato con esto.\"",
-            "🟡 **Cereales:** \"Un cuarto del plato (arroz, pasta, tortilla).\"",
-            "🔴 **Proteínas:** \"El otro cuarto (pollo, pescado, frijoles). Evite carnes rojas.\""
+            "**Verduras y Frutas:** \"Llene la mitad de su plato con esto.\"",
+            "**Cereales:** \"Un cuarto del plato (arroz, pasta, tortilla).\"",
+            "**Proteínas:** \"El otro cuarto (pollo, pescado, frijoles). Evite carnes rojas.\""
           ]
         }
       ]

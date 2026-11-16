@@ -5,14 +5,14 @@
   "topics": [
     {
       "id": "labnotes_guide",
-      "title": "📖 Guía: Uso de Lab Notes",
+      "title": "Guía: Uso de Lab Notes",
       "path": "dataset/topics/labnotes_guide.json",
       "audience": "clinician",
       "tags": ["tutorial", "ayuda", "clozapina"]
     },
     {
       "id": "psych_clozapine_monitoring",
-      "title": "🩺 Protocolo: Monitoreo Clozapina (REMS 2024)",
+      "title": "Protocolo: Monitoreo Clozapina (REMS 2024)",
       "path": "dataset/topics/psych_clozapine_monitoring.json",
       "audience": "clinician",
       "tags": ["clozapina", "seguridad", "ANC", "neutropenia"]

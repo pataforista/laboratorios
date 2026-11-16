@@ -46,7 +46,7 @@
     {
       "id": "oral_warning_signs",
       "type": "warning",
-      "title": "⛔ Signos de Alarma",
+      "title": "Signos de Alarma",
       "level": "danger",
       "content": "Consulte a su dentista de inmediato si nota:",
       "items": [
