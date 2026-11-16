@@ -5,6 +5,25 @@ import * as manualLoader from './manualLoader.js';
 const $ = s => document.querySelector(s);
 const $$ = s => [...document.querySelectorAll(s)];
 
+// Íconos de trazo (PLAN_COHERENCIA_ECOSISTEMA.md, A5). Nunca emojis.
+const ICON_PATHS = {
+  calc: '<rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 7h6M9 12h.01M13 12h.01M9 16h.01M13 16h.01"/>',
+  book: '<path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 19V5"/>',
+  file: '<path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6"/>',
+  image: '<rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-5-8 8"/>',
+  protocol: '<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/>',
+  info: '<circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/>',
+  warning: '<path d="M12 4l9 16H3z"/><path d="M12 10v4M12 17h.01"/>',
+  print: '<path d="M7 9V3h10v6"/><rect x="4" y="9" width="16" height="8" rx="2"/><path d="M7 14h10v7H7z"/>',
+  food: '<path d="M7 3v8a3 3 0 0 0 6 0V3M10 3v18M17 3c-2 2-2 6 0 8v10"/>',
+  alert: '<path d="M12 3l9 16H3z"/><path d="M12 10v4M12 17h.01"/>',
+  check: '<circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.5 2.5L16 9.5"/>',
+  clipboard: '<rect x="6" y="4" width="12" height="17" rx="2"/><path d="M9 4V3h6v1M9 12h6M9 16h6"/>',
+  flask: '<path d="M9 3h6M10 3v6l-5 9a2 2 0 0 0 2 3h10a2 2 0 0 0 2-3l-5-9V3"/>',
+  calendar: '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>',
+};
+const ui = (name, cls = "ui-ico") => `<svg class="${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICON_PATHS[name] || ""}</svg>`;
+
 const LS_KEY = "labnotes_records_v2";
 const LS_KEY_V1 = "labnotes_records_v1";
 const LS_THEME = "labnotes_theme";
@@ -319,11 +338,11 @@ function renderManualHome(filter = "all") {
 
   // 1. Calculators
   if (filter === "all" || filter === "calculator") {
-    if (filter === "all") html += sectionLabel("🧮", "Calculadoras");
+    if (filter === "all") html += sectionLabel(ui("calc"), "Calculadoras");
     html += MANUAL_CALCULATORS.map(c => `
       <div class="manual-topic-card calculator-card" onclick="openCalculator('${c.type}')">
         <div class="card-icon-header">
-          <span class="card-icon">🧮</span>
+          <span class="card-icon">${ui("calc")}</span>
           <span class="badge normal">Calculadora</span>
         </div>
         <h4>${sanitize(c.title)}</h4>
@@ -339,16 +358,16 @@ function renderManualHome(filter = "all") {
     if (filter === "protocol") {
       topics = topics.filter(t => t.id.startsWith("psych_") || t.id.startsWith("comorb_") || t.id === "womens_health" || t.id === "prevent_cancer");
     }
-    if (filter === "all") html += sectionLabel("⚕", "Protocolos y Guías");
+    if (filter === "all") html += sectionLabel(ui("protocol"), "Protocolos y Guías");
     html += topics.map(t => {
       let typeLabel = "Protocolo";
-      let icon = "⚕";
+      let icon = ui("protocol");
       if (t.id === "labnotes_guide") {
         typeLabel = "Guía";
-        icon = "📖";
+        icon = ui("book");
       } else if (t.id.startsWith("lifestyle_")) {
         typeLabel = "Estilo de Vida";
-        icon = "🥗";
+        icon = ui("food");
       }
       return `
         <div class="manual-topic-card protocol-card" onclick="openManualTopic('${t.id}')">
@@ -367,10 +386,10 @@ function renderManualHome(filter = "all") {
   // 3. Printables (PDFs & Infographies)
   if (filter === "all" || filter === "printable") {
     const printables = state.manual.printables || [];
-    if (filter === "all" && printables.length > 0) html += sectionLabel("📄", "Recursos Imprimibles");
+    if (filter === "all" && printables.length > 0) html += sectionLabel(ui("file"), "Recursos Imprimibles");
     html += printables.map(p => {
       const isPdf = p.template === 'pdf';
-      const icon = isPdf ? "📄" : "🖼️";
+      const icon = isPdf ? ui("file") : ui("image");
       const typeLabel = isPdf ? "PDF Imprimible" : "Infografía";
       return `
         <div class="manual-topic-card printable-card" onclick="openManualResource('${p.id}')">
@@ -393,7 +412,7 @@ function renderManualSearchResults(items) {
   const el = $("#manualResults");
   if (!el) return;
 
-  const icons = { calculator: "🧮", printable: "📄", topic: "⚕" };
+  const icons = { calculator: ui("calc"), printable: ui("file"), topic: ui("protocol") };
   const badges = { calculator: "clz", printable: "warn", topic: "normal" };
   const labels = { calculator: "Calculadora", printable: "Imprimible", topic: "Protocolo" };
   
@@ -434,7 +453,7 @@ function renderManualBlock(block) {
     caution: "#e67e00",
     danger: "var(--m3-error)"
   };
-  const levelIcons = { info: "ⓘ", caution: "⚠", danger: "⚠" };
+  const levelIcons = { info: ui("info"), caution: ui("warning"), danger: ui("alert") };
 
   let html = "";
 
@@ -485,7 +504,7 @@ function renderManualBlock(block) {
     case 'alert':{
       const lvl = block.level || 'info';
       const color = levelColors[lvl] || levelColors.info;
-      const icon = levelIcons[lvl] || 'ℹ️';
+      const icon = levelIcons[lvl] || ui("info");
       const lvlItems = (block.items || []).map(i => {
         const md = sanitize(i).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
         return `<li>${md}</li>`;
@@ -518,7 +537,7 @@ function renderManualBlock(block) {
         <div class="manual-printable-ref" style="display:flex; align-items:center; gap:12px; padding:12px; border:1px solid var(--m3-outline-variant); border-radius:8px; margin-top:8px; cursor:pointer;"
           onclick="openManualResource('${pId}')" role="button" tabindex="0"
           onkeydown="if(event.key==='Enter')openManualResource('${pId}')">
-          <span style="font-size:24px;">⎙</span>
+          <span style="font-size:24px;">${ui("print", "ui-ico ui-ico-lg")}</span>
           <div>
             <div style="font-weight:600;">${sanitize(block.title || 'Ver recurso imprimible')}</div>
             <div class="muted small">Abrir PDF o infografía</div>
@@ -1223,13 +1242,13 @@ function updateClozapineMonitoringWidget() {
 
   let statusHtml = "";
   if (diffDaysSinceLatest > 30) {
-    statusHtml = `<div style="color:var(--m3-error); font-weight:bold; margin-bottom:4px;">🚨 ALERTA: Paciente lleva ${diffDaysSinceLatest} días sin control hematológico (Límite: 30 días).</div>`;
+    statusHtml = `<div style="color:var(--m3-error); font-weight:bold; margin-bottom:4px;">ALERTA: Paciente lleva ${diffDaysSinceLatest} días sin control hematológico (Límite: 30 días).</div>`;
   } else if (daysToNext < 0) {
-    statusHtml = `<div style="color:var(--m3-error); font-weight:bold; margin-bottom:4px;">⚠️ CONTROL RETRASADO por ${Math.abs(daysToNext)} días (Debió realizarse el ${formattedNextDue}).</div>`;
+    statusHtml = `<div style="color:var(--m3-error); font-weight:bold; margin-bottom:4px;">${ui("warning")} CONTROL RETRASADO por ${Math.abs(daysToNext)} días (Debió realizarse el ${formattedNextDue}).</div>`;
   } else if (daysToNext === 0) {
-    statusHtml = `<div style="color:#e67e00; font-weight:bold; margin-bottom:4px;">📅 CONTROL SUGERIDO PARA HOY.</div>`;
+    statusHtml = `<div style="color:#e67e00; font-weight:bold; margin-bottom:4px;">${ui("calendar")} CONTROL SUGERIDO PARA HOY.</div>`;
   } else {
-    statusHtml = `<div style="color:var(--m3-primary); font-weight:bold; margin-bottom:4px;">✅ Al día. Próximo control en ${daysToNext} días (${formattedNextDue}).</div>`;
+    statusHtml = `<div style="color:var(--m3-primary); font-weight:bold; margin-bottom:4px;">${ui("check")} Al día. Próximo control en ${daysToNext} días (${formattedNextDue}).</div>`;
   }
 
   content.innerHTML = `
@@ -2155,7 +2174,7 @@ function generateCompactClinicalNote(r) {
 function openDetail(id) {
   const r = state.records.find(x => x.id === id);
   state.selected = r;
-  $("#detailHeader").innerHTML = `<strong>${formatDate(r.date)}</strong> · ${sanitize(r.context || '')}${r.isClozapine ? ' 🔵 CLZ' : ''}${r.isBEN ? ' · BEN' : ''}`;
+  $("#detailHeader").innerHTML = `<strong>${formatDate(r.date)}</strong> · ${sanitize(r.context || '')}${r.isClozapine ? ' · CLZ' : ''}${r.isBEN ? ' · BEN' : ''}`;
 
   // Generador de Nota Clínica Compacta
   const noteText = generateCompactClinicalNote(r);
@@ -2164,7 +2183,7 @@ function openDetail(id) {
   let noteCopyHtml = `
     <div class="card note-quick-copy-card" style="border: 1px solid var(--m3-primary); background: var(--m3-primary-container)15; padding:12px; margin-bottom:16px;">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-        <span style="font-size:12px; font-weight:700; color:var(--m3-primary); text-transform:uppercase; letter-spacing:0.5px;">📋 Copiar para Nota Clínica</span>
+        <span style="font-size:12px; font-weight:700; color:var(--m3-primary); text-transform:uppercase; letter-spacing:0.5px;">Copiar para Nota Clínica</span>
         <button class="btn btn-filled btn-sm" onclick="copyTextToClipboard('${btoa(unescape(encodeURIComponent(noteText)))}', this)" style="font-size:11px; padding:2px 10px; height:24px;">Copiar Nota</button>
       </div>
       <div class="font-mono" style="font-size:12px; background:var(--m3-surface-container-low); padding:8px; border-radius:6px; border:1px solid var(--m3-outline-variant); line-height:1.4; color:var(--m3-on-surface); word-break:break-word;">
@@ -2195,7 +2214,7 @@ function openDetail(id) {
     clozAnalysisHtml = `
       <div class="cloz-analysis-card" style="margin-top:16px; padding:12px; border-radius:8px; border:1px solid var(--m3-outline-variant); background:var(--m3-surface-container-low); margin-bottom:12px;">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-          <h3 style="margin:0; font-size:16px;">🔬 Análisis Clozapina (REMS 2024)</h3>
+          <h3 style="margin:0; font-size:16px;">Análisis Clozapina (REMS 2024)</h3>
           <span class="badge ${ancAnalysis?.status.toLowerCase() || 'ok'}">${ancAnalysis?.status || 'OK'}</span>
         </div>
         <p style="font-size:14px; margin:4px 0;"><strong>ANC:</strong> ${(r.data?.anc/1000 || 0).toFixed(2)} k/µL (${r.data?.anc || 0} /µL)</p>
@@ -2217,7 +2236,7 @@ function openDetail(id) {
   if (hasFib4Data || hasQtcData) {
     shortcutsHtml += `
       <div class="card" style="border: 1.5px solid var(--m3-primary); background: var(--m3-primary-container)12; padding: 16px; margin-bottom: 16px;">
-        <h3 style="margin-top: 0; font-size: 14px; color: var(--m3-primary); display: flex; align-items: center; gap: 6px;">🧮 Herramientas Sugeridas</h3>
+        <h3 style="margin-top: 0; font-size: 14px; color: var(--m3-primary); display: flex; align-items: center; gap: 6px;">${ui("calc")} Herramientas Sugeridas</h3>
         <p class="muted small" style="margin-bottom: 10px;">Los resultados de este laboratorio coinciden con los campos de las siguientes calculadoras:</p>
         <div style="display: flex; gap: 8px; flex-wrap: wrap;">
     `;

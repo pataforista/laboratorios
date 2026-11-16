@@ -1500,6 +1500,23 @@ summary:focus-visible {
   line-height: 1;
 }
 
+/* Íconos de trazo (A5): toman el color del texto que los rodea, así claro y oscuro funcionan solos. */
+.ui-ico {
+  width: 1.1em;
+  height: 1.1em;
+  vertical-align: -0.2em;
+  flex: none;
+  display: inline-block;
+}
+.ui-ico-lg {
+  width: 1.4em;
+  height: 1.4em;
+}
+.card-icon .ui-ico {
+  width: 26px;
+  height: 26px;
+}
+
 .card-action-indicator {
   position: absolute;
   bottom: 18px;
