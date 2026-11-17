@@ -212,21 +212,45 @@ function calcAbsolute(aid, pctValue) {
 }
 
 /* ---------- theme ---------- */
+// Clave compartida del dominio (PLAN_COHERENCIA_ECOSISTEMA.md, E7). Se lee la vieja una vez.
+const LS_THEME_SHARED = "theme";
+
+function readThemePref() {
+  try {
+    const v = localStorage.getItem(LS_THEME_SHARED) ?? localStorage.getItem(LS_THEME);
+    return ["light", "dark", "auto"].includes(v) ? v : "auto";
+  } catch { return "auto"; }
+}
+
 function initTheme() {
-  const saved = localStorage.getItem(LS_THEME) || "auto";
-  setTheme(saved, false);
+  setTheme(readThemePref(), false);
+  // Con preferencia "auto", seguir los cambios del sistema en vivo.
+  const mq = window.matchMedia("(prefers-color-scheme: dark)");
+  mq.addEventListener?.("change", () => {
+    if (readThemePref() === "auto") applyEffective("auto");
+  });
+}
+
+/** Aplica el tema efectivo al body; "auto" se resuelve contra el sistema. */
+function applyEffective(pref) {
+  const effective = pref === "auto"
+    ? (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light")
+    : pref;
+  document.body.dataset.theme = effective;
+  document.body.dataset.themePref = pref;
 }
 
 /**
- * Applies a theme ("light" | "dark" | "auto") to the document.
+ * Applies a theme preference ("light" | "dark" | "auto") to the document.
  * @param {string} theme
  * @param {boolean} [persist=true] - Whether to store the choice in localStorage.
  */
 function setTheme(theme, persist = true) {
   if (!["light", "dark", "auto"].includes(theme)) theme = "auto";
-  document.body.dataset.theme = theme;
-  if (persist) localStorage.setItem(LS_THEME, theme);
-  // Reflect selection in the settings theme picker, if present.
+  applyEffective(theme);
+  if (persist) {
+    try { localStorage.setItem(LS_THEME_SHARED, theme); } catch { /* almacenamiento bloqueado: el tema dura la sesión */ }
+  }
   ["light", "dark", "auto"].forEach(t => {
     const btn = $(`#theme-${t}`);
     if (btn) btn.classList.toggle("active", t === theme);
@@ -235,11 +259,7 @@ function setTheme(theme, persist = true) {
 
 /** Returns the effective theme, resolving "auto" against the OS preference. */
 function effectiveTheme() {
-  const t = document.body.dataset.theme || "auto";
-  if (t === "auto") {
-    return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-  }
-  return t;
+  return document.body.dataset.theme === "dark" ? "dark" : "light";
 }
 
 /** Toggles between light and dark from the current effective theme. */

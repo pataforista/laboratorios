@@ -3,8 +3,8 @@
   "short_name": "LabNotes",
   "start_url": "index.html",
   "display": "standalone",
-  "background_color": "#0f0f10",
-  "theme_color": "#0f0f10",
+  "background_color": "#FBF1EC",
+  "theme_color": "#FBF1EC",
   "description": "Registro local y exportación de estudios de laboratorio. No sustituye el criterio clínico.",
   "icons": [
     {
