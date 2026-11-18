@@ -18,6 +18,7 @@
   <link rel="stylesheet" href="styles.css" />
   <title>Lab Notes — Registro Clínico</title>
   <link rel="stylesheet" href="shared/shell/shell.css" />
+  <link rel="stylesheet" href="shared/humano-chrome.css" />
 </head>
 
 <body data-theme="dark">
@@ -101,7 +102,7 @@
   </div>
 
   <!-- ── TOP APP BAR ───────────────────────────────────────────────── -->
-  <header class="topbar">
+  <header class="topbar" data-hs-header>
     <div class="brand">
       <span class="brand-icon" style="display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 50%; background: var(--m3-primary-container); color: var(--m3-on-primary-container);">
         <svg class="svg-icon"><use href="#icon-flask"></use></svg>
@@ -656,7 +657,7 @@
   </section>
 
   <!-- ── BOTTOM NAVIGATION BAR ─────────────────────────────────────── -->
-  <nav class="bottom-nav" id="bottomNav" role="tablist" aria-label="Navegación principal">
+  <nav class="bottom-nav" data-hs-tabbar id="bottomNav" role="tablist" aria-label="Navegación principal">
     <button class="nav-item active" data-tab="lab" role="tab" aria-selected="true" aria-controls="tabLab" aria-label="Ver registros de laboratorios">
       <span class="nav-icon" aria-hidden="true">
         <svg class="svg-icon"><use href="#icon-flask"></use></svg>
