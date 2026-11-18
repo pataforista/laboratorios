@@ -12,7 +12,7 @@
     },
     {
       "id": "psych_clozapine_monitoring",
-      "title": "Protocolo: Monitoreo Clozapina (REMS 2024)",
+      "title": "Protocolo: monitoreo de clozapina (consenso Delphi 2025)",
       "path": "dataset/topics/psych_clozapine_monitoring.json",
       "audience": "clinician",
       "tags": ["clozapina", "seguridad", "ANC", "neutropenia"]

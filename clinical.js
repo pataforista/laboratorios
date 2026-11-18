@@ -2,7 +2,10 @@
  * clinical.js - Centralized Clinical Logic
  * Based on:
  * - 2024-2025 APA Practice Guidelines for Schizophrenia.
- * - FDA Clozapine REMS Program (v3.0).
+ * - Consenso Delphi global (Siskind et al., Lancet Psychiatry 2025; DOI 10.1016/S2215-0366(25)00098-7).
+ *   Umbral de consideración de suspensión: ANC < 1.0 (general) y < 0.5 (Duffy-null).
+ * - FDA: programa REMS de clozapina retirado el 13 de junio de 2025; el monitoreo de ANC sigue recomendado.
+ * - CERSI-PGx (Reino Unido, 2026; DOI 10.1002/bcp.70576): genotipo ACKR1/Duffy-null (ADAN).
  * - Consensus on Clozapine-Induced Gastrointestinal Hypomotility (CIGH).
  */
 
@@ -12,7 +15,7 @@
  */
 export const CLINICAL_RULES = {
     // Neutropenia Thresholds (ANC in x10³/µL)
-    // Ref: Clozapine REMS (US FDA v3.0)
+    // Ref: consenso Delphi 2025 (ANC < 1.0 general; < 0.5 Duffy-null); ver encabezado.
     ANC: {
         NORMAL: { START: 1.5, WARN: 1.5, MODERATE: 1.0, CRITICAL: 0.5 },
         BEN: { START: 1.0, WARN: 1.0, MODERATE: 0.5, CRITICAL: 0.5 }
@@ -54,8 +57,8 @@ export function analyzeANC(anc, isBEN = false) {
     if (anc < limits.MODERATE) {
         return {
             status: 'DANGER',
-            message: 'Neutropenia MODERADA.',
-            action: 'Monitoreo diario. Consultar hematología.'
+            message: 'ANC < 1.0: considerar suspensión (consenso Delphi 2025).',
+            action: 'Monitoreo diario y consulta a hematología.'
         };
     }
 
@@ -399,7 +402,7 @@ export function evaluateRecord(rec, catalog, history = []) {
                 type: "critical",
                 title: "SUSPENSIÓN PERMANENTE",
                 msg: "Segundo registro con ANC < 500 detectado.",
-                hint: "Protocolo FDA REMS exige suspensión definitiva de Clozapina."
+                hint: "Suspensión permanente según ficha técnica (advertencia de neutropenia grave)."
             });
         }
     }

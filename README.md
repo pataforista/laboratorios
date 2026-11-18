@@ -27,11 +27,14 @@
 ## 📚 Referencias Clínicas y Umbrales
 
 La lógica clínica de esta aplicación está alineada con:
-1. **FDA Clozapine REMS Program (v3.0, 2024)**:
-   - *Estándar*: Suspensión y monitoreo en base a límites normales (ANC < 1500 /µL leve, < 1000 /µL moderada, < 500 /µL agranulocitosis/crítica).
-   - *BEN (Benign Ethnic Neutropenia)*: Límites ajustados (ANC < 1000 /µL para monitoreo intensivo, < 500 /µL para descontinuación).
-2. **Guías APA 2024-2025** para el tratamiento de la Esquizofrenia.
-3. **Consenso sobre Hipomotilidad Gastrointestinal Inducida por Clozapina (CIGH)**: Detección y alerta temprana ante un grado de estreñimiento $\ge 3/5$ para mitigar riesgos de íleo paralítico.
+1. **Consenso Delphi global 2025** (Siskind et al., *Lancet Psychiatry*; [DOI 10.1016/S2215-0366(25)00098-7](https://doi.org/10.1016/S2215-0366(25)00098-7)):
+   - *General*: considerar suspensión con ANC < 1.0 ×10⁹/L. Severa (agranulocitosis): ANC < 0.5.
+   - *Duffy-null (BEN/DARC)*: umbral de suspensión < 0.5.
+   - Monitoreo rutinario de ANC: se puede suspender tras 2 años.
+2. **FDA 2025**: el programa REMS de clozapina se retiró el 13 de junio de 2025. El monitoreo de ANC sigue recomendado y el aviso de neutropenia grave (Boxed Warning) se mantiene. Referencia de inicio: ANC ≥ 1.5 (ficha técnica).
+3. **CERSI-PGx 2026, Reino Unido** (ADAN/Duffy-null; [DOI 10.1002/bcp.70576](https://doi.org/10.1002/bcp.70576)): genotipado para umbrales de ADAN. La valoración hematológica se pide con fiebre sostenida ≥ 38 °C y ANC < 1.0.
+4. **Guías APA 2024-2025** para el tratamiento de la Esquizofrenia.
+5. **Consenso sobre Hipomotilidad Gastrointestinal Inducida por Clozapina (CIGH)**: Detección y alerta temprana ante un grado de estreñimiento $\ge 3/5$ para mitigar riesgos de íleo paralítico.
 
 ---
 

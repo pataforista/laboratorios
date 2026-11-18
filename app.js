@@ -2234,14 +2234,14 @@ function openDetail(id) {
     clozAnalysisHtml = `
       <div class="cloz-analysis-card" style="margin-top:16px; padding:12px; border-radius:8px; border:1px solid var(--m3-outline-variant); background:var(--m3-surface-container-low); margin-bottom:12px;">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-          <h3 style="margin:0; font-size:16px;">Análisis Clozapina (REMS 2024)</h3>
+          <h3 style="margin:0; font-size:16px;">Análisis clozapina (consenso Delphi 2025)</h3>
           <span class="badge ${ancAnalysis?.status.toLowerCase() || 'ok'}">${ancAnalysis?.status || 'OK'}</span>
         </div>
         <p style="font-size:14px; margin:4px 0;"><strong>ANC:</strong> ${(r.data?.anc/1000 || 0).toFixed(2)} k/µL (${r.data?.anc || 0} /µL)</p>
         <p style="font-size:13px; color:var(--m3-on-surface-variant);">${ancAnalysis?.message || 'Sin datos suficientes.'}</p>
         ${ancAnalysis?.action ? `<p style="font-size:13px; font-weight:bold; color:var(--m3-error); margin-top:8px;">Acción: ${ancAnalysis.action}</p>` : ''}
         <div style="margin-top:12px; border-top:1px solid var(--m3-outline-variant); padding-top:8px; font-size:12px; opacity:0.8; display:flex; justify-content:space-between; align-items:center;">
-          <p style="margin:2px 0;"><strong>Fuente:</strong> FDA REMS / APA 2024-25</p>
+          <p style="margin:2px 0;"><strong>Fuentes:</strong> consenso Delphi 2025 (Lancet Psychiatry); FDA, retiro del REMS 13-jun-2025; CERSI-PGx 2026 (Reino Unido)</p>
           <button class="btn btn-text btn-sm" onclick="openManualTopic('psych_clozapine_monitoring')" style="padding:0; min-height:0; color:var(--m3-primary);">Ver Protocolo →</button>
         </div>
       </div>
