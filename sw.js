@@ -1,5 +1,5 @@
 // LabNotes PWA Service Worker v5.0
-const CACHE_NAME = "labnotes-v6.5";
+const CACHE_NAME = "labnotes-v6.6";
 
 const STATIC_ASSETS = [
   "./",
@@ -9,6 +9,17 @@ const STATIC_ASSETS = [
   "./shared/shell/shell.css",
   "./shared/shell/shell.js",
   "./shared/shell/apps.json",
+  "./shared/humano-chrome.css",
+  "./fonts/inter-latin-wght-normal.woff2",
+  "./fonts/inter-latin-ext-wght-normal.woff2",
+  "./fonts/poppins-latin-500-normal.woff2",
+  "./fonts/poppins-latin-600-normal.woff2",
+  "./fonts/poppins-latin-700-normal.woff2",
+  "./fonts/poppins-latin-ext-500-normal.woff2",
+  "./fonts/poppins-latin-ext-600-normal.woff2",
+  "./fonts/poppins-latin-ext-700-normal.woff2",
+  "./fonts/jetbrains-mono-latin-500-normal.woff2",
+  "./fonts/jetbrains-mono-latin-ext-500-normal.woff2",
   "./fonts/fonts.css",
   "./app.js",
   "./clinical.js",

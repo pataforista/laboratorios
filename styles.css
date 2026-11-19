@@ -1273,7 +1273,7 @@ details[open] .manual-accordion-summary::after { transform: rotate(90deg); }
 /* Manual Grid */
 .manual-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(260px, 100%), 1fr));
   gap: 14px;
   margin-top: 4px;
   padding: 0 0 24px;
