@@ -1,5 +1,5 @@
 // LabNotes PWA Service Worker v5.0
-const CACHE_NAME = "labnotes-v6.3";
+const CACHE_NAME = "labnotes-v6.4";
 
 const STATIC_ASSETS = [
   "./",

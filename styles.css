@@ -1846,3 +1846,25 @@ summary:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
+
+/* ── Cabecera única (docs/CABECERA_Y_NAVEGACION.md) ─────────────────
+   Marca (cuadro índigo con icono) · título · acciones. En móvil, la
+   búsqueda baja a una segunda fila a todo el ancho. */
+.topbar { height: auto; min-height: 60px; padding: 8px 16px; flex-wrap: wrap; row-gap: 8px; }
+.brand { min-width: 0; flex: 1 1 0; }
+.brand > div { min-width: 0; }
+.brand-mark {
+  width: 32px; height: 32px; border-radius: 10px; flex: none;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: var(--h-btn, var(--h-indigo)); color: #FFFFFF; font-size: 18px;
+}
+.brand-title { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 1.05rem; }
+.top-actions { display: flex; align-items: center; gap: 6px; flex: none; }
+.omnisearch-wrap { flex: 1 1 100%; order: 3; }
+@media (max-width: 520px) {
+  .brand-title { font-size: 1rem; }
+}
+@media (min-width: 521px) {
+  .omnisearch-wrap { flex: 1 1 auto; order: 0; max-width: 420px; margin-left: auto; margin-right: 12px; }
+  .top-actions { order: 1; }
+}
