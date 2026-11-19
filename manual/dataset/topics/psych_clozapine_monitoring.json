@@ -26,7 +26,7 @@
             "id": "clz_ben_thresholds",
             "type": "section",
             "title": "Población BEN (Neutropenia Étnica Benigna)",
-            "content": "Para pacientes con diagnóstico de BEN (Duffy-null), los umbrales son más bajos según el programa REMS:",
+            "content": "Para pacientes con diagnóstico de BEN (Duffy-null), los umbrales son más bajos (consenso Delphi 2025; antes, programa REMS de la FDA, retirado en 2025):",
             "items": [
                 "**Normal**: ANC >= 1.0 k/µL",
                 "**Neutropenia Leve**: 0.5 - 0.99 k/µL (Monitoreo 3 veces/semana)",

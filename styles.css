@@ -267,7 +267,8 @@ h3 {
 }
 
 .btn-filled {
-  background-color: var(--m3-primary);
+  /* En oscuro --m3-primary es un tono claro para TEXTO; el fondo sólido usa --h-btn (5:1 con blanco). */
+  background-color: var(--h-btn, var(--m3-primary));
   color: var(--m3-on-primary);
   box-shadow: 0 4px 12px rgba(90, 75, 120, 0.2);
 }
@@ -1736,7 +1737,7 @@ summary:focus-visible {
 }
 
 .ai-search-send-btn:hover {
-  background: hsl(var(--p-h), var(--p-s), calc(var(--p-l) - 8%));
+  background: var(--h-btn-hover, var(--accent));
   transform: scale(1.08);
 }
 
@@ -1867,4 +1868,14 @@ summary:focus-visible {
 @media (min-width: 521px) {
   .omnisearch-wrap { flex: 1 1 auto; order: 0; max-width: 420px; margin-left: auto; margin-right: 12px; }
   .top-actions { order: 1; }
+}
+
+
+/* Variables que se usaban sin definirse (auditoría de accesibilidad y tema). */
+:root, [data-theme="light"] {
+  --glass-backdrop: saturate(140%) blur(10px);
+  --m3-inverse-primary: #C9CFF6; /* acción sobre snackbar oscuro, 9:1 */
+}
+[data-theme="dark"] {
+  --m3-inverse-primary: #3D4A8F; /* acción sobre snackbar claro, 7:1 */
 }

@@ -392,7 +392,7 @@ export function evaluateRecord(rec, catalog, history = []) {
             }
         }
 
-        // Permanent Suspension Check (REMS)
+        // Comprobación de suspensión permanente (Delphi 2025 / ficha técnica FDA)
         const histRecords = history.filter(r => r.isClozapine && r.id !== rec.id);
         const criticalHistory = histRecords.filter(h => (h.data?.anc !== undefined && h.data.anc < 500));
         const currentCritical = (rec.data?.anc !== undefined && rec.data.anc < 500);

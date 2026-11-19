@@ -37,7 +37,7 @@
                     "type": "warning",
                     "level": "info",
                     "title": "Cálculo de ANC",
-                    "content": "Si ingresa el valor de Neutrófilos/WBC, el sistema calculará el ANC absoluto y lo comparará con los umbrales de la FDA (REMS) y guías APA. Soporta perfiles BEN (Neutropenia Étnica Benigna)."
+                    "content": "Si ingresa el valor de Neutrófilos/WBC, el sistema calculará el ANC absoluto y lo comparará con los umbrales del consenso Delphi 2025 y la ficha técnica FDA y guías APA. Soporta perfiles BEN (Neutropenia Étnica Benigna)."
                 },
                 {
                     "id": "guide_triage",

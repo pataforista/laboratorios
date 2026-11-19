@@ -293,7 +293,7 @@
                   <input id="nrClozapine" type="checkbox" onchange="toggleClozapineFields()">
                   <span style="font-weight:600;">Monitorizar Clozapina</span>
                 </label>
-                <span class="muted small" style="margin-left:34px; font-size:11px; display:block; line-height:1.3; opacity:0.85;">Activa el protocolo hematológico FDA REMS y el triage de efectos secundarios.</span>
+                <span class="muted small" style="margin-left:34px; font-size:11px; display:block; line-height:1.3; opacity:0.85;">Activa el protocolo hematológico (consenso Delphi 2025 y ficha técnica FDA) y el triage de efectos secundarios.</span>
               </div>
               <div style="display:flex; flex-direction:column; gap:4px;">
                 <label class="checkrow" style="margin-bottom:0;">
@@ -702,6 +702,7 @@
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('./sw.js').then(reg => {
+          if (!reg) return;
           reg.addEventListener('updatefound', () => {
             const nw = reg.installing;
             if (nw) {
